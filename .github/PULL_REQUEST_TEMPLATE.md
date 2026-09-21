@@ -15,6 +15,12 @@ Ein Satz:
 
 -
 
+## Kollisionsschutz / Dateibesitz
+
+- [ ] jede geänderte Datei hat genau einen schreibenden Besitzer
+- [ ] Prüfer waren read-only und haben eigene Befunde nicht repariert
+- [ ] kollidierende Änderungen wurden serialisiert
+
 ## Risiken
 
 -
@@ -44,8 +50,20 @@ Ein Satz:
 - [ ] README/TODO/Docs/Evidence sind nicht betroffen ODER passend zum realen Ist-Stand aktualisiert
 - [ ] `python3 scripts/info_text_guard.py --base <BASE_SHA>` ist grün
 
+## GUI / CLI Parität
+
+- [ ] nicht betroffen ODER jede neue GUI-Fachfunktion besitzt denselben Core-Use-Case und einen CLI-Zahlenmenüpfad
+- [ ] rein visuelle Ausnahme ist dokumentiert
+
 ## Abschluss
 
-**Status:** 🟢 / 🟨 / 🔴
+**Iteration:**
+**Status:** 🟢 / 🟨 / 🔴 / 🔵 / 🔒
+**Fortschritt:** `████████░░ 80 %`
+**A – FESTER PLAN:**
+**B – VARIABLE FOLGEAUFGABE:**
 **Offen:**
 **Nächster Schritt:**
+**Vorausplanung 1:**
+**Vorausplanung 2:**
+**Vorausplanung 3:**
