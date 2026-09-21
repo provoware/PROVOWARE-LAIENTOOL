@@ -1,9 +1,14 @@
 from __future__ import annotations
 
+import io
 import json
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
 
+from provoware_laientool.application_core import execute
+from provoware_laientool.capability_registry import get_use_case
+from provoware_laientool.cli_shell import menu_entries
 from provoware_laientool.diagnostics import (
     build_diagnostic_report,
     diagnostic_to_json,
@@ -16,6 +21,7 @@ from provoware_laientool.preflight import (
     PreflightResult,
     StartPlan,
 )
+from scripts.diagnostic_snapshot import main as diagnostic_main
 from provoware_laientool.recovery_contract import (
     STATE_APPLYING,
     JournalSnapshot,
@@ -135,6 +141,33 @@ class DiagnosticReportTests(unittest.TestCase):
         report = build_diagnostic_report(preflight=sample_preflight())
         payload = json.loads(diagnostic_to_json(report))
         self.assertEqual(payload["schema_version"], "1")
+        self.assertFalse(payload["write_paths_enabled"])
+
+class DiagnosticAdapterTests(unittest.TestCase):
+    def test_registry_marks_diagnostics_cli_only(self) -> None:
+        entry = get_use_case("diagnostics.snapshot")
+        self.assertIsNotNone(entry)
+        assert entry is not None
+        self.assertTrue(entry.cli_available)
+        self.assertFalse(entry.gui_available)
+        self.assertTrue(entry.diagnostic_cli_only)
+
+    def test_numeric_menu_exposes_diagnostics(self) -> None:
+        ids = {use_case_id for _, use_case_id, _ in menu_entries()}
+        self.assertIn("diagnostics.snapshot", ids)
+
+    def test_application_result_keeps_write_paths_locked(self) -> None:
+        result = execute("diagnostics.snapshot")
+        self.assertIn(result.status, {"PASS", "OPEN"})
+        self.assertIn("Schreibpfade: GESPERRT", result.body)
+
+    def test_stdout_json_helper_is_parseable(self) -> None:
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            code = diagnostic_main(["--json"])
+        payload = json.loads(buffer.getvalue())
+        self.assertEqual(code, 0)
+        self.assertEqual(payload["collection_status"], "PASS")
         self.assertFalse(payload["write_paths_enabled"])
 
 
