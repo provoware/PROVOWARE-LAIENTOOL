@@ -2,8 +2,8 @@
 
 ## I18 – read-only Inventar-Komfortkern
 
-**Status:** 🟨 IMPLEMENTIERT / CI-ABNAHME AUSSTEHEND
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
+**Fortschritt:** `█████████░ 90 %`
 
 Der Prozentwert bildet ausschließlich definierte I18-Checkpoints ab.
 
@@ -29,8 +29,9 @@ Der Prozentwert bildet ausschließlich definierte I18-Checkpoints ab.
 - 🟢 professioneller temporärer Core-Diagnoselauf
 - 🟢 Debugging-Klassifikation PRODUCT / TEST / INFRASTRUCTURE / EVIDENCE
 - 🟢 CI-Diagnostic-Gate ergänzt
-- 🔵 Repository-/PR-CI
-- 🔵 finaler Diff / Merge / Post-Merge
+- 🟢 Repository-/PR-CI PASS
+- 🟢 finaler Diff ohne Scope-Drift
+- 🔵 Merge / Post-Merge
 
 ## B – VARIABLE FOLGEAUFGABE
 
