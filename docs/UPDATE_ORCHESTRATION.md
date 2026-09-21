@@ -2,7 +2,7 @@
 
 ## Ziel
 
-Jede Iteration besteht aus genau zwei logisch getrennten Anteilen:
+Jede Iteration besteht aus genau zwei logisch getrennten Anteilen und einer verpflichtenden kollisionsfreien Datei-Besitzplanung:
 
 - **A – PLAN:** verbindlicher nächster Schritt aus dem bestehenden Entwicklungsplan.
 - **B – DELTA:** genau ein neuer, aus dem letzten Lauf entstandener Folgepunkt.
@@ -34,7 +34,9 @@ Damit bleibt die Entwicklung planstabil, reagiert aber trotzdem kontrolliert auf
 7. Abhängigkeit zwischen A und B bestimmen;
 8. Reihenfolge festlegen;
 9. erlaubte Dateien und Nicht-Ziele definieren;
-10. Gates und Stop-Bedingungen ausgeben.
+10. Gates und Stop-Bedingungen ausgeben;
+11. Datei-Besitzmatrix festlegen;
+12. nach Abschluss genau drei wahrscheinliche Folgeschritte vorplanen.
 
 ## Entscheidungslogik
 
@@ -51,7 +53,7 @@ Reihenfolge:
 **A → Verify → B/DOC**
 
 ### B verletzt Freeze-/Scope-Grenze
-B wird dokumentiert und in TODO/Evidence verschoben. Es wird **nicht** heimlich mitimplementiert.
+B wird dokumentiert und in die variable Folgeliste der nächsten Iteration verschoben. Es wird **nicht** heimlich mitimplementiert.
 
 ### Kein B vorhanden
 `B = NONE`. Es wird kein künstlicher Zusatzscope erfunden.
@@ -83,6 +85,17 @@ Exit-Gate:
 
 REIHENFOLGE:
 BLOCKER:
+DATEI-BESITZ:
+- <datei>: <einziger schreibender Besitzer>
+
+ITERATIONSSTATUS:
+FORTSCHRITT:
+
+NÄCHSTE 3 SCHRITTE:
+1.
+2.
+3.
+
 MERGE-KRITERIUM:
 ```
 
@@ -94,7 +107,29 @@ MERGE-KRITERIUM:
 - Dokumentar dokumentiert nur belegte Ergebnisse;
 - Organisator schreibt keinen Produktcode;
 - Implementierer erweitert den Scope nicht selbst;
-- neue Erkenntnisse während der Implementierung werden als Kandidaten für den **nächsten** DELTA-Anteil gesammelt, außer sie blockieren die aktuelle Korrektheit oder Sicherheit.
+- neue Erkenntnisse während der Implementierung werden als Kandidaten für den **nächsten** DELTA-Anteil gesammelt, außer sie blockieren die aktuelle Korrektheit oder Sicherheit;
+- pro Datei existiert während eines Write-Batches genau ein schreibender Besitzer;
+- Prüfer berichten ausschließlich read-only und reparieren ihre Befunde nicht selbst;
+- Planer implementieren nicht;
+- Dokumentar schreibt erst nach bestätigter Prüfung;
+- kollidierende Änderungen werden serialisiert;
+- jede Iteration endet mit drei vorgeplanten, noch nicht automatisch freigegebenen Folgeschritten.
+
+## Iterationsanzeige
+
+Jede Iteration verwendet:
+
+- `🟢` abgeschlossen / belegt
+- `🟨` in Arbeit / OPEN
+- `🔴` blockiert / fehlgeschlagen
+- `🔵` geplant
+- `🔒` gesperrt
+
+Zusätzlich wird ein Checkpoint-basierter Balken ausgegeben, z. B. `██████░░░░ 60 %`.
+
+## GUI-/Konsolen-Parität
+
+Jede fachliche GUI-Funktion muss einen gleichwertigen Konsolenweg über ein laienfreundliches Zahlenmenü besitzen. Die Detailregeln stehen in `docs/GUI_CLI_PARITY.md`. GUI und CLI bleiben Adapter desselben Application-/Domain-Kerns.
 
 ## Beispiel für den aktuellen Stand
 
