@@ -133,3 +133,19 @@ Bei notwendigen Pfadangaben bevorzugt redigieren oder temporäre reproduzierbare
 Ein VERIFY-/Diagnose-Schritt darf einen gefundenen Produktfehler nicht im selben Prüferauftrag heimlich reparieren.
 
 Befund → Klasse → expliziter nächster Write-Batch.
+
+
+## Diagnose-Export – künftige Writer-Triage
+
+Ein späterer Diagnose-Export ist ein bewusst eng begrenzter Sonderfall zum allgemeinen Read-only-Lock.
+
+Vor jedem Writer-REOPEN gilt:
+
+1. Redaction/Payload-Validierung muss bereits vor dem Write abgeschlossen sein.
+2. Bestehende Zieldateien dürfen niemals verändert werden.
+3. Partial-Write, ENOSPC, PermissionError und Parallelrace sind eigenständige Pflichtbefunde.
+4. Ein Writer-Fehler darf nicht automatisch erneut schreiben.
+5. Eine zurückgebliebene Partial-Datei ist ein sichtbarer Befund und kein erfolgreicher Export.
+6. Der allgemeine Produktkern bleibt weiterhin read-only.
+
+Die vollständige Writer-Architektur steht in `docs/I24_DIAGNOSTIC_EXPORT_WRITER_DESIGN.md`.
