@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .capability_registry import get_use_case, list_use_cases
+from .diagnostics import build_diagnostic_report, format_diagnostic_text
 from .inventory import InventoryResult, scan_inventory
 from .inventory_view import InventoryView, InventoryViewSpec, build_inventory_view
 from .preflight import format_text, run_preflight
@@ -257,6 +258,15 @@ def execute(use_case_id: str, *, root: str | None = None) -> ActionResult:
             title="System prüfen",
             body=format_text(result),
             status=result.status,
+        )
+
+    if use_case_id == "diagnostics.snapshot":
+        report = build_diagnostic_report()
+        return ActionResult(
+            use_case_id=use_case_id,
+            title="Diagnose anzeigen",
+            body=format_diagnostic_text(report),
+            status=report.health_status,
         )
 
     if use_case_id == "files.preview_trash":
