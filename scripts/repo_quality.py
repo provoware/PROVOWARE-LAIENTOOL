@@ -19,6 +19,8 @@ REQUIRED = (
     "docs/UI_DESIGN_SYSTEM.md",
     "docs/theme-tokens.md",
     "docs/B01_PLATFORM_PREFLIGHT.md",
+    "docs/B01_PATH_BOUNDARIES.md",
+    "docs/evidence/EV-20260921-003-b01b-path-boundaries.md",
     "docs/UPDATE_ORCHESTRATION.md",
     "docs/evidence/EV-20260921-002-b01a-preflight.md",
     ".github/PULL_REQUEST_TEMPLATE.md",
