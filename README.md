@@ -36,7 +36,7 @@ Wichtige Leitplanken:
 
 Die geplante GUI basiert auf **PySide6/Qt**. **Tkinter ist im Produktionscode ausgeschlossen.** Datei- und Tabellenansichten sollen Qt-Modelle/Delegates verwenden; Thumbnails und Vorschauen werden bedarfsgesteuert und außerhalb des UI-Threads geladen.
 
-GUI und Linux-Konsole sind zwei Adapter desselben Fachkerns. Jede fachliche GUI-Funktion benötigt einen gleichwertigen laienfreundlichen Konsolenweg über ein Zahlen-Auswahlmenü; rein visuelle Ausnahmen müssen ausdrücklich begründet sein. Beide Adapter verwenden dieselben Use Cases, Sicherheitsregeln, Preview-/Recovery-Verträge und Fachresultate.
+GUI und Linux-Konsole sind zwei Adapter desselben Fachkerns. Jede fachliche GUI-Funktion benötigt einen gleichwertigen laienfreundlichen Konsolenweg über ein Zahlen-Auswahlmenü; rein visuelle Ausnahmen müssen ausdrücklich begründet sein. Seit I10 beschreibt eine gemeinsame immutable Capability-/Use-Case-Registry Verfügbarkeit und Sicherheitsmetadaten für beide Adapter.
 
 Siehe [ADR-0001](docs/adr/ADR-0001-ui-cli-foundation.md), das [UI-Designsystem](docs/UI_DESIGN_SYSTEM.md), die [Theme-Tokens](docs/theme-tokens.md), den [messbaren Laien-Qualitätsstandard](docs/LAIEN_QUALITY_STANDARD.md), die [Info-Text-Governance](docs/INFO_TEXT_GOVERNANCE.md) und den [GUI-/Konsolen-Paritätsvertrag](docs/GUI_CLI_PARITY.md).
 
