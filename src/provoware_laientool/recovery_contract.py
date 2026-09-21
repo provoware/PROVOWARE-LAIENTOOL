@@ -7,6 +7,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from .preview_model import ACTION_COPY, ACTION_MOVE, ACTION_TRASH
+
 STATE_PREPARED = "prepared"
 STATE_APPLYING = "applying"
 STATE_APPLIED = "applied"
@@ -31,6 +33,11 @@ UNDO_COPY = "remove-created-copy"
 UNDO_MOVE = "move-back"
 UNDO_TRASH = "restore-from-trash"
 VALID_UNDO_STRATEGIES = {UNDO_COPY, UNDO_MOVE, UNDO_TRASH}
+EXPECTED_UNDO_BY_OPERATION = {
+    ACTION_COPY: UNDO_COPY,
+    ACTION_MOVE: UNDO_MOVE,
+    ACTION_TRASH: UNDO_TRASH,
+}
 
 _ALLOWED_TRANSITIONS: dict[str, frozenset[str]] = {
     STATE_PREPARED: frozenset({STATE_APPLYING, STATE_FAILED}),
@@ -83,8 +90,17 @@ def validate_recovery_contract(contract: RecoveryContract) -> tuple[str, ...]:
         errors.append("Recovery-Vertrag benötigt eine Preview-Aktions-ID.")
     if not contract.reversible:
         errors.append("Recovery-Vertrag muss Reversibilität erwarten.")
+    if contract.operation not in EXPECTED_UNDO_BY_OPERATION:
+        errors.append(f"Unbekannte Recovery-Operation: {contract.operation}")
     if contract.undo_strategy not in VALID_UNDO_STRATEGIES:
         errors.append(f"Unbekannte Undo-Strategie: {contract.undo_strategy}")
+    elif contract.operation in EXPECTED_UNDO_BY_OPERATION:
+        expected = EXPECTED_UNDO_BY_OPERATION[contract.operation]
+        if contract.undo_strategy != expected:
+            errors.append(
+                f"Undo-Strategie passt nicht zu {contract.operation}: "
+                f"erwartet {expected}, erhalten {contract.undo_strategy}"
+            )
     if not contract.journal_required:
         errors.append("Schreibende Zukunftsaktion darf Journal-Pflicht nicht deaktivieren.")
     return tuple(errors)
