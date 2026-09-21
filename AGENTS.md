@@ -29,7 +29,9 @@ Widersprüche nicht durch Annahmen überdecken. Kleinste sichere Interpretation 
 
 ## 3. Verbindlicher Arbeitszyklus
 
-`READ → DECIDE → ONE WRITE BATCH → LOCAL TEST → LOCAL EVIDENCE → ONE REMOTE HEAD → TARGETED CI → DIFF → MERGE → POST-MERGE QUALITY`
+`ORGANIZE → PLAN → IMPLEMENT → VERIFY → DOC → EVIDENCE → CI → DIFF → MERGE → POST-MERGE VERIFY → NEXT-PLAN`
+
+Vor jeder Iteration erzeugt der Organisator ein kollisionsfreies Update-Paket. Planung, Implementierung, Prüfung und Dokumentation bleiben personell bzw. rollenlogisch getrennt.
 
 Vor dem Schreiben festhalten:
 
@@ -65,6 +67,7 @@ Regeln:
 
 - GUI: PySide6/Qt; kein Tkinter im Produktionscode.
 - GUI und CLI verwenden denselben Application-/Domain-Kern.
+- Jede GUI-Fachfunktion benötigt einen gleichwertigen laienfreundlichen Konsolenweg gemäß `docs/GUI_CLI_PARITY.md`; rein visuelle Funktionen müssen als solche begründet sein.
 - UI entscheidet nicht selbst über Datei- oder Sicherheitsregeln.
 - Thumbnail-/Preview-Laden blockiert den UI-Thread nicht.
 - CLI bleibt laienverständlich und ist kein zweiter Fachkern.
@@ -98,6 +101,20 @@ Subagenten werden nicht nur nach Fachgebiet, sondern auch nach **Berechtigungsar
 
 Ein Agent darf in derselben Iteration nicht gleichzeitig **IMPLEMENT** und **VERIFY** für denselben fachlichen Block sein.
 
+### Kollisionsschutz und Dateibesitz
+
+Vor jedem Write-Batch wird eine Datei-Besitzmatrix festgelegt. Für jede veränderte Datei gilt:
+
+- genau ein schreibender Besitzer je Iteration;
+- beliebig viele read-only Prüfer;
+- Prüfer berichten nur und verändern den geprüften Block nicht;
+- Planer planen, aber implementieren nicht;
+- Dokumentar schreibt erst nach bestätigter Prüfung;
+- bei kollidierendem Dateibedarf werden Arbeiten serialisiert statt parallelisiert;
+- gemeinsame Kernverträge werden vor GUI-/CLI-Adaptern festgelegt.
+
+Ein zweiter schreibender Agent darf dieselbe Datei erst übernehmen, nachdem der vorherige Write-Batch abgeschlossen, geprüft und ausdrücklich übergeben wurde.
+
 
 Subagent standardmäßig **AUS**. Aktivierung nur, wenn alle Bedingungen erfüllt sind:
 
@@ -123,7 +140,9 @@ Aufgaben:
    - **B – DELTA:** genau ein neu entstandener, sinnvoller Folgebedarf aus dem letzten Lauf;
 5. Konflikte, Reihenfolge und Abhängigkeiten festlegen;
 6. unnötige Parallelität verhindern;
-7. Scope, Nicht-Ziele, Gates und Stop-Bedingungen für beide Anteile ausgeben.
+7. Scope, Nicht-Ziele, Gates und Stop-Bedingungen für beide Anteile ausgeben;
+8. Datei-Besitzmatrix für alle geplanten Writes erstellen;
+9. nach Abschluss zusätzlich die nächsten drei wahrscheinlichen Schritte mit Ziel, Abhängigkeit und Gate vorplanen.
 
 Der Organisator darf **keine neue Fachanforderung erfinden**. Wenn aus dem letzten Lauf kein sinnvoller DELTA-Anteil entsteht, lautet B ausdrücklich **NONE**.
 
@@ -132,7 +151,7 @@ Prioritätsregel für B:
 
 Wenn B den Plananteil A blockiert, wird **B zuerst** ausgeführt. Wenn B unabhängig ist, bleibt **A zuerst**. Wenn B Scope oder Freeze-Grenzen verletzt, wird B nur dokumentiert und auf eine spätere Iteration verschoben.
 
-Stop: Zwei-Spuren-Updatepaket mit Reihenfolge, Begründung, erlaubten Dateien, Gates und eindeutigem Abschlusskriterium.
+Stop: Zwei-Spuren-Updatepaket mit Reihenfolge, Begründung, Datei-Besitzmatrix, erlaubten Dateien, Gates, eindeutigem Abschlusskriterium und Drei-Schritte-Vorausplanung.
 
 ### Planer 📐
 
@@ -216,6 +235,7 @@ Jede neue Iteration startet mit einem vom Update-Organisator erzeugten Paket:
 
 **B – DELTA-Anteil**
 - stammt ausschließlich aus dem unmittelbar vorherigen Lauf;
+- wird grundsätzlich für die nächste Iteration eingeplant, außer er blockiert Korrektheit oder Sicherheit der laufenden Iteration;
 - Beispiele: CI-Befund, neue Testlücke, erkannte Portabilitätskante, notwendige Doku-/Evidence-Korrektur, klarer technischer Folgepunkt;
 - maximal ein DELTA-Thema pro Iteration;
 - falls nichts Relevantes entstand: `B = NONE`.
@@ -230,7 +250,15 @@ Der Organisator entscheidet:
 
 Standardablauf:
 
-`ORGANIZE → PLAN(A+B) → IMPLEMENT → VERIFY → DOC → EVIDENCE → MERGE → POST-MERGE ORGANIZE`
+`ORGANIZE → PLAN(A+B) → IMPLEMENT → VERIFY → DOC → EVIDENCE → CI → DIFF → MERGE → POST-MERGE VERIFY → NEXT-PLAN`
+
+### Drei-Schritte-Vorausplanung
+
+Am Ende jeder Iteration werden genau drei wahrscheinliche Folgeschritte kurz vorbereitet. Für jeden werden Ziel, Abhängigkeit, erwarteter Scope und Gate genannt. Diese Vorschau ist Orientierung, keine automatische Freigabe.
+
+### Iterationsstatus
+
+Jede Iteration erhält eine ID `Ixx – Kurzname`, einen Status `🟢 | 🟨 | 🔴 | 🔵 | 🔒` und einen Checkpoint-basierten Fortschrittsbalken wie `████████░░ 80 %`. Prozentwerte dürfen nur definierte Gates abbilden.
 
 ### Minimaler Auftrag
 Jeder Subagent erhält nur:
@@ -296,4 +324,5 @@ Jeder Arbeitsblock endet mit:
 - offene Punkte;
 - neue Risiken;
 - Status 🟢 / 🟨 / 🔴;
-- genau einem empfohlenen nächsten Schritt.
+- genau einem empfohlenen nächsten Schritt;
+- den nächsten drei vorgeplanten Schritten in Kurzform.
