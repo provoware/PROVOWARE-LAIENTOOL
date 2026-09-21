@@ -67,6 +67,7 @@ Diese Dateien dokumentieren **fachliche Checkpoints**, nicht den flüchtigen Liv
 | I32 | [I32_PORTABLE_OFFLINE_PACKAGE.md](I32_PORTABLE_OFFLINE_PACKAGE.md) |
 | I33 | [I33_WHEELHOUSE_INTEGRITY.md](I33_WHEELHOUSE_INTEGRITY.md) |
 | I34 | [I34_PLUGIN_BOUNDARY.md](I34_PLUGIN_BOUNDARY.md) |
+| I35 | [I35_PACKAGE_PROVENANCE.md](I35_PACKAGE_PROVENANCE.md) |
 
 ## Architektur und Evidence
 

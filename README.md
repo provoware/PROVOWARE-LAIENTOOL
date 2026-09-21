@@ -40,6 +40,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I32 Portable Offline-Paket | deterministisches Linux-x86_64-ZIP, lokales PySide6-Wheelhouse, Manifest/Hashes, KDE-Klickstarter und Offline-Fremdpfad-Validierung | 🟢 AUTO PASS · B01-Zweitgerät bleibt OPEN |
 | I33 Wheelhouse-Integrität | exaktes Qt-Wheel-Set/Version/Plattform, Build-/Archiv-/Runtime-Hashgate vor Offline-pip | 🟢 AUTO PASS · keine Signaturbehauptung |
 | I34 Plugin-Grenze | data-only Manifest-/Capability-Vertrag; nur READY/read-only; Auto-Install/Enable/Netzwerk und echte dynamische Plugin-Ladepfade statisch gesperrt | 🟢 AUTO PASS · keine Plugin-Runtime |
+| I35 Paket-Provenienz | Commit ↔ Manifest ↔ Paketwurzel ↔ ZIP-Name ↔ SHA-256-Sidecar ↔ ZIP-Bytes fail-closed gebunden | 🟢 AUTO PASS · keine Signaturbehauptung |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -175,7 +176,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I25 und I31 bleiben mit je einer finalen Human-Wahrnehmungsfrage geparkt. I34 schließt parallel B09 als rein automatischen Sicherheitsvertrag: data-only Plugin-Metadaten, nur READY/read-only Capabilities und kein Loader/Installer/Netzwerk.**
+**I25 und I31 bleiben mit je einer finalen Human-Wahrnehmungsfrage geparkt. I35 härtet parallel die portable Release-Provenienz automatisch, ohne eine kryptografische Signatur vorzutäuschen.**
 
 
 ## Screenshots

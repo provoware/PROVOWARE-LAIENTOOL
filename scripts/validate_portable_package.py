@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -28,6 +29,9 @@ REQUIRED = {
     "start.sh",
 }
 FORBIDDEN_PARTS = {".git", ".github", ".venv", "__pycache__", "tests", "dist", "build"}
+COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
+PLATFORM_RE = re.compile(r"^[a-z0-9_]+-[a-z0-9_]+$")
+PRODUCT = "PROVOWARE-LAIENTOOL"
 
 
 def sha256_bytes(data: bytes) -> str:
@@ -54,7 +58,71 @@ def restore_modes(root: Path, handle: zipfile.ZipFile) -> None:
             os.chmod(root / package_root / rel, mode)
 
 
-def validate_archive(archive: Path, *, require_wheelhouse: bool = False) -> dict[str, object]:
+
+def provenance_failures(
+    archive: Path,
+    roots: set[str],
+    manifest: dict[str, object],
+    *,
+    require_wheelhouse: bool,
+) -> tuple[str, ...]:
+    failures: list[str] = []
+    commit = manifest.get("commit")
+    platform_tag = manifest.get("platform_tag")
+    product = manifest.get("product")
+
+    if product != PRODUCT:
+        failures.append(f"Manifest-Produkt falsch: {product!r}")
+    if not isinstance(commit, str) or not COMMIT_RE.fullmatch(commit):
+        failures.append("Manifest-Commit ist kein exakter 40-stelliger Git-SHA-1.")
+    if not isinstance(platform_tag, str) or not PLATFORM_RE.fullmatch(platform_tag):
+        failures.append("Manifest-Plattformtag ist ungültig.")
+
+    if (
+        isinstance(commit, str)
+        and COMMIT_RE.fullmatch(commit)
+        and isinstance(platform_tag, str)
+        and PLATFORM_RE.fullmatch(platform_tag)
+    ):
+        expected_root = f"{PRODUCT}-{commit[:12]}-{platform_tag}"
+        if roots != {expected_root}:
+            failures.append(
+                f"Paketwurzel stimmt nicht mit Commit/Plattform überein: erwartet {expected_root}"
+            )
+        if archive.name != f"{expected_root}.zip":
+            failures.append(
+                f"ZIP-Dateiname stimmt nicht mit Commit/Plattform überein: erwartet {expected_root}.zip"
+            )
+        if require_wheelhouse and platform_tag != "linux-x86_64":
+            failures.append(
+                f"Offline-Wheelhouse ist nur für linux-x86_64 freigegeben: {platform_tag}"
+            )
+
+    return tuple(failures)
+
+
+def checksum_failures(archive: Path, checksum: Path) -> tuple[str, ...]:
+    if not checksum.is_file():
+        return (f"Checksum-Datei fehlt: {checksum}",)
+    try:
+        text = checksum.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as exc:
+        return (f"Checksum-Datei unlesbar: {exc}",)
+
+    expected_line = f"{sha256_bytes(archive.read_bytes())}  {archive.name}\n"
+    if text != expected_line:
+        return (
+            "Checksum-Sidecar stimmt nicht exakt mit ZIP-Hash und ZIP-Dateiname überein.",
+        )
+    return ()
+
+
+def validate_archive(
+    archive: Path,
+    *,
+    require_wheelhouse: bool = False,
+    checksum: Path | None = None,
+) -> dict[str, object]:
     failures: list[str] = []
     if not archive.is_file():
         return {"status": "FAIL", "failures": [f"Archiv fehlt: {archive}"]}
@@ -100,6 +168,14 @@ def validate_archive(archive: Path, *, require_wheelhouse: bool = False) -> dict
                 failures.append(f"Manifest unlesbar: {exc}")
 
         if manifest:
+            failures.extend(
+                provenance_failures(
+                    archive,
+                    roots,
+                    manifest,
+                    require_wheelhouse=require_wheelhouse,
+                )
+            )
             listed = manifest.get("files")
             if not isinstance(listed, list):
                 failures.append("Manifest files ist keine Liste.")
@@ -160,6 +236,9 @@ def validate_archive(archive: Path, *, require_wheelhouse: bool = False) -> dict
             for marker in ("Type=Application", "%k", "./start.sh --gui", "Terminal=false"):
                 if marker not in text:
                     failures.append(f"Desktop-Launcher-Vertrag fehlt: {marker}")
+
+    if checksum is not None:
+        failures.extend(checksum_failures(archive, checksum))
 
     return {
         "status": "PASS" if not failures else "FAIL",
@@ -239,11 +318,16 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("archive", type=Path)
     parser.add_argument("--require-wheelhouse", action="store_true")
+    parser.add_argument("--checksum", type=Path)
     parser.add_argument("--runtime-check", action="store_true")
     parser.add_argument("--report", type=Path)
     args = parser.parse_args(argv)
 
-    structural = validate_archive(args.archive, require_wheelhouse=args.require_wheelhouse)
+    structural = validate_archive(
+        args.archive,
+        require_wheelhouse=args.require_wheelhouse,
+        checksum=args.checksum,
+    )
     runtime = {"status": "SKIPPED", "failures": []}
     if structural["status"] == "PASS" and args.runtime_check:
         runtime = runtime_check(args.archive, require_wheelhouse=args.require_wheelhouse)

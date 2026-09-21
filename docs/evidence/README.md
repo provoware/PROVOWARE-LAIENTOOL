@@ -44,3 +44,5 @@ Dateiname: `EV-YYYYMMDD-NNN-kurzname.md`
 - `EV-20260922-011-i33-wheelhouse-integrity.md` – I33 Exact-Set-/Version-/Plattform-/Manifest-/SHA-256-Nachweis für das Linux-x86_64-Offline-Wheelhouse.
 
 - `EV-20260922-012-i34-plugin-boundary.md` – I34 data-only Plugin-/Capability-Grenze, dynamische Loader gesperrt, read-only `find_spec()` explizit als legitimer Preflight-Fall regressiert.
+
+- `EV-20260922-013-i35-package-provenance.md` – I35 Commit-/Manifest-/Paketwurzel-/ZIP-Name-/Sidecar-/Byte-Bindung für portable Artefakte.
