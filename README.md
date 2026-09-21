@@ -6,7 +6,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 
 **Gesamtstatus:** 🟨 PLANUNG / REPOSITORY-FOUNDATION
 **Schreibende Dateioperationen:** 🔒 GESPERRT
-**Produktkern:** 🟨 read-only B01-Kern vorhanden (`preflight` + Pfadgrenzen); noch keine produktive GUI und keine Schreiboperationen
+**Produktkern:** 🟨 read-only Kern vorhanden (`preflight`, Pfadgrenzen, gemeinsame Registry, Application-Core, CLI-/GUI-Shell); keine Schreiboperationen
 
 | Bereich | Stand | Anzeige |
 |---|---:|---|
@@ -15,6 +15,8 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | Entwicklungsblöcke | B00–B11 definiert | 🟢 12 Blöcke |
 | B00 Visuelle Orientierung | Designsystem definiert | 🟢 `██████████` 100 % |
 | B01 Projektkern/Sicherheitsgrenzen | B01-A Preflight + B01-B Pfadgrenzen implementiert; standardisierter Zweitgeräte-Evidence-Runner vorbereitet, physischer Lauf offen | 🟨 `████████░░` 80 % |
+| I10 GUI-/CLI-Registry | gemeinsame immutable Registry implementiert und geprüft | 🟢 `██████████` 100 % |
+| I11 read-only Shell | gemeinsamer Core + Zahlenmenü + optionale PySide6-Shell implementiert; reale visuelle Accessibility-Evidence offen | 🟨 `████████░░` 80 % |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -59,13 +61,13 @@ Siehe [ADR-0001](docs/adr/ADR-0001-ui-cli-foundation.md), das [UI-Designsystem](
     └── workflows/repo-quality.yml
 ```
 
-Produktcode unter `src/` und zugehörige Tests werden nur blockweise angelegt, wenn Scope und Abnahme definiert sind. Aktuell existieren der read-only B01-Preflight und die Pfad-/Symlink-Grenzen samt Unit-Tests; leere Architektur wird nicht auf Vorrat erzeugt.
+Produktcode unter `src/` und zugehörige Tests werden nur blockweise angelegt, wenn Scope und Abnahme definiert sind. Aktuell existieren B01-Preflight/Pfadgrenzen, die gemeinsame Capability-Registry sowie der read-only I11 Application-/GUI-/CLI-Shell-Kern samt Tests; leere Architektur wird nicht auf Vorrat erzeugt.
 
 ## Entwicklungsdisziplin
 
 Verbindlicher Standard:
 
-`READ → DECIDE → ONE WRITE BATCH → LOCAL TEST → LOCAL EVIDENCE → ONE REMOTE HEAD → TARGETED CI → DIFF → MERGE → POST-MERGE QUALITY`
+`ORGANIZE → PLAN → IMPLEMENT → VERIFY → DOC → EVIDENCE → CI → DIFF → MERGE → POST-MERGE VERIFY → NEXT-PLAN`
 
 Vor jeder Änderung:
 
@@ -100,7 +102,7 @@ Sobald Produktcode entsteht, wird dieser Gate gezielt um echte Unit-/Integration
 
 1. **B00:** Designrichtung, vier Themes, Neon-/Workflow-Semantik und Accessibility-Grundregeln sind dokumentiert.
 2. **B01:** B01-A Preflight und B01-B Pfad-/Symlink-Grenzen sind implementiert; der read-only Zweitgeräte-Evidence-Runner ist vorbereitet, die reale physische Ausführung bleibt offen.
-3. Erst anschließend UX-Shell und weitere Fachblöcke schrittweise freigeben.
+3. **I10/I11:** gemeinsame Registry sowie read-only Application-/CLI-/GUI-Shell sind implementiert; reale visuelle Accessibility-Evidence bleibt OPEN.
 4. **B06 bleibt P0-Gate:** keine produktiven Schreiboperationen vor belegtem Preview-, Journal-, Undo- und Recovery-Vertrag.
 
 ## Quellen der Wahrheit
@@ -115,4 +117,4 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**Den vorbereiteten Zweitgeräte-Evidence-Lauf auf der realen zweiten Maschine ausführen; der Repository-Fortschritt kann parallel erst nach sauberem I09-Freeze mit I10 fortgesetzt werden.**
+**I11 technisch vollständig über CI abnehmen und danach B05/I12 als reines immutable Preview-Modell beginnen; keine schreibenden Dateioperationen öffnen.**

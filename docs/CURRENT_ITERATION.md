@@ -1,83 +1,97 @@
 # PROVOWARE – Current Iteration
 
-## I10 – Gemeinsame Capability-/Use-Case-Registry
+## I11 – Read-only GUI-/CLI-Shell
 
-**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
+**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN / VISUELLE EVIDENCE OPEN
 **Fortschritt:** `█████████░ 90 %`
 
-Der Prozentwert bildet ausschließlich die definierten Checkpoints dieser Iteration ab.
+Der Prozentwert bildet ausschließlich definierte I11-Checkpoints ab.
 
 ## A – FESTER PLAN
 
-**Quelle:** I09-Drei-Schritte-Vorausplanung + GUI-/CLI-Paritätsvertrag.
+**Quelle:** I10-Drei-Schritte-Vorausplanung + B02/B03 + GUI-/CLI-Paritätsvertrag.
 
-**Ziel:** eine einzige unveränderliche Funktionsregistry bereitstellen, aus der spätere GUI- und Konsolenadapter dieselben Use Cases, Verfügbarkeiten und Sicherheitsmetadaten lesen.
+**Ziel:** gemeinsamen read-only Application-/Navigation-Core schaffen und darauf sowohl ein laienfreundliches Zahlenmenü als auch eine optionale PySide6-Grundshell setzen.
 
 **Checkpoints:**
 
-- 🟢 immutable Registry-Modell implementiert
-- 🟢 stabile Funktions-IDs und Laienanzeigename definiert
-- 🟢 GUI-/CLI-Verfügbarkeit zentralisiert
-- 🟢 Sicherheitsklasse, Preview-/Recovery-Pflicht und Status zentralisiert
-- 🟢 Paritätsvalidator blockiert GUI ohne CLI
-- 🟢 keine zukünftigen Produktfunktionen als READY vorgetäuscht
-- 🟢 Unit-Tests für Kernverträge angelegt
+- 🟢 gemeinsamer Application-Core
+- 🟢 Registry um drei reale read-only Use Cases erweitert
+- 🟢 Zahlenmenü ausschließlich aus Registry abgeleitet
+- 🟢 PySide6-Shell ausschließlich als Adapter
+- 🟢 vier dokumentierte Theme-Familien umgesetzt
+- 🟢 Größenwahl 100/125/150/175/200 %
+- 🟢 Starter-Routing für `--menu` und `--gui`
+- 🟢 bestehende B01-Default-Startsemantik erhalten
+- 🟢 technische Paritätstests angelegt
 - 🟢 Repository-/PR-CI-Gates PASS
 - 🟢 finaler Diff ohne Scope-Drift
 - 🔵 Merge / Post-Merge
+- 🟨 reale visuelle Accessibility-Evidence bleibt separat OPEN
 
 ## B – VARIABLE FOLGEAUFGABE
 
-**B = NONE**
+**Quelle letzter Lauf:** I10 war bereits gemergt und Post-Merge-CI grün, während `CURRENT_ITERATION.md` noch „Merge / Post-Merge“ als offen auswies.
 
-Der I09-Lauf erzeugte keinen neuen Repository-Fehler, keine Regression und keinen neuen Sicherheitsbefund. Die physische Zweitgeräte-Evidence bleibt eine bereits bekannte externe OPEN-Aufgabe und wird nicht künstlich als neuer DELTA-Patch geführt.
+**Priorität:** Dokumentationsdrift.
+
+**Maßnahme:** I11 startet vom bestätigten grünen I10-`main`; der alte Status wird damit ersetzt.
+
+**Status:** 🟢 erledigt.
 
 ## Datei-Besitz dieser Iteration
 
 | Datei | Schreibender Besitzer | Prüfer |
 | --- | --- | --- |
-| `src/provoware_laientool/capability_registry.py` | IMPLEMENT | VERIFY read-only |
-| `tests/test_capability_registry.py` | IMPLEMENT | VERIFY read-only |
-| `docs/I10_CAPABILITY_REGISTRY.md` | DOC | VERIFY read-only |
-| `docs/GUI_CLI_PARITY.md` | DOC | VERIFY read-only |
+| `src/provoware_laientool/application_core.py` | IMPLEMENT | VERIFY read-only |
+| `src/provoware_laientool/cli_shell.py` | IMPLEMENT | VERIFY read-only |
+| `src/provoware_laientool/gui_shell.py` | IMPLEMENT | VERIFY read-only |
+| `src/provoware_laientool/ui_themes.py` | IMPLEMENT | VERIFY read-only |
+| `src/provoware_laientool/capability_registry.py` | IMPLEMENT nach Core-Batch | VERIFY read-only |
+| `start.py` | IMPLEMENT nach Adapter-Batch | VERIFY read-only |
+| `tests/test_i11_shell.py` | IMPLEMENT/TEST-SCOPE | VERIFY read-only |
+| `tests/test_capability_registry.py` | TEST-SCOPE nach Vertragsänderung | VERIFY read-only |
+| `docs/I11_READONLY_SHELL.md` | DOC | VERIFY read-only |
 | `docs/CURRENT_ITERATION.md` | ORGANIZE/DOC | VERIFY read-only |
 | `README.md` | DOC | VERIFY read-only |
 | `todo.txt` | DOC | VERIFY read-only |
 | `scripts/repo_quality.py` | PROCESS-IMPLEMENT | VERIFY read-only |
 
+Die Änderungen wurden serialisiert: zuerst Core/Adapter-Dateien, danach Registry/Starter-Vertrag.
+
 ## Nicht-Ziele
 
-- keine GUI;
-- kein Konsolenmenü;
+- keine Datei-Inventarisierung;
 - keine Dateioperation;
-- keine Dateisuche;
-- keine Plugin-Ladung;
-- keine dynamische Registry;
-- keine Änderung der B01-Sicherheitsgrenzen.
+- keine persistente Einstellung;
+- kein Executor;
+- kein Preview-/Recovery-Vorgriff;
+- keine automatische Installation von PySide6;
+- kein behauptetes visuelles Accessibility-PASS ohne reale Evidence.
 
 ## Exit-Gates
 
-1. Registry-Unit-Tests PASS.
+1. I11 Unit-/Paritätstests PASS.
 2. vollständige Test-Suite PASS.
 3. Repository-Contract PASS.
 4. Info-Text-Impact PASS.
-5. Preflight Text/JSON unverändert PASS.
+5. bestehender Preflight Text/JSON PASS.
 6. finaler Diff ohne Scope-Drift.
 7. Post-Merge-CI PASS.
 
 ## Nächste drei vorgeplante Schritte
 
-### 1. 🔵 I11 – minimaler read-only UX-/CLI-Shell-Prototyp
-**Ziel:** PySide6-Shell und laienfreundliches Konsolen-Zahlenmenü lesen dieselbe Registry.
-**Abhängigkeit:** I10 Registry grün.
-**Gate:** Navigation, Tastatur, 100/150/200 %, Parität und keine Nutzdaten-Schreiboperation.
+### 1. 🔵 I12 – B05 Preview-Modell
+**Ziel:** immutable Vorschauvertrag für spätere Dateiaktionen definieren.
+**Abhängigkeit:** gemeinsamer Application-Core aus I11.
+**Gate:** Quelle, Ziel, Wirkung, Umfang, Sicherheitsgrenzen und Rückweg modelliert; kein Executor.
 
-### 2. 🔵 I12 – Preview-Modell vorbereiten
-**Ziel:** B05 als immutable Preview-Modell für spätere Dateiaktionen entwerfen.
-**Abhängigkeit:** gemeinsame Use-Case-Grenzen aus I10.
-**Gate:** Wirkung, Quelle, Zielgrenzen und Rückweg modelliert; kein Executor.
-
-### 3. 🔵 I13 – Recovery-Zustandsvertrag
-**Ziel:** B06 Journal-/Undo-/Crash-Zustände fachlich definieren, bevor Schreibpfade entstehen.
+### 2. 🔵 I13 – B06 Recovery-Zustandsvertrag
+**Ziel:** Journal-/Undo-/Crash-/Recovery-Zustände fachlich definieren.
 **Abhängigkeit:** Preview-Vertrag aus I12.
-**Gate:** Zustandsautomat + Failure-Matrix; Schreiboperationen bleiben gesperrt.
+**Gate:** Zustandsautomat und Failure-Matrix vollständig; produktive Schreibpfade weiter gesperrt.
+
+### 3. 🔵 I14 – reale Shell-/Accessibility-Evidence
+**Ziel:** I11 auf echter PySide6-/Display-Umgebung bei 100/150/200 %, Tastatur, Fokus und Kontrast reproduzierbar prüfen.
+**Abhängigkeit:** stabiler I11-Merge.
+**Gate:** technisches PASS plus dokumentiertes Laien-/Accessibility-Ergebnis; offene Punkte bleiben OPEN.

@@ -27,6 +27,7 @@ REQUIRED = (
     "docs/INFO_TEXT_GOVERNANCE.md",
     "docs/GUI_CLI_PARITY.md",
     "docs/I10_CAPABILITY_REGISTRY.md",
+    "docs/I11_READONLY_SHELL.md",
     "docs/CURRENT_ITERATION.md",
     "scripts/info_text_guard.py",
     "scripts/second_device_evidence.py",
