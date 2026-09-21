@@ -2,7 +2,7 @@
 
 ## Status
 
-**Evidence-Infrastruktur:** vorbereitet  
+**Evidence-Infrastruktur:** vorbereitet
 **Realer Zielsystemnachweis:** 🟨 OPEN
 
 I17 darf erst vollständig grün werden, wenn die sichtbaren/manuellen Gates auf einer echten PySide6-/Desktop-Session geprüft wurden.
