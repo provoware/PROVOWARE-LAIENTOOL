@@ -117,6 +117,10 @@ for workflow in (ROOT / ".github" / "workflows").glob("*.y*ml"):
     text = workflow.read_text(encoding="utf-8")
     if re.search(r"(?m)^permissions:\s*$", text) is None:
         fail(f"Workflow ohne explizite permissions: {workflow.relative_to(ROOT)}")
+    if re.search(r"(?m)^\s{2,}timeout-minutes:\s*[1-9][0-9]*\s*$", text) is None:
+        fail(f"Workflow ohne Job-Timeout: {workflow.relative_to(ROOT)}")
+    if re.search(r"(?mi)^\s*continue-on-error:\s*true\s*$", text):
+        fail(f"Workflow darf Fehler nicht pauschal ignorieren: {workflow.relative_to(ROOT)}")
     for action in re.findall(r"(?m)^\s*uses:\s*([^\s#]+)", text):
         if action.startswith("./"):
             continue
