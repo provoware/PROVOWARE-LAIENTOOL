@@ -88,7 +88,8 @@ def scan_inventory(root: Path) -> InventoryResult:
     while pending:
         directory = pending.pop()
         try:
-            entries = list(os.scandir(directory))
+            with os.scandir(directory) as iterator:
+                entries = list(iterator)
         except OSError as exc:
             issues.append(
                 InventoryIssue(
