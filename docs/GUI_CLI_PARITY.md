@@ -58,7 +58,7 @@ Regeln:
 
 ## 3. Capability Registry
 
-Sobald echte Fachfunktionen entstehen, wird eine zentrale Capability-/Use-Case-Registry verwendet. Jeder Eintrag enthält mindestens:
+Die zentrale Capability-/Use-Case-Registry ist ab I10 unter `src/provoware_laientool/capability_registry.py` vorhanden. Jeder Eintrag enthält mindestens:
 
 - stabile Funktions-ID;
 - Anzeigename;
@@ -70,7 +70,7 @@ Sobald echte Fachfunktionen entstehen, wird eine zentrale Capability-/Use-Case-R
 - benötigte Capability;
 - Status: `READY | OPEN | BLOCKED`.
 
-GUI und Konsole lesen dieselbe Registry. Dadurch kann Paritätsdrift automatisch geprüft werden.
+GUI und Konsole lesen dieselbe Registry. Dadurch kann Paritätsdrift automatisch geprüft werden. Aktuell ist ausschließlich der bereits vorhandene diagnostische Use Case `system.preflight` als READY registriert; zukünftige Produktfunktionen werden nicht vorgetäuscht.
 
 ## 4. Paritätsgate
 
