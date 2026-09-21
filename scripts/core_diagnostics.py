@@ -18,12 +18,14 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from provoware_laientool.application_core import prepare_trash_preview  # noqa: E402
+from provoware_laientool.application_core import (  # noqa: E402
+    prepare_inventory_view,
+    prepare_trash_preview,
+)
 from provoware_laientool.inventory import scan_inventory  # noqa: E402
 from provoware_laientool.inventory_view import (  # noqa: E402
     SORT_SIZE_DESC,
     InventoryViewSpec,
-    build_inventory_view,
 )
 
 
@@ -68,16 +70,20 @@ def run_diagnostic() -> dict[str, object]:
             "external symlink must be reported but not inventoried",
         )
 
-        view = build_inventory_view(
-            inventory,
+        view_preparation = prepare_inventory_view(
+            root,
             InventoryViewSpec(sort=SORT_SIZE_DESC, limit=10),
         )
+        view = view_preparation.view
         record(
             "largest-first",
-            bool(view.items)
+            view_preparation.status == "PASS"
+            and view is not None
+            and bool(view.items)
             and view.items[0].relative_path == "Unter Ordner/ä Bild mit Leerzeichen.png"
             and view.items[0].size_bytes == 10,
-            f"first={view.items[0].relative_path if view.items else 'none'}",
+            f"status={view_preparation.status}; "
+            f"first={view.items[0].relative_path if view and view.items else 'none'}",
         )
 
         preview = prepare_trash_preview(root)
