@@ -14,7 +14,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | Qualitätsanforderungen | 20 definiert | 🟢 dokumentiert |
 | Entwicklungsblöcke | B00–B11 definiert | 🟢 12 Blöcke |
 | B00 Visuelle Orientierung | Designsystem definiert | 🟢 `██████████` 100 % |
-| B01 Projektkern/Sicherheitsgrenzen | offen | 🟨 `░░░░░░░░░░` 0 % |
+| B01 Projektkern/Sicherheitsgrenzen | B01-A Preflight implementiert; B01-B Pfadgrenzen offen | 🟨 `████░░░░░░` 40 % |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -96,7 +96,7 @@ Sobald Produktcode entsteht, wird dieser Gate gezielt um echte Unit-/Integration
 ## Aktuelle Reihenfolge
 
 1. **B00:** Designrichtung, vier Themes, Neon-/Workflow-Semantik und Accessibility-Grundregeln sind dokumentiert.
-2. **B01:** unterstützte Ubuntu/Kubuntu-Versionen und Laufzeitkomponenten inventarisieren; danach minimalen read-only Projektkern/Preflight aufbauen.
+2. **B01:** B01-A read-only Preflight ist implementiert; als nächstes ausschließlich B01-B Pfad-/Symlink-Grenzen spezifizieren und testen.
 3. Erst anschließend UX-Shell und weitere Fachblöcke schrittweise freigeben.
 4. **B06 bleibt P0-Gate:** keine produktiven Schreiboperationen vor belegtem Preview-, Journal-, Undo- und Recovery-Vertrag.
 
@@ -112,4 +112,4 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**B01 als read-only Inventar-/Preflight-Block eröffnen.** Unterstützte Zielsysteme und Laufzeitkomponenten zuerst belegen; noch keine schreibenden Dateioperationen.
+**B01-B als separaten Pfad-/Symlink-Sicherheitsblock umsetzen.** Noch kein Dateiinventar und keine schreibenden Dateioperationen.

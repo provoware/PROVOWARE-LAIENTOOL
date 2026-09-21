@@ -15,7 +15,7 @@ REQUIRED = (
     "PROVOWARE_TODO_INPUT_POOL0.md",
     "todo.txt",
     "docs/adr/ADR-0001-ui-cli-foundation.md",
-    "docs/evidence/README.md",
+    "docs/evidence/README.md",\n    "docs/UI_DESIGN_SYSTEM.md",\n    "docs/theme-tokens.md",\n    "docs/B01_PLATFORM_PREFLIGHT.md",
     ".github/PULL_REQUEST_TEMPLATE.md",
     ".github/CODEOWNERS",
     ".github/workflows/repo-quality.yml",
