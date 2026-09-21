@@ -27,9 +27,9 @@
 
 ## Theme-Familien
 
-**Purple Neon:** Navy/Anthrazit + Lila + elektrisches Blau + Cyan + Grün.  
-**Turquoise Neon:** Petrol + Türkis + Cyanblau + Violett + Amber/Orange.  
-**Graphite Electric:** Graphit + elektrisches Blau + Blaugrau + Neongrün + Amber.  
+**Purple Neon:** Navy/Anthrazit + Lila + elektrisches Blau + Cyan + Grün.
+**Turquoise Neon:** Petrol + Türkis + Cyanblau + Violett + Amber/Orange.
+**Graphite Electric:** Graphit + elektrisches Blau + Blaugrau + Neongrün + Amber.
 **Crimson / Copper:** Burgunder/Schwarzbraun + Rot/Magenta + Kupfer/Orange + Cyan + Cremeweiß.
 
 ## Geometrie

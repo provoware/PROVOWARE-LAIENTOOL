@@ -1,7 +1,7 @@
 # PROVOWARE LAIENTOOL – UI-/Erscheinungsbild Profi-Spezifikation
 
-**Status:** B00 Designsystem definiert  
-**Bezug:** REQ-001, REQ-002, REQ-004, REQ-005, REQ-006, REQ-008; AQ-006, AQ-007, AQ-015, AQ-016, AQ-017, AQ-018  
+**Status:** B00 Designsystem definiert
+**Bezug:** REQ-001, REQ-002, REQ-004, REQ-005, REQ-006, REQ-008; AQ-006, AQ-007, AQ-015, AQ-016, AQ-017, AQ-018
 **Architektur:** ADR-0001
 
 ## 1. Designziel
@@ -34,9 +34,9 @@ Theme-Wechsel dürfen keine Funktion verschieben.
 
 ## 3. Visuelle Hierarchie
 
-**A – aktueller Arbeitsschritt:** stärkste Hervorhebung, Neon-Rahmen, Nummer, Symbol, Text.  
-**B – primäre Aktionen:** große Buttons oder Kacheln.  
-**C – Arbeitsdaten:** Dateiliste, Kategorien, Vorschauen, Metadaten.  
+**A – aktueller Arbeitsschritt:** stärkste Hervorhebung, Neon-Rahmen, Nummer, Symbol, Text.
+**B – primäre Aktionen:** große Buttons oder Kacheln.
+**C – Arbeitsdaten:** Dateiliste, Kategorien, Vorschauen, Metadaten.
 **D – Zusatzinformationen:** Status, Speicherplatz, Hilfe, sekundäre Optionen.
 
 Nicht alle Bereiche dürfen gleichzeitig dieselbe visuelle Priorität erhalten.
@@ -204,7 +204,7 @@ Die Vorschau darf einklappbar werden. Wichtige Aktionen dürfen nicht verschwind
 
 **„Professionelles Werkzeug mit der Verständlichkeit einer guten Einsteiger-App.“**
 
-Erster Eindruck: visuell attraktiv und modern.  
+Erster Eindruck: visuell attraktiv und modern.
 Längerer Einsatz: ruhig, logisch und vorhersehbar.
 
 ## 20. Verbindliche Designformel
