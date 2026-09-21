@@ -2,8 +2,8 @@
 
 ## I20 – Diagnose-/Recovery-Observability
 
-**Status:** 🟨 IMPLEMENTIERT / CI-ABNAHME AUSSTEHEND
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
+**Fortschritt:** `█████████░ 90 %`
 
 ## A – FESTER PLAN
 
@@ -72,6 +72,10 @@ Der Bericht enthält keine Recovery-IDs und schreibt keine Diagnose-Datei. Redac
 8. Info-Text-Impact PASS.
 9. finaler Diff ohne Scope-Drift.
 10. Post-Merge-CI PASS.
+
+**Repository-/PR-CI:** 🟢 PASS
+**Finaler Diff:** 🟢 ohne Scope-Drift
+**Merge/Post-Merge:** 🔵 ausstehend
 
 ## Nächste drei vorgeplante Schritte
 
