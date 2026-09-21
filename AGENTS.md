@@ -82,6 +82,15 @@ Für Tests, Diagnose, Agentenläufe und Reparaturschleifen gilt zusätzlich:
 
 ## 5. Architekturgrenzen
 
+### Verbindlicher Startvertrag
+
+- `start.sh` ist dauerhaft der einzige offizielle Nutzer-Einstiegspunkt.
+- Neue nutzerseitige Startmodi müssen in `start.sh` integriert werden.
+- Runtime-, Venv-, GUI- oder Evidence-Änderungen aktualisieren `start.sh` im selben Change-Batch, falls die Startlogik betroffen ist.
+- Direkte Aufrufe von `python3 start.py` oder `python3 scripts/...` sind interne Entwickler-/Diagnosewege und keine Nutzeranleitung.
+- Repository-Gate und Tests müssen die zentralen `start.sh`-Modi gegen versehentliches Entfernen absichern.
+- `start.sh` bleibt Venv-first, fail-fast und ohne stille Rechteausweitung/Systeminstallation.
+
 - GUI: PySide6/Qt; kein Tkinter im Produktionscode.
 - GUI und CLI verwenden denselben Application-/Domain-Kern.
 - Jede GUI-Fachfunktion benötigt einen gleichwertigen laienfreundlichen Konsolenweg gemäß `docs/GUI_CLI_PARITY.md`; rein visuelle Funktionen müssen als solche begründet sein.
