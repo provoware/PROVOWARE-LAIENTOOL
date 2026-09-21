@@ -37,6 +37,7 @@ REQUIRED = (
     "docs/I18_READONLY_INVENTORY_COMFORT.md",
     "docs/I19_TARGET_SELECTION_DECISION.md",
     "docs/I20_DIAGNOSTIC_OBSERVABILITY.md",
+    "docs/I21_SAME_ROOT_COPY_MOVE_PREVIEW.md",
     "docs/DEBUGGING_STANDARD.md",
     "docs/REGRESSION_MATRIX.md",
     "docs/evidence/EV-20260921-004-i14-accessibility.md",
