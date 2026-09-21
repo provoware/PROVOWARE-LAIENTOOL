@@ -1,79 +1,87 @@
 # PROVOWARE – Current Iteration
 
-## I23 – Same-Root Zielauswahl Adapter-Decision
+## I24 – Diagnose-Export Writer Design
 
 **Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
 **Fortschritt:** `█████████░ 90 %`
 
 ## A – FESTER PLAN
 
-**Ziel:** festlegen, wie I18-Auswahl und I21-Same-Root-Preview später laiengerecht und paritätsgleich in GUI und Zahlenmenü angebunden werden.
+**Ziel:** create-only/no-overwrite, Partial-Write/Crash-Verhalten und gezielten Read-only-Guard-REOPEN für einen späteren Diagnose-Export technisch festlegen, ohne einen Writer zu implementieren.
 
 **Entscheidungen:**
 
-- 🟢 gemeinsamer fachlicher Workflow für beide Adapter
-- 🟢 geplante IDs `files.preview_copy` / `files.preview_move`
-- 🟢 keine irreführenden Execute-Namen
-- 🟢 gemeinsame Inputs: Root, relative Auswahl, Zielordner
-- 🟢 GUI-Auswahl ausschließlich Darstellung/Eingabe auf I18
-- 🟢 CLI nummeriert Dateien statt Dateinamenwissen vorauszusetzen
-- 🟢 Zielordner bleibt Same-Root
-- 🟢 Preview endet immer vor Write
-- 🟢 Status PASS/OPEN/BLOCKED bleibt Core-seitig
-- 🟢 keine Adapter-Sicherheitslogik
-- 🟢 keine READY-Freigabe vor GUI+CLI+Parität+realer Accessibility-Evidence
-- 🔒 keine sichtbare Implementierung in I23
-- 🔒 kein Executor
+- 🟢 genau ein späteres Writer-Modul
+- 🟢 keine Schreiblogik in Diagnostics/Application/Adaptern
+- 🟢 Redaction vollständig vor Writer
+- 🟢 immutable ExportPlan vor Write
+- 🟢 create-only / no-overwrite
+- 🟢 temporäre Partial-Datei im Zielordner
+- 🟢 Größe/Hash vor finalem Commit prüfen
+- 🟢 kein `os.replace()` als overwrite-fähiger Fallback
+- 🟢 parallele Namens-Races fail-closed
+- 🟢 ENOSPC/Permission/Crash als Pflicht-Testfälle
+- 🟢 Guard-REOPEN nur für exakten Writer-Pfad
+- 🟢 alle übrigen Produktmodule bleiben vollständig write-locked
+- 🔒 noch kein Writer
+- 🔒 noch keine Guard-Allowlist
+- 🔒 kein Datei-Export
 
 ## B – VARIABLE FOLGEAUFGABE
 
-**Quelle letzter Lauf:** I22 wurde gemergt und Post-Merge-CI vollständig grün, während `CURRENT_ITERATION.md` Merge/Post-Merge noch offen zeigte.
+**Quelle letzter Lauf:** I23 wurde gemergt und Post-Merge-CI grün, während `CURRENT_ITERATION.md` Merge/Post-Merge noch offen zeigte.
 
-**Maßnahme:** Statusdrift beim Wechsel auf I23 synchronisiert.
+**Maßnahme:** Statusdrift beim Wechsel auf I24 synchronisiert.
 
 **Status:** 🟢 erledigt.
 
-## Accessibility-Sperre
+## Sicherheitsgrenze
 
-Der reale I17-Basislauf ist weiterhin OPEN.
+I24 öffnet keinerlei Schreibpfad.
 
-Daher definiert I23 nur den Adaptervertrag. Sichtbare GUI-Erweiterungen werden nicht implementiert, bis die bestehende Shell real bei 100/150/200 %, Tastatur und Fokus geprüft wurde.
+Der bestehende `scripts/read_only_guard.py` bleibt unverändert und muss weiterhin den gesamten Produktbaum blockieren.
 
 ## Nicht-Ziele
 
+- keine Produktcodeänderung;
+- keine Exportdatei;
+- keine Temp-Datei;
+- keine Guard-Ausnahme;
 - keine Registry-Änderung;
-- keine GUI-Änderung;
-- keine CLI-Änderung;
-- kein neuer READY-Use-Case;
-- kein Executor;
-- keine Dateioperation;
-- keine externe Zielwurzel;
-- keine Persistenz.
+- keine GUI-/CLI-Erweiterung;
+- kein Netzwerk;
+- kein Executor.
 
 ## Exit-Gates
 
-1. GUI-Workflow eindeutig beschrieben.
-2. CLI-Workflow eindeutig beschrieben.
-3. gemeinsame Input-/Statussemantik festgelegt.
-4. READY-Gate an Parität + reale Accessibility gebunden.
-5. Repository-Contract PASS.
-6. Info-Text-Impact PASS.
-7. Read-only-Lock PASS.
-8. vollständige Regression-Suite PASS.
-9. finaler Diff ohne Produktcode.
-10. Post-Merge-CI PASS.
-
-**Repository-/PR-CI:** 🟢 PASS
-**Finaler Diff:** 🟢 nur Decision-/Statusdoku
-**Merge/Post-Merge:** 🔵 ausstehend
+1. Writer-Modulgrenze eindeutig.
+2. Redaction-before-write eingefroren.
+3. create-only/no-overwrite eindeutig.
+4. Partial-/Crash-Strategie definiert.
+5. Race/ENOSPC/Permission-Testmatrix definiert.
+6. gezielter Guard-REOPEN eindeutig.
+7. Repository-Contract PASS.
+8. Info-Text-Impact PASS.
+9. Read-only-Lock PASS.
+10. vollständige Regression-Suite PASS.
+11. finaler Diff ohne Produktcode.
+12. Post-Merge-CI PASS.
 
 ## Nächste drei vorgeplante Schritte
 
-### 1. 🔵 I24 – Diagnose-Export Writer Design
-Create-only/no-overwrite, Partial-Write und gezielte Guard-REOPEN-Architektur technisch planen. Noch kein Writer.
+### 1. 🔵 I17-B – realer GUI-Zielsystemlauf
+Echte Shell 100/150/200 %, Tastatur, Fokus und Screenshots abschließen.
 
-### 2. 🔵 I17-B – realer GUI-Zielsystemlauf
-Basis-Shell real prüfen; danach kann der I23-Adaptervertrag sichtbar implementiert werden.
+### 2. 🔵 I25 – Adapter-Implementierung
+Nur nach grünem I17: I18-Auswahl + I21 Copy/Move-Preview in GUI/Zahlenmenü.
 
-### 3. 🔵 I25 – Adapter-Implementierung
-Nur nach grünem I17: I18-Auswahl + I21 Preview in GUI und Zahlenmenü, weiterhin ohne Executor.
+### 3. 🔵 I26 – Diagnose-Export Preflight Core
+Unabhängig vom Writer später nur immutable ExportPlan/Payload-Validierung als read-only Core vorbereiten; weiterhin kein Write.
+
+
+**Repository-/PR-CI:** 🟢 PASS
+**Read-only-Lock:** 🟢 PASS
+**Full Suite:** 🟢 PASS
+**Core Diagnostic:** 🟢 PASS
+**Diagnostic Snapshot:** 🟢 PASS
+**Merge/Post-Merge:** 🔵 ausstehend
