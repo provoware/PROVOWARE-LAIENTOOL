@@ -2,12 +2,20 @@
 
 from __future__ import annotations
 
-from .application_core import action_requires_root, execute
+from pathlib import Path
+
+from .application_core import (
+    TRANSFER_PREVIEW_IDS,
+    action_requires_root,
+    execute,
+    prepare_inventory_view,
+)
+from .inventory_view import InventoryViewSpec, SORT_NAME_ASC
 from .capability_registry import list_use_cases
 from .ui_themes import THEMES, get_theme, stylesheet
 
 
-def create_main_window():
+def create_main_window(*, evidence_mode: bool = False):
     """Create the real GUI window without entering the Qt event loop."""
     try:
         from PySide6.QtWidgets import (
@@ -15,10 +23,14 @@ def create_main_window():
             QComboBox,
             QFrame,
             QFileDialog,
+            QDialog,
+            QDialogButtonBox,
             QHBoxLayout,
             QLabel,
             QMainWindow,
             QPushButton,
+            QListWidget,
+            QAbstractItemView,
             QTextEdit,
             QVBoxLayout,
             QWidget,
@@ -79,9 +91,20 @@ def create_main_window():
             side_layout.setSpacing(8)
 
             for entry in list_use_cases():
-                if not (entry.gui_available and entry.status == "READY"):
+                is_ready = entry.gui_available and entry.status == "READY"
+                is_i25_evidence = (
+                    evidence_mode
+                    and entry.gui_available
+                    and entry.id in TRANSFER_PREVIEW_IDS
+                )
+                if not (is_ready or is_i25_evidence):
                     continue
-                button = QPushButton(entry.label)
+                label = (
+                    f"{entry.label} · Prüfmodus"
+                    if entry.id in TRANSFER_PREVIEW_IDS and entry.status != "READY"
+                    else entry.label
+                )
+                button = QPushButton(label)
                 button.setObjectName(f"action-{entry.id}")
                 button.setAccessibleName(entry.label)
                 button.clicked.connect(
@@ -161,7 +184,80 @@ def create_main_window():
         def show_action_for_root(self, use_case_id: str, root: str | None) -> None:
             self._render_result(use_case_id, root)
 
+        def show_transfer_action(self, use_case_id: str) -> None:
+            root = QFileDialog.getExistingDirectory(
+                self,
+                "1/3 Wurzel für Transfer-Vorschau auswählen",
+            )
+            if not root:
+                self._render_result(use_case_id, None)
+                return
+
+            preparation = prepare_inventory_view(
+                Path(root),
+                InventoryViewSpec(sort=SORT_NAME_ASC, limit=100),
+            )
+            if preparation.status != "PASS" or preparation.view is None:
+                self.section_title.setText(f"Transfer-Vorschau · {preparation.status}")
+                self.output.setPlainText(
+                    "Der gewählte Ordner konnte nicht vollständig und sicher vorbereitet werden.\n\n"
+                    "🔒 Es wurden keine Dateien verändert."
+                )
+                return
+
+            dialog = QDialog(self)
+            dialog.setWindowTitle("2/3 Dateien auswählen")
+            dialog_layout = QVBoxLayout(dialog)
+            hint = QLabel(
+                "Wähle eine oder mehrere Dateien. Strg/Shift erlaubt Mehrfachauswahl."
+            )
+            hint.setWordWrap(True)
+            dialog_layout.addWidget(hint)
+
+            file_list = QListWidget()
+            file_list.setAccessibleName("Dateien für Transfer-Vorschau")
+            file_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
+            for item in preparation.view.items:
+                file_list.addItem(f"{item.relative_path}  ·  {item.size_bytes} Byte")
+            dialog_layout.addWidget(file_list)
+
+            buttons = QDialogButtonBox(
+                QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+            )
+            buttons.accepted.connect(dialog.accept)
+            buttons.rejected.connect(dialog.reject)
+            dialog_layout.addWidget(buttons)
+
+            if dialog.exec() != QDialog.Accepted:
+                self.section_title.setText("Transfer-Vorschau · OPEN")
+                self.output.setPlainText(
+                    "Auswahl abgebrochen.\n\n🔒 Es wurden keine Dateien verändert."
+                )
+                return
+
+            selected_rows = sorted(index.row() for index in file_list.selectedIndexes())
+            selected = tuple(
+                preparation.view.items[row].relative_path for row in selected_rows
+            )
+
+            target = QFileDialog.getExistingDirectory(
+                self,
+                "3/3 Zielordner innerhalb derselben Wurzel auswählen",
+                root,
+            )
+            result = execute(
+                use_case_id,
+                root=root,
+                selected_relative_paths=selected,
+                target_dir=target,
+            )
+            self.section_title.setText(f"{result.title} · {result.status}")
+            self.output.setPlainText(result.body)
+
         def show_action(self, use_case_id: str) -> None:
+            if use_case_id in TRANSFER_PREVIEW_IDS:
+                self.show_transfer_action(use_case_id)
+                return
             root = None
             if action_requires_root(use_case_id):
                 root = QFileDialog.getExistingDirectory(

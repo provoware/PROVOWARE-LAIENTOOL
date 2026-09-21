@@ -1,61 +1,63 @@
 # PROVOWARE – Current Iteration
 
-## I25 – Adapter-Implementierung nach grünem I17-Freeze
+## I25 – Transfer-Preview Adapter
 
-**Status:** 🔵 FREIGEGEBEN FÜR PLANUNG
-**Fortschritt:** `░░░░░░░░░░ 0 %`
-
-## Abgeschlossener Vorgänger
-
-### I17-D – Automated Qt Evidence
-
-**Status:** 🟢 FROZEN PASS
-
-- I17-AUTO: PASS;
-- I17-HUMAN: PASS;
-- realer Chromium-Zielsystemlauf: PASS;
-- bestätigter Lauf auf Commit `1678f050083f9e172fd9122f2808b0a7c45dea05`;
-- Legacy-I17-B-Helfer nach erfolgreichem Ersatz entfernt;
-- kosmetischer Wunsch „größere Schrift / mehr Farbe“ als `UX-POLISH-01` ausgelagert, ohne I17 wieder zu öffnen.
+**Status:** 🟨 IMPLEMENTIERT · REAL-EVIDENCE OPEN
+**Fortschritt:** `████████░░ 80 %`
 
 ## A – FESTER PLAN
 
-**Ziel:** Den eingefrorenen I23-Adaptervertrag als kleinsten sichtbaren Funktionsblock umsetzen.
+I23/I18/I21 sind als gemeinsamer read-only Workflow umgesetzt:
 
-Erlaubter Scope:
+- `files.preview_copy` und `files.preview_move` im gemeinsamen Application-Core;
+- I18-Inventaransicht liefert die auswählbaren Dateien;
+- I21 erzeugt ausschließlich Same-Root Copy-/Move-Preview;
+- CLI besitzt nummerierte Mehrfachauswahl;
+- GUI besitzt Mehrfachauswahl im expliziten I25-Prüfmodus;
+- Start des Prüfmodus ausschließlich über `./start.sh --i25-evidence`;
+- kein Executor, kein produktiver Datei-Write.
 
-- I18-Auswahl fachlich über gemeinsamen Application-Core;
-- I21 Copy-/Move-Preview anbinden;
-- GUI und Zahlenmenü verwenden denselben Core;
-- Same-Root bleibt Pflicht;
-- kein Executor;
-- kein Overwrite;
-- keine externe Zielwurzel;
-- kein produktiver Datei-Write.
+Die beiden Registry-Einträge bleiben absichtlich `OPEN`. I23 erlaubt `READY` erst nach realer Accessibility-/Laien-Evidence des neuen sichtbaren Workflows.
 
-## B – VARIABLE FOLGEAUFGABE
+## B – DELTA AUS DEM RC-LAUF
 
-**Quelle:** Repository-Hygiene nach I17-D.
+Der erste I25-RC belegte einen Prozesskonflikt: `info_text_guard.py` lief vor den Produktgates und stoppte einen bewusst noch nicht finalisierten RC, bevor Full Suite und Safety-Gates ausgeführt wurden.
 
-- `start.sh` bleibt einziger offizieller Nutzer-Einstiegspunkt;
-- Zweitgeräte-Evidence wird ebenfalls über `start.sh` geführt;
-- I17-Legacy-Code ist kein aktiver Rückfallpfad mehr;
-- alte Remote-Branches bleiben eine separate Repository-Verwaltungsaufgabe.
+Korrektur:
 
-## Exit-Gates für I25
+- Produkt-/Safety-Gates laufen im CI zuerst;
+- Info-Text-Impact bleibt hart, läuft aber als finales PR-Gate;
+- fehlende Finalisierungsdoku bleibt damit merge-blockierend;
+- Produktfehler können trotzdem unabhängig von Doku-Finalisierung diagnostiziert werden.
 
-1. Scope/Non-Goals vor Implementierung festschreiben.
-2. Gemeinsamer Application-Pfad.
-3. GUI-/CLI-Parität.
-4. targeted Tests zuerst.
-5. Read-only-Lock PASS.
-6. vollständige Suite PASS.
-7. Pflichtcheck `repository-contract` PASS.
-8. Post-Merge-CI PASS.
-9. kein Executor-/Writer-REOPEN.
+Zusätzlich wurde der spätere READY-Pfad des Zahlenmenüs explizit auf `run_transfer_preview_flow()` verdrahtet.
+
+## Weiterhin gesperrt
+
+- Executor;
+- produktives Kopieren/Verschieben;
+- Overwrite;
+- Auto-Rename;
+- externe Zielwurzel;
+- Cross-Device Move;
+- Persistenz;
+- Rechteausweitung;
+- READY ohne reale Folge-Evidence.
+
+## Exit-Gates
+
+1. Repository-Contract PASS.
+2. Read-only-Lock PASS.
+3. vollständige Unit-/Integrationssuite PASS.
+4. Core Diagnostic PASS.
+5. Diagnose/Preflight PASS.
+6. Info-Text-Impact PASS.
+7. finaler Diff ohne Scope-Drift.
+8. reale I25-Evidence: 100/150/200 %, Tastatur/Fokus, Mehrfachauswahl, Zielwahl, Preview und Laienverständlichkeit.
+9. erst danach Registry `READY`.
 
 ## Nächste drei Schritte
 
-1. 🔵 I25-Scope aus I23/I18/I21 exakt auflösen.
-2. 🔵 kleinsten GUI-/CLI-Adapterblock implementieren, weiterhin nur Preview.
-3. 🔵 `UX-POLISH-01` später separat: Chromium-Evidence-Schrift etwa 10–15 % größer und etwas mehr Akzentfarbe, ohne funktionales Gate.
+1. 🟨 finalen automatischen PR-Gate des I25-Branches abschließen.
+2. 🔵 realen I25-Prüfmodus über `./start.sh --i25-evidence` ausführen und Ergebnis dokumentieren.
+3. 🔒 nur bei realem PASS die beiden Transfer-Preview-Registry-Einträge in einem kleinen Freeze-Batch auf `READY` setzen; Executor bleibt gesperrt.
