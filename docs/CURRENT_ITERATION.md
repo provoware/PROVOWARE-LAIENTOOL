@@ -1,86 +1,69 @@
 # PROVOWARE – Current Iteration
 
-## M01 – Info-Text-Konsistenz und Wartbarkeit
+## I17-B – Geführter realer GUI-/Accessibility-Zielsystemlauf
 
-**Status:** 🟢 REPOSITORY-BLOCK UMGESETZT
-**Fortschritt:** `██████████ 100 %`
+**Status:** 🟨 EVIDENCE-ASSISTENT IMPLEMENTIERT – REALER ZIELSYSTEMLAUF OFFEN
+**Fortschritt:** `██████░░░░ 60 %`
 
-**Basis vor M01:** `fcbdd9048eb082cd86a73cff74bacc43dbf6d299`
-
-Der I26-Merge war auf `main` bereits abgeschlossen. Der anschließende `repo-quality`-Push-Lauf **#83** (ID `35633942745`) war vollständig grün. M01 verändert keine Produktlogik.
+**Basis:** `b1a7bbd47c74316fc391177bea112fc836e73caf`
 
 ## A – FESTER PLAN
 
-**Ziel:** Informationsdateien und Repository-Wartbarkeit vollständig prüfen, nachgewiesene Drift beheben und künftige Inkonsistenzen früher automatisch stoppen.
+**Ziel:** Den bereits definierten realen I17-Zielsystemlauf so führen, dass ein Laie ihn mit einem Befehl reproduzierbar durchführen kann, ohne dass CI oder das Skript einen visuellen PASS vortäuscht.
 
-### Analysebefunde
+### Umgesetzter Block
 
-- 🟢 14 Produktmodule unter `src/`, zusammen ca. 2.355 Python-Zeilen geprüft.
-- 🟢 17 Testdateien mit 143 Testmethoden; keine TODO/FIXME-Häufung festgestellt.
-- 🟢 8 Wartungs-/Evidence-Skripte vorhanden.
-- 🟡 `application_core.py` liegt bei rund 500 Zeilen: Beobachtungsschwelle, aber aktuell kein begründeter Zwangsrefactor.
-- 🔴 README und TODO enthielten mehrere bereits überholte „CI ausstehend/über CI einfrieren“-Angaben.
-- 🔴 diese Datei meldete I26 Merge/Post-Merge noch als ausstehend, obwohl `main` und Lauf #83 grün waren.
-- 🔴 `docs/REGRESSION_MATRIX.md` enthielt einen wörtlichen Backslash-n-Tabellenumbruch.
-- 🟡 `scripts/repo_quality.py` führte fast jede Iterationsdatei einzeln als Pflichtdatei; das erzeugte unnötige Pflegekopplung.
-- 🟡 ein zentraler navigierbarer Dokumentationsindex fehlte.
-
-### Umgesetzter Wartungsblock
-
-- 🟢 `docs/README.md` als Dokumentationsindex.
-- 🟢 `docs/MAINTENANCE.md` als dauerhafter Wartungsvertrag.
-- 🟢 README/TODO auf dauerhafte Capability-/OPEN-/LOCKED-Aussagen statt flüchtiger CI-Kopien umgestellt.
-- 🟢 Regressionsmatrix repariert.
-- 🟢 Repository-Gate modularisiert.
-- 🟢 alle Python-Dateien in `src/`, `scripts/`, `tests/` und `start.py` werden syntaktisch geprüft.
-- 🟢 relative Markdown-Links werden auf existierende Ziele geprüft.
-- 🟢 alle `docs/I??_*.md` müssen im Dokumentationsindex auffindbar sein.
-- 🟢 versehentliche wörtliche Backslash-n-Tabellenumbrüche werden blockiert.
-- 🟢 flüchtige CI-Statusformulierungen in README/TODO werden blockiert.
+- geführter `--guided`-Modus;
+- echte Runtime-/Display-Vorprüfung;
+- synthetische Preview-Fixtures für leer sowie Unicode/Leerzeichen;
+- GUI-Start ohne Produkt-Schreibpfad;
+- manuelle PASS/FAIL/OPEN/ABORT-Gates;
+- maximal drei ungültige Eingabeversuche je Gate;
+- fünf feste Screenshot-Namen;
+- lokale TXT-/JSON-Evidence ohne Überschreiben alter Läufe;
+- Abschlussstatus nur bei vollständiger Evidence PASS;
+- automatische Desktop-Öffnung von Evidence-Ordner/Auswertung soweit verfügbar.
 
 ## B – VARIABLE FOLGEAUFGABE
 
-**Quelle:** Vollanalyse der Informationsarchitektur.
+**Quelle:** unmittelbar vorheriger Wartungsblock zu Anti-Endlosschleifen.
 
-**Befund:** Der bisherige Prozess spiegelte PR-/Merge-/CI-Livezustände in dauerhaften Dateien. Dadurch entstand unmittelbar nach erfolgreichen Merges wieder Statusdrift.
+**Befund:** Interaktive Evidence darf selbst keine unendliche Eingabeschleife erzeugen.
 
-**Maßnahme:** GitHub bleibt Quelle für aktuellen PR-/Workflow-/Merge-Zustand. Dauerhafte Repo-Texte speichern Capability-, OPEN-/LOCKED- und historische Evidence-Zustände.
-
-**Status:** 🟢 in Governance und Wartungsvertrag überführt.
+**Maßnahme:** Jede Gate-Eingabe ist auf drei ungültige Versuche begrenzt. Danach bleibt das Gate `OPEN`. Es gibt keinen automatischen Retry des GUI-Laufs.
 
 ## Sicherheitsgrenze
 
-M01 verändert ausschließlich Dokumentation, Repository-Prüfcode und PR-Prozessmetadaten.
-
 Kein:
 
-- Produktverhalten;
-- Datei-Executor;
-- Persistenz;
-- Guard-REOPEN;
-- Netzwerkpfad im Produkt;
-- Dependency-Zuwachs.
+- Produkt-Executor;
+- Copy/Move/Trash;
+- Installation;
+- Netzwerkpfad;
+- Rechteausweitung;
+- automatisches visuelles PASS;
+- Überschreiben eines früheren Evidence-Laufs.
+
+Der Helper erzeugt nur einen neuen lokalen Evidence-Ordner und synthetische Testdateien.
 
 ## Exit-Gates
 
-1. Repository-Contract PASS.
-2. Info-Text-Impact PASS.
+1. targeted Tests für I17-Evidence PASS.
+2. Repository-Contract PASS.
 3. Read-only-Lock PASS.
-4. vollständige Regression-Suite PASS.
-5. Core Diagnostic PASS.
-6. Diagnostic Snapshot PASS.
-7. Starter-Preflight Klartext/JSON PASS.
-8. finaler Diff ohne Produktlogik.
-9. PR-CI PASS.
-10. Post-Merge-Main-CI PASS.
+4. vollständige Suite PASS.
+5. PR-Pflichtcheck `repository-contract` PASS.
+6. realer Zielsystemlauf auf echter PySide6-/Desktop-Session.
+7. fünf Screenshots vorhanden und manuell auf Datenschutz geprüft.
+8. erst danach I17-B vollständig PASS.
 
-## Nächste drei vorgeplante Produktschritte
+## Nächste drei vorgeplante Schritte
 
-### 1. 🔵 I17-B – realer GUI-Zielsystemlauf
-Weiterhin einziges sichtbares UI-/Accessibility-Gate.
+### 1. 🔵 Realer I17-B-Zielsystemlauf
+Ein Befehl: `python3 scripts/i17_target_evidence.py --guided`.
 
-### 2. 🔵 I25 – Adapter-Implementierung
+### 2. 🔒 I25 – Adapter-Implementierung
 Erst nach grünem realem I17-Befund.
 
 ### 3. 🔵 I27 – Writer-spezifischer Guard Decision/Prototype
-Zuerst exakte Guard-Architektur und No-clobber-Plattformbeweis; noch kein produktiver Export-Adapter.
+Unabhängig planbar, aber kein produktiver Writer ohne eigenen Guard-/No-clobber-Nachweis.
