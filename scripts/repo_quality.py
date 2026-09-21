@@ -25,6 +25,7 @@ REQUIRED = (
     "docs/LAIEN_QUALITY_STANDARD.md",
     "docs/INFO_TEXT_GOVERNANCE.md",
     "docs/GUI_CLI_PARITY.md",
+    "docs/CURRENT_ITERATION.md",
     "scripts/info_text_guard.py",
     "docs/evidence/EV-20260921-002-b01a-preflight.md",
     ".github/PULL_REQUEST_TEMPLATE.md",
