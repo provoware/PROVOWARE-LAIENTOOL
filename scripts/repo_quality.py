@@ -89,7 +89,10 @@ if starter_sh.is_file():
         "--i17-auto",
         "--i17-guided",
         "--i17-offscreen",
+        "--diagnostics",
+        "--diagnostics-json",
         "scripts/i17_auto_evidence.py",
+        "scripts/diagnostic_snapshot.py",
     ):
         if marker not in starter_text:
             fail(f"start.sh Venv-Vertrag fehlt: {marker}")
