@@ -9,7 +9,6 @@ from .ui_themes import THEMES, get_theme, stylesheet
 
 def run_gui() -> int:
     try:
-        from PySide6.QtCore import Qt
         from PySide6.QtWidgets import (
             QApplication,
             QComboBox,
@@ -123,7 +122,6 @@ def run_gui() -> int:
 
     app = QApplication.instance() or QApplication([])
     app.setApplicationName("PROVOWARE LAIENTOOL")
-    app.setAttribute(Qt.ApplicationAttribute.AA_UseHighDpiPixmaps, True)
     window = MainWindow()
     window.show()
     return app.exec()
