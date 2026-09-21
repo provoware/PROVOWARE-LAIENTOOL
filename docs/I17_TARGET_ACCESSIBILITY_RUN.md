@@ -12,8 +12,10 @@ I17 darf erst vollständig grün werden, wenn die sichtbaren/manuellen Gates auf
 Auf dem echten Kubuntu-/PySide6-Zielsystem im Repository:
 
 ```bash
-python3 scripts/i17_target_evidence.py --guided
+./start.sh --i17
 ```
+
+Der Starter validiert davor automatisch die projektlokale `.venv`, die Python-Version und PySide6/Qt. Fehlt `.venv` oder PySide6 6.11.2, fragt er ausdrücklich nach, bevor er lokal einrichtet bzw. aus PyPI installiert. System-Python bleibt unverändert.
 
 Der geführte Assistent:
 
@@ -30,7 +32,7 @@ Der geführte Assistent:
 11. erzeugt `I17_AUSWERTUNG.txt` und `I17_EVIDENCE.json`;
 12. öffnet die Textauswertung im Standardprogramm, soweit verfügbar.
 
-Es wird nichts installiert. Der Produktkern bleibt read-only. Der Assistent schreibt nur in seinen neu angelegten Evidence-Ordner und überschreibt keine vorhandenen Evidence-Läufe.
+Der I17-Assistent selbst installiert nichts. Die vorgelagerte `start.sh`-Einrichtung darf nach ausdrücklicher Bestätigung ausschließlich `.venv` und deren Python-Pakete anlegen/aktualisieren; kein `sudo`, kein `apt`, keine Systeminstallation. Der Produktkern bleibt read-only. Der Assistent schreibt nur in seinen neu angelegten Evidence-Ordner und überschreibt keine vorhandenen Evidence-Läufe.
 
 ### Rückgabecodes
 

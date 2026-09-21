@@ -1,69 +1,75 @@
 # PROVOWARE – Current Iteration
 
-## I17-B – Geführter realer GUI-/Accessibility-Zielsystemlauf
+## I17-C – Venv-first Runtime-Härtung für I17-B
 
-**Status:** 🟨 EVIDENCE-ASSISTENT IMPLEMENTIERT – REALER ZIELSYSTEMLAUF OFFEN
-**Fortschritt:** `██████░░░░ 60 %`
+**Status:** 🟨 INFRASTRUKTUR-PATCH IMPLEMENTIERT – REALER ZIELSYSTEMLAUF DANACH OFFEN
+**Fortschritt:** `███████░░░ 70 %`
 
-**Basis:** `b1a7bbd47c74316fc391177bea112fc836e73caf`
+**Basis:** `7687147510090642369942f82c0e7b713f081f7c`
 
 ## A – FESTER PLAN
 
-**Ziel:** Den bereits definierten realen I17-Zielsystemlauf so führen, dass ein Laie ihn mit einem Befehl reproduzierbar durchführen kann, ohne dass CI oder das Skript einen visuellen PASS vortäuscht.
+**Ziel:** Den realen I17-B-Zielsystemlauf auf eine projektlokale, validierte Python-`.venv` umstellen, damit System-Python und GUI-Abhängigkeiten nicht auseinanderlaufen.
 
-### Umgesetzter Block
+### Befund aus echtem Zielsystemlauf
 
-- geführter `--guided`-Modus;
-- echte Runtime-/Display-Vorprüfung;
-- synthetische Preview-Fixtures für leer sowie Unicode/Leerzeichen;
-- GUI-Start ohne Produkt-Schreibpfad;
-- manuelle PASS/FAIL/OPEN/ABORT-Gates;
-- maximal drei ungültige Eingabeversuche je Gate;
-- fünf feste Screenshot-Namen;
-- lokale TXT-/JSON-Evidence ohne Überschreiben alter Läufe;
-- Abschlussstatus nur bei vollständiger Evidence PASS;
-- automatische Desktop-Öffnung von Evidence-Ordner/Auswertung soweit verfügbar.
+- System-Python: 3.14.4;
+- Display-Session: Wayland vorhanden;
+- automatisierter Accessibility-Vertrag: PASS;
+- PySide6 im System-Python: nicht vorhanden;
+- I17 blieb deshalb korrekt OPEN.
+
+### Umgesetzter Infrastrukturblock
+
+- neuer Standardstarter `start.sh`;
+- `.venv` als verbindliche Projekt-Runtime;
+- Python-Vertrag `>=3.10,<3.15`;
+- PySide6 fest auf `6.11.2` gepinnt;
+- `--check`, `--setup`, `--gui`, `--menu`, `--preflight`, `--json`, `--i17`;
+- keine Systeminstallation und keine Rechteausweitung;
+- explizite Zustimmung vor Venv-Erzeugung und PyPI-Installation;
+- `--yes` nur als ausdrücklicher nicht-interaktiver Opt-in;
+- Vor-/Nachvalidierung von Venv, PySide6 und QtWidgets;
+- atomare Erst-Erzeugung über `.venv.tmp`;
+- Regressionstests für Dependency-Pin, Venv-first und Privilegschutz.
 
 ## B – VARIABLE FOLGEAUFGABE
 
-**Quelle:** unmittelbar vorheriger Wartungsblock zu Anti-Endlosschleifen.
+**Quelle:** realer I17-B-Lauf.
 
-**Befund:** Interaktive Evidence darf selbst keine unendliche Eingabeschleife erzeugen.
+**Befund:** `.gitignore` enthielt bereits `.venv/`, aber das Repository besaß keinen Bootstrap, der diese Umgebung tatsächlich erzeugt und für GUI/I17 erzwingt.
 
-**Maßnahme:** Jede Gate-Eingabe ist auf drei ungültige Versuche begrenzt. Danach bleibt das Gate `OPEN`. Es gibt keinen automatischen Retry des GUI-Laufs.
+**Maßnahme:** Venv-first wird als dauerhafter Runtime-Vertrag formalisiert; direkte GUI-/I17-Aufrufe über zufälliges System-Python sind nicht mehr der empfohlene Nutzerweg.
 
 ## Sicherheitsgrenze
 
 Kein:
 
+- `sudo`/`apt`;
+- Schreiben in System-Python;
+- automatischer Download ohne explizite Zustimmung;
 - Produkt-Executor;
 - Copy/Move/Trash;
-- Installation;
-- Netzwerkpfad;
-- Rechteausweitung;
-- automatisches visuelles PASS;
-- Überschreiben eines früheren Evidence-Laufs.
-
-Der Helper erzeugt nur einen neuen lokalen Evidence-Ordner und synthetische Testdateien.
+- Rechteausweitung.
 
 ## Exit-Gates
 
-1. targeted Tests für I17-Evidence PASS.
+1. Venv-Bootstrap-Vertragstests PASS.
 2. Repository-Contract PASS.
 3. Read-only-Lock PASS.
 4. vollständige Suite PASS.
 5. PR-Pflichtcheck `repository-contract` PASS.
-6. realer Zielsystemlauf auf echter PySide6-/Desktop-Session.
-7. fünf Screenshots vorhanden und manuell auf Datenschutz geprüft.
-8. erst danach I17-B vollständig PASS.
+6. Post-Merge-Main-CI PASS.
+7. danach echter Lauf `./start.sh --i17`.
+8. I17-B erst nach vollständiger visueller Evidence PASS.
 
 ## Nächste drei vorgeplante Schritte
 
-### 1. 🔵 Realer I17-B-Zielsystemlauf
-Ein Befehl: `python3 scripts/i17_target_evidence.py --guided`.
+### 1. 🔵 Realer I17-B-Lauf über Venv-Starter
+`./start.sh --i17`
 
 ### 2. 🔒 I25 – Adapter-Implementierung
 Erst nach grünem realem I17-Befund.
 
 ### 3. 🔵 I27 – Writer-spezifischer Guard Decision/Prototype
-Unabhängig planbar, aber kein produktiver Writer ohne eigenen Guard-/No-clobber-Nachweis.
+Weiterhin ohne produktiven Writer bis zum eigenen Guard-/No-clobber-Nachweis.
