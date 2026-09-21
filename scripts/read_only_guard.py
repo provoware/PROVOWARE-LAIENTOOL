@@ -49,31 +49,48 @@ FORBIDDEN_QUALIFIED = {
 WRITE_MODE_MARKERS = {"w", "a", "x", "+"}
 
 
-def _qualified_name(node: ast.AST) -> str | None:
-    if isinstance(node, ast.Name):
-        return node.id
-    if isinstance(node, ast.Attribute):
-        parent = _qualified_name(node.value)
-        if parent:
-            return f"{parent}.{node.attr}"
-    return None
-
-
 def _literal_string(node: ast.AST | None) -> str | None:
     if isinstance(node, ast.Constant) and isinstance(node.value, str):
         return node.value
     return None
 
 
+def _import_aliases(tree: ast.AST) -> dict[str, str]:
+    aliases: dict[str, str] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                local = alias.asname or alias.name.split(".", 1)[0]
+                aliases[local] = alias.name
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            for alias in node.names:
+                if alias.name == "*":
+                    continue
+                local = alias.asname or alias.name
+                aliases[local] = f"{node.module}.{alias.name}"
+    return aliases
+
+
+def _qualified_name(node: ast.AST, aliases: dict[str, str]) -> str | None:
+    if isinstance(node, ast.Name):
+        return aliases.get(node.id, node.id)
+    if isinstance(node, ast.Attribute):
+        parent = _qualified_name(node.value, aliases)
+        if parent:
+            return f"{parent}.{node.attr}"
+    return None
+
+
 def analyze_source(source: str, *, filename: str = "<memory>") -> tuple[str, ...]:
     tree = ast.parse(source, filename=filename)
+    aliases = _import_aliases(tree)
     violations: list[str] = []
 
     for node in ast.walk(tree):
         if not isinstance(node, ast.Call):
             continue
 
-        name = _qualified_name(node.func)
+        name = _qualified_name(node.func, aliases)
         line = getattr(node, "lineno", "?")
 
         if name in FORBIDDEN_QUALIFIED:
@@ -86,7 +103,7 @@ def analyze_source(source: str, *, filename: str = "<memory>") -> tuple[str, ...
             )
             continue
 
-        if name == "open" or (
+        if name in {"open", "builtins.open"} or (
             isinstance(node.func, ast.Attribute) and node.func.attr == "open"
         ):
             mode_node: ast.AST | None = None
@@ -95,8 +112,16 @@ def analyze_source(source: str, *, filename: str = "<memory>") -> tuple[str, ...
             for keyword in node.keywords:
                 if keyword.arg == "mode":
                     mode_node = keyword.value
+
+            if mode_node is None:
+                continue
+
             mode = _literal_string(mode_node)
-            if mode is not None and any(marker in mode for marker in WRITE_MODE_MARKERS):
+            if mode is None:
+                violations.append(
+                    f"{filename}:{line}: open()-Modus ist nicht statisch als read-only belegbar"
+                )
+            elif any(marker in mode for marker in WRITE_MODE_MARKERS):
                 violations.append(
                     f"{filename}:{line}: schreibender open()-Modus {mode!r}"
                 )
@@ -126,6 +151,7 @@ def main() -> int:
 
     print("🟢 Read-only-Lock PASS")
     print(" - keine offensichtliche Dateisystem-Schreib-API im Produktionscode")
+    print(" - Import-Aliase und dynamische open()-Modi werden fail-closed geprüft")
     print(" - Executor-/Persistenzpfade bleiben statisch gesperrt")
     return 0
 
