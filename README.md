@@ -78,7 +78,7 @@ Vor jeder Änderung:
 
 Subagenten sind **triggerbasiert**, nicht standardmäßig aktiv. Explorer, Implementierer, Testprüfer, UX/Accessibility-Prüfer und Sicherheitsprüfer werden nur eingesetzt, wenn ihre Arbeit unabhängig, überschneidungsfrei und messbar günstiger ist. Schreibbesitz an einer Datei hat immer nur ein Agent.
 
-Die vollständigen Trigger und Stop-Bedingungen stehen in [AGENTS.md](AGENTS.md).
+Die vollständigen Trigger und Stop-Bedingungen stehen in [AGENTS.md](AGENTS.md). Der Update-Prozess wird zusätzlich durch den [Update-Organisator mit Zwei-Spuren-Modell](docs/UPDATE_ORCHESTRATION.md) geregelt.
 
 ## Automatische Qualitätsprüfung
 
