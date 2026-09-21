@@ -18,6 +18,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I10 GUI-/CLI-Registry | gemeinsame immutable Registry implementiert und geprüft | 🟢 `██████████` 100 % |
 | I11 read-only Shell | gemeinsamer Core + Zahlenmenü + optionale PySide6-Shell implementiert; reale visuelle Accessibility-Evidence offen | 🟨 `████████░░` 80 % |
 | I12 B05 Preview-Modell | immutable Preview-Vertrag mit B01-Pfadgrenzen implementiert; kein Executor | 🟢 `██████████` 100 % Modellstand |
+| I13 B06 Recovery-Vertrag | Zustandsautomat, Journal-/Undo-Vertrag und Crash-Matrix implementiert; keine Persistenz/kein Executor | 🟨 `████████░░` 80 % |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -105,7 +106,7 @@ Sobald Produktcode entsteht, wird dieser Gate gezielt um echte Unit-/Integration
 2. **B01:** B01-A Preflight und B01-B Pfad-/Symlink-Grenzen sind implementiert; der read-only Zweitgeräte-Evidence-Runner ist vorbereitet, die reale physische Ausführung bleibt offen.
 3. **I10/I11:** gemeinsame Registry sowie read-only Application-/CLI-/GUI-Shell sind implementiert; reale visuelle Accessibility-Evidence bleibt OPEN.
 4. **I12/B05:** immutable Preview-Vertrag ist implementiert; kein Executor und keine Schreibfreigabe.
-5. **B06 bleibt P0-Gate:** keine produktiven Schreiboperationen vor belegtem Journal-, Undo- und Recovery-Vertrag.
+5. **I13/B06:** Journal-/Undo-/Recovery-Zustandsvertrag ist implementiert; Persistenz und Executor bleiben weiterhin gesperrt.
 
 ## Quellen der Wahrheit
 
@@ -119,4 +120,4 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I12 technisch über CI einfrieren und danach I13/B06 ausschließlich als Recovery-/Journal-Zustandsvertrag beginnen; produktive Schreibpfade bleiben gesperrt.**
+**I13 vollständig über CI einfrieren; danach entweder reale I11-Accessibility-Evidence oder read-only Inventar beginnen. Produktive Schreibpfade bleiben gesperrt.**
