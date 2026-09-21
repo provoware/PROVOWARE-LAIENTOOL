@@ -2,8 +2,8 @@
 
 ## I22 – Diagnose-Export Decision Gate
 
-**Status:** 🟨 ENTSCHEIDUNG DOKUMENTIERT / CI-ABNAHME AUSSTEHEND
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
+**Fortschritt:** `█████████░ 90 %`
 
 ## A – FESTER PLAN
 
@@ -69,6 +69,10 @@ Ein späterer Export-Writer benötigt einen **gezielten REOPEN**, der nur diesen
 8. Read-only-Lock unverändert PASS.
 9. finaler Diff ohne Scope-Drift.
 10. Post-Merge-CI PASS.
+
+**Repository-/PR-CI:** 🟢 PASS
+**Finaler Diff:** 🟢 ohne Produktcode-/Writer-Scope
+**Merge/Post-Merge:** 🔵 ausstehend
 
 ## Nächste drei vorgeplante Schritte
 
