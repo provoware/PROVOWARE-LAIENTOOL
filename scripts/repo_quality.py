@@ -39,6 +39,7 @@ CORE_REQUIRED = (
     "scripts/core_diagnostics.py",
     "scripts/read_only_guard.py",
     "scripts/diagnostic_writer_guard.py",
+    "src/provoware_laientool/diagnostic_export.py",
     "scripts/diagnostic_snapshot.py",
     "scripts/second_device_evidence.py",
     ".github/PULL_REQUEST_TEMPLATE.md",

@@ -23,6 +23,23 @@ class DiagnosticWriterGuardTests(unittest.TestCase):
     def test_exact_no_clobber_sequence_is_allowed(self) -> None:
         self.assertEqual(analyze_writer_source(safe_writer()), ())
 
+    def test_read_only_directory_open_is_allowed(self) -> None:
+        source = (
+            "import os\n"
+            "target_dir='.'\n"
+            "directory_fd=os.open(target_dir, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC | os.O_NOFOLLOW)\n"
+            "os.fsync(directory_fd)\n"
+            "os.close(directory_fd)\n"
+        )
+        self.assertEqual(analyze_writer_source(source), ())
+
+    def test_directory_flag_is_not_allowed_for_create_open(self) -> None:
+        source = (
+            "import os\npartial_path='p'\n"
+            "os.open(partial_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY | os.O_DIRECTORY)"
+        )
+        self.assertTrue(any("unerlaubte Create-Flags" in item for item in analyze_writer_source(source)))
+
     def test_write_without_exclusive_create_is_blocked(self) -> None:
         violations = analyze_writer_source(
             "import os\npartial_path='p'\nos.open(partial_path, os.O_CREAT | os.O_WRONLY)"
