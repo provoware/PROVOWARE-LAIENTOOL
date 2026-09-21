@@ -14,7 +14,10 @@ import sys
 import tempfile
 import zipfile
 
-from verify_wheelhouse_lock import verify_wheelhouse
+try:
+    from .verify_wheelhouse_lock import verify_wheelhouse
+except ImportError:
+    from verify_wheelhouse_lock import verify_wheelhouse
 
 REQUIRED = {
     "README.md",
