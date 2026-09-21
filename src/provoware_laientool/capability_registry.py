@@ -63,6 +63,18 @@ REGISTRY: tuple[UseCaseCapability, ...] = (
         status=STATUS_READY,
     ),
     UseCaseCapability(
+        id="files.preview_trash",
+        label="Dateivorschau",
+        gui_available=True,
+        cli_available=True,
+        diagnostic_cli_only=False,
+        safety_class=SAFETY_READ_ONLY,
+        preview_required=False,
+        recovery_required=False,
+        required_capability=None,
+        status=STATUS_READY,
+    ),
+    UseCaseCapability(
         id="app.help",
         label="Hilfe",
         gui_available=True,
