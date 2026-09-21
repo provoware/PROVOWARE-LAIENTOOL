@@ -1,81 +1,36 @@
 # PROVOWARE – Current Iteration
 
-## I27 – Diagnostic Writer Guard / Branch-Hygiene
+## I28 – Diagnose-Export Writer Testlab
 
-**Status:** 🟢 AUTOMATISCH PASS · MERGE-READY
-**Fortschritt:** `██████████ 100 %`
+**Status:** 🟨 RC · AUTOMATISCHE GATES LAUFEN
+**Fortschritt:** `████████░░ 80 %`
 
-## A – FESTER PLAN
+I24 → I26 → I27 ist erfüllt. I28 implementiert ausschließlich den dedizierten Writer unter dem gehärteten Spezialguard. GUI, CLI und Registry bleiben unangetastet.
 
-I24 und I26 verlangen vor jedem echten Diagnose-Writer:
+## Automatische Gates
 
-- exakten REOPEN nur für `src/provoware_laientool/diagnostic_export.py`;
-- create-only / no-clobber;
-- keinen Overwrite-Fallback;
-- Writer-spezifischen statischen Guard;
-- Race-/Crash-/Failure-Evidence erst im späteren Writer-Block.
-
-I27 implementiert ausschließlich diesen Guard. Noch existiert kein `diagnostic_export.py`.
-
-## B – DELTA AUS DER ALTBRANCH-ANALYSE
-
-Vier Remote-Altbranches wurden gegen aktuellen `main` klassifiziert:
-
-- `design/i24-diagnostic-export-writer`: vollständig superseded;
-- `application/i21-transfer-preview`: alte Implementierung superseded durch heutigen I21/`transfer_application.py`;
-- `domain/i12-preview-contract`: Architektur superseded, aber MOVE-Reversibilitätsinvariante gerettet;
-- `security/i27-diagnostic-writer-guard`: Konzept relevant, alter Stand jedoch nicht ausreichend gehärtet; auf frischem Main transplantiert.
-
-Details: `docs/evidence/EV-20260921-006-branch-hygiene-i27.md`.
-
-## I27 Guard-Vertrag
-
-Außerhalb des exakten Diagnose-Writers bleiben sämtliche Low-Level-Write-APIs blockiert.
-
-Im Spezialwriter darf später nur ein statisch beweisbarer Pfad entstehen:
-
-```text
-partial_path
-→ os.open(O_CREAT | O_EXCL | O_WRONLY/O_RDWR)
-→ nachweislich daraus stammender Partial-FD
-→ os.write/fsync
-→ Hash/Größe zur Laufzeit verifizieren
-→ os.link(partial_path, final_path, follow_symlinks=False)
-→ eigene partial_path entfernen
-```
-
-Dynamische Flags, numerische Rohflags, `O_TRUNC`, `O_APPEND`, `O_TMPFILE`, freie FDs, freie Hardlinks, `rename`, `replace`, alternative Writer-/Escape-Bibliotheken und freie Deletes bleiben BLOCKED.
-
-## Zusätzlich gerettete Preview-Invariante
-
-`MOVE` und `TRASH` müssen zentral `reversible=True` besitzen. I21 erzeugte MOVE bereits korrekt; das Preview-Modell erzwingt dies nun ebenfalls fail-closed.
+1. Autorisierung/No-clobber.
+2. JSON/Text + Unicode/Leerzeichen.
+3. Hash/Größe vor und nach Write.
+4. Symlink/Target-Race.
+5. ENOSPC/PermissionError.
+6. echter Zwei-Thread-Race.
+7. Crash nach Partial-Create und vor Commit.
+8. Partial-Ownership/Cleanup.
+9. I27-Guard + Read-only-Lock.
+10. Full Suite/Core Diagnostic/Preflight.
 
 ## Weiterhin gesperrt
 
-- echter Diagnose-Writer;
-- produktiver Diagnose-Dateiexport;
+- GUI-/CLI-Diagnoseexport;
+- Registry-READY;
 - allgemeiner Executor;
-- Copy/Move-Write;
-- Overwrite;
-- Auto-Rename;
-- Persistenz;
-- Rechteausweitung;
-- I25 READY ohne finale Human-Abnahme.
+- automatischer Nutzerwrite;
+- Overwrite/Netzwerk/Rechteausweitung;
+- I25 READY ohne Human-Gate.
 
-## Exit-Gates
+## Nächste Schritte
 
-1. I27-Guard-Tests PASS.
-2. Read-only-Lock PASS.
-3. Preview-Reversibilitätsregression PASS.
-4. Repository-Contract PASS.
-5. vollständige Unit-/Integrationssuite PASS.
-6. Core Diagnostic PASS.
-7. Diagnose/Preflight PASS.
-8. finaler Diff ohne allgemeinen Write-Reopen.
-9. Post-Merge-Main-Gate PASS.
-
-## Nächste drei Schritte
-
-1. 🟨 I27-RC automatisch vollständig prüfen und nur bei Grün mergen.
-2. 🔵 danach den dedizierten Diagnose-Writer als separaten kleinen Testlab-Block planen/implementieren; zunächst ohne GUI/CLI-Adapter.
-3. 🔒 Writer erst nach Race/Crash/ENOSPC/PermissionError/Hash-/No-clobber-Evidence fachlich freigeben; I25-Human-Gate bleibt unabhängig offen.
+1. I28 RC automatisch vollständig prüfen.
+2. Bei Grün Evidence binden und mergen.
+3. Erst danach separaten Autorisierungs-/Adapter-Decision-Block eröffnen.

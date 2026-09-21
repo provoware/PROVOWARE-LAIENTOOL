@@ -34,7 +34,7 @@ FORBIDDEN_ATTRS = {
 }
 
 WRITE_MODE_MARKERS = {"w", "a", "x", "+"}
-READ_OPEN_FLAGS = {"os.O_RDONLY", "os.O_CLOEXEC", "os.O_NOFOLLOW"}
+READ_OPEN_FLAGS = {"os.O_RDONLY", "os.O_CLOEXEC", "os.O_NOFOLLOW", "os.O_DIRECTORY"}
 CREATE_OPEN_FLAGS = {
     "os.O_CREAT", "os.O_EXCL", "os.O_WRONLY", "os.O_RDWR",
     "os.O_CLOEXEC", "os.O_NOFOLLOW",
