@@ -15,6 +15,8 @@ I18 prepare_inventory_view()
   ↓
 explizite Mehrfachauswahl
   ↓
+transfer_application
+  ↓
 Copy- oder Move-Preview
   ↓
 I21 prepare_copy_preview() / prepare_move_preview()
