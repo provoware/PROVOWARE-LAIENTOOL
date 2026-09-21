@@ -35,6 +35,15 @@ Ein Satz:
 - [ ] Diff geprüft
 - [ ] Evidence-ID oder Begründung, warum nicht erforderlich
 
+## Testbudget / Schleifenschutz
+
+- [ ] targeted Tests vor Full Suite
+- [ ] kein identischer Fehltest mehr als einmal ohne Zustandsänderung wiederholt
+- [ ] höchstens zwei Reparaturzyklen pro Root Cause
+- [ ] Timeouts/Hänger als eigener Befund klassifiziert
+- [ ] keine unbegrenzte Poll-/Retry-/Wait-Schleife eingeführt
+- [ ] jeder Retry besitzt Limit und Abbruchbedingung
+
 ## Debugging / Triage
 
 - Fehlerklasse bei Befund: `PRODUCT | TEST | INFRASTRUCTURE | EVIDENCE | NONE`

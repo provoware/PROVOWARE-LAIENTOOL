@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   repository-contract:
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,7 +19,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Validate repository contracts
-        run: python3 scripts/repo_quality.py
+        run: timeout 2m python3 scripts/repo_quality.py
       - name: Validate triggered info-text impact
         run: |
           if [ -n "${GITHUB_BASE_REF:-}" ]; then
@@ -27,16 +28,16 @@ jobs:
           else
             BASE_SHA="$(git rev-parse HEAD^)"
           fi
-          python3 scripts/info_text_guard.py --base "$BASE_SHA"
+          timeout 2m python3 scripts/info_text_guard.py --base "$BASE_SHA"
       - name: Enforce read-only product lock
-        run: python3 scripts/read_only_guard.py
+        run: timeout 2m python3 scripts/read_only_guard.py
       - name: Run full unit and integration suite
-        run: PYTHONPATH=src python3 -m unittest discover -s tests -v
+        run: timeout 5m env PYTHONPATH=src python3 -m unittest discover -s tests -v
       - name: Run temporary-filesystem core diagnostic
-        run: python3 scripts/core_diagnostics.py
+        run: timeout 2m python3 scripts/core_diagnostics.py
       - name: Run redacted diagnostic snapshot
-        run: python3 scripts/diagnostic_snapshot.py --json
+        run: timeout 2m python3 scripts/diagnostic_snapshot.py --json
       - name: Run read-only preflight
-        run: python3 start.py
+        run: timeout 2m python3 start.py
       - name: Run read-only preflight JSON
-        run: python3 start.py --json
+        run: timeout 2m python3 start.py --json

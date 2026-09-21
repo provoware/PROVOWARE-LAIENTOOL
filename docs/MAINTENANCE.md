@@ -90,10 +90,31 @@ Diese Punkte sind bewusst zu beobachten, aber nicht automatisch zu refactoren:
 - GUI/CLI: keine Fachlogik in Adapter zurückwandern lassen.
 - Diagnose-Writer: Guard-REOPEN eng halten; keinen allgemeinen Schreibpfad daraus ableiten.
 
-## 8. Ein-Befehl-Abnahme
+## 8. Testbudget und Schleifenschutz
+
+Jeder Testlauf braucht einen Zweck, ein Budget und ein Stop-Kriterium.
+
+| Ebene | Standardbudget | Wiederholung |
+| --- | ---: | --- |
+| einzelner targeted Test / Repository-Gate | 2 Minuten | max. 1 identischer Repro-Lauf |
+| vollständige Unit-/Integration-Suite | 5 Minuten | erst nach Ursachenänderung erneut |
+| GitHub-Job `repository-contract` | 15 Minuten gesamt | kein automatischer Retry |
+| manueller GUI-/Evidence-Lauf | menschlich geführt | jederzeit klar abbrechbar |
+
+Regeln:
+
+- grün + unveränderter Stand = nicht erneut testen;
+- rot = erst ersten ursächlichen Fehler isolieren, dann targeted;
+- Timeout = Befund, nicht Anlass für blindes Retry;
+- maximal zwei Reparaturzyklen pro Root Cause;
+- bei drittem Reparaturbedarf: STOP und Re-Plan;
+- kein wachsender Scope, nur um einen Test doch noch grün zu bekommen;
+- Tests mit Schleifen brauchen endliche Iterationszahl oder Deadline.
+
+## 9. Ein-Befehl-Abnahme
 
 ```bash
-python3 scripts/repo_quality.py && python3 scripts/read_only_guard.py && PYTHONPATH=src python3 -m unittest discover -s tests -v && python3 scripts/core_diagnostics.py && python3 scripts/diagnostic_snapshot.py --json && python3 start.py && python3 start.py --json
+timeout 2m python3 scripts/repo_quality.py && timeout 2m python3 scripts/read_only_guard.py && timeout 5m env PYTHONPATH=src python3 -m unittest discover -s tests -v && timeout 2m python3 scripts/core_diagnostics.py && timeout 2m python3 scripts/diagnostic_snapshot.py --json && timeout 2m python3 start.py && timeout 2m python3 start.py --json
 ```
 
 Reale I17-GUI-Evidence bleibt davon getrennt und kann nicht durch Headless-CI ersetzt werden.

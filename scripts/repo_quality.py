@@ -117,6 +117,10 @@ for workflow in (ROOT / ".github" / "workflows").glob("*.y*ml"):
     text = workflow.read_text(encoding="utf-8")
     if re.search(r"(?m)^permissions:\s*$", text) is None:
         fail(f"Workflow ohne explizite permissions: {workflow.relative_to(ROOT)}")
+    if re.search(r"(?m)^\s{2,}timeout-minutes:\s*[1-9][0-9]*\s*$", text) is None:
+        fail(f"Workflow ohne Job-Timeout: {workflow.relative_to(ROOT)}")
+    if re.search(r"(?mi)^\s*continue-on-error:\s*true\s*$", text):
+        fail(f"Workflow darf Fehler nicht pauschal ignorieren: {workflow.relative_to(ROOT)}")
     for action in re.findall(r"(?m)^\s*uses:\s*([^\s#]+)", text):
         if action.startswith("./"):
             continue
@@ -194,6 +198,6 @@ print(" - Baseline-Marker vorhanden")
 print(" - TODO-Schema, Sortierung und Duplikate konsistent")
 print(" - Python-Syntax in Produktcode, Skripten, Tests und Starter geprüft")
 print(" - kein Tkinter im Python-Produktionscode")
-print(" - Workflow-Permissions und Action-Pinning geprüft")
+print(" - Workflow-Permissions, Job-Timeouts, Fehlerhärte und Action-Pinning geprüft")
 print(" - interne Markdown-Links, Tabellenumbrüche und stabile Statusformulierungen geprüft")
 print(" - kein Trailing-Whitespace in zentralen Textformaten")

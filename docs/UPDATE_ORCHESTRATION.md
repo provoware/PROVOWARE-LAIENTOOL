@@ -113,7 +113,12 @@ MERGE-KRITERIUM:
 - Planer implementieren nicht;
 - Dokumentar schreibt erst nach bestätigter Prüfung;
 - kollidierende Änderungen werden serialisiert;
-- jede Iteration endet mit drei vorgeplanten, noch nicht automatisch freigegebenen Folgeschritten.
+- jede Iteration endet mit drei vorgeplanten, noch nicht automatisch freigegebenen Folgeschritten;
+- identische fehlgeschlagene Tests werden ohne Zustandsänderung höchstens einmal reproduziert;
+- pro Root Cause sind höchstens zwei gezielte Reparaturzyklen erlaubt; danach wird neu geplant;
+- Full Suite folgt targeted Tests und wird nicht als Fehlersuchschleife verwendet;
+- Timeout/Hänger ist ein eigener Befund und darf keinen automatischen Retry-Zyklus auslösen;
+- ein Lauf ohne neue Hypothese oder neue Evidence wird nicht wiederholt.
 
 ## Iterationsanzeige
 
