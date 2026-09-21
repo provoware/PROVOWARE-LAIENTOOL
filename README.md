@@ -25,6 +25,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I17 Real-Accessibility | Zielsystem-Helfer, manuelle 100/150/200-%-Matrix und Screenshot-Vertrag vorbereitet; echter Desktop-/Laienlauf OPEN | 🟨 reale Evidence OPEN |
 | I18 Inventar-Komfort | read-only Suche, Sortierung und Top-10/50/100-Größenansichten im Domain-/Application-Core; sichtbare GUI-Anbindung wartet auf realen I17-Lauf | 🟨 CI ausstehend |
 | I19 Zielwahl-Decision | Same-Root-Zielwahl ohne Overwrite beschlossen; externe Ziele bleiben gesperrt; statischer Read-only-Lock blockiert Schreib-APIs im Produktcode | 🟨 CI ausstehend |
+| I20 Diagnose-Observability | redigierter read-only Diagnosebericht als Klartext/JSON, CLI-only Use Case und stdout-Helfer; kein Datei-Export | 🟨 CI ausstehend |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -128,7 +129,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I19 Zielwahl-Decision und Read-only-Lock über CI einfrieren. Danach kann I20 datensparsame Diagnose-/Recovery-Observability vorbereiten; Schreibpfade bleiben gesperrt.**
+**I20 Diagnose-/Recovery-Observability über CI einfrieren. Danach kann I21 ausschließlich Same-Root Copy/Move-Preview vorbereiten; Executor und Persistenz bleiben gesperrt.**
 
 
 ## Screenshots
@@ -155,3 +156,15 @@ Damit werden frühe Iterationsläufe kürzer, ohne die finale Abnahme zu schwäc
 ## Read-only-Lock
 
 Solange Executor und Persistenz nicht ausdrücklich freigegeben sind, prüft `scripts/read_only_guard.py` den Produktionscode statisch auf typische Schreib-APIs. Der Guard läuft vor der Full-Suite in CI und blockiert auch Import-Aliase sowie nicht statisch als read-only belegbare `open()`-Modi.
+
+
+## Diagnose-Snapshot
+
+Für Support/Debugging steht ein read-only, redigierter Snapshot bereit:
+
+```bash
+python3 scripts/diagnostic_snapshot.py
+python3 scripts/diagnostic_snapshot.py --json
+```
+
+Er schreibt keine Datei, nutzt kein Netzwerk und zeigt keine Recovery-IDs. Home-Pfade, E-Mails und typische Token-Muster werden vor der Ausgabe redigiert.
