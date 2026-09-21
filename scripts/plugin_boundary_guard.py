@@ -9,10 +9,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
 ALLOWED_PLUGIN_CONTRACT = SRC / "provoware_laientool" / "plugin_contract.py"
-FORBIDDEN_IMPORT_PREFIXES = ("importlib", "pkg_resources", "requests", "httpx")
+FORBIDDEN_IMPORT_PREFIXES = ("pkg_resources", "requests", "httpx")
 FORBIDDEN_TEXT_MARKERS = (
     "pip install",
     "entry_points(",
+    "import_module(",
     "spec_from_file_location(",
     "exec_module(",
 )

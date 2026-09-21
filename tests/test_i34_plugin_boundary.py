@@ -89,6 +89,13 @@ class I34PluginBoundaryTests(unittest.TestCase):
         for source in samples:
             self.assertTrue(analyze_source(source))
 
+    def test_preflight_importlib_find_spec_is_allowed(self) -> None:
+        source = (
+            "import importlib.util\n"
+            "available = importlib.util.find_spec('PySide6') is not None\n"
+        )
+        self.assertEqual(analyze_source(source), ())
+
     def test_normal_static_import_is_allowed(self) -> None:
         self.assertEqual(analyze_source("from pathlib import Path\n"), ())
 
