@@ -23,15 +23,15 @@ class CapabilityRegistryTests(unittest.TestCase):
         with self.assertRaises(FrozenInstanceError):
             REGISTRY[0].label = "Geändert"  # type: ignore[misc]
 
-    def test_preflight_is_ready_read_only_cli_diagnostic(self) -> None:
+    def test_preflight_is_ready_read_only_in_gui_and_cli(self) -> None:
         entry = get_use_case("system.preflight")
         self.assertIsNotNone(entry)
         assert entry is not None
         self.assertEqual(entry.status, STATUS_READY)
         self.assertEqual(entry.safety_class, SAFETY_READ_ONLY)
         self.assertTrue(entry.cli_available)
-        self.assertFalse(entry.gui_available)
-        self.assertTrue(entry.diagnostic_cli_only)
+        self.assertTrue(entry.gui_available)
+        self.assertFalse(entry.diagnostic_cli_only)
 
     def test_gui_without_cli_is_rejected(self) -> None:
         invalid = replace(
@@ -49,7 +49,7 @@ class CapabilityRegistryTests(unittest.TestCase):
     def test_duplicate_ids_are_rejected(self) -> None:
         duplicate = replace(REGISTRY[0])
         errors = validate_registry((REGISTRY[0], duplicate))
-        self.assertIn("Doppelte Funktions-ID: system.preflight", errors)
+        self.assertIn(f"Doppelte Funktions-ID: {REGISTRY[0].id}", errors)
 
     def test_recovery_without_preview_is_rejected(self) -> None:
         invalid = UseCaseCapability(
