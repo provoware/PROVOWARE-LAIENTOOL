@@ -14,21 +14,35 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 START = ROOT / "start.py"
 
-SAFE_KEYS = {
-    "profile",
-    "status",
-    "os_name",
-    "os_version",
-    "architecture",
-    "python_version",
-    "runtime_source",
+PLATFORM_KEYS = {
+    "system",
+    "release",
+    "machine",
+    "python",
+    "distro_id",
+    "distro_name",
+    "distro_version",
     "desktop",
     "session_type",
-    "pyside6_available",
     "filesystem_encoding",
-    "home_reachable",
-    "downloads_source",
+    "runtime_source",
+}
+CAPABILITY_KEYS = {
+    "linux",
+    "supported_distro_family",
+    "python_supported",
+    "graphical_session",
+    "pyside6_available",
+    "utf8_filesystem",
+    "home_available",
+    "downloads_available",
     "project_readable",
+}
+START_PLAN_KEYS = {
+    "profile",
+    "gui_possible",
+    "portable_runtime_preferred",
+    "reason",
 }
 
 
@@ -50,12 +64,22 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def redact_payload(payload: object) -> object:
-    if isinstance(payload, dict):
-        return {key: redact_payload(value) for key, value in payload.items() if key in SAFE_KEYS}
-    if isinstance(payload, list):
-        return [redact_payload(item) for item in payload]
-    return payload
+def select_keys(value: object, allowed: set[str]) -> dict[str, object]:
+    if not isinstance(value, dict):
+        return {}
+    return {key: value[key] for key in allowed if key in value}
+
+
+def redact_payload(payload: object) -> dict[str, object]:
+    if not isinstance(payload, dict):
+        return {}
+    result: dict[str, object] = {}
+    if "status" in payload:
+        result["status"] = payload["status"]
+    result["platform"] = select_keys(payload.get("platform"), PLATFORM_KEYS)
+    result["capabilities"] = select_keys(payload.get("capabilities"), CAPABILITY_KEYS)
+    result["start_plan"] = select_keys(payload.get("start_plan"), START_PLAN_KEYS)
+    return result
 
 
 def main() -> int:
