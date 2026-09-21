@@ -1,93 +1,81 @@
 # PROVOWARE – Current Iteration
 
-## I17 – realer Accessibility-Zielsystemlauf
+## I18 – read-only Inventar-Komfortkern
 
-**Status:** 🟨 EVIDENCE-INFRASTRUKTUR BEREIT / REALER ZIELSYSTEMLAUF OPEN
-**Fortschritt:** `███████░░░ 70 %`
+**Status:** 🟨 IMPLEMENTIERT / CI-ABNAHME AUSSTEHEND
+**Fortschritt:** `████████░░ 80 %`
 
-Der Prozentwert bildet ausschließlich definierte I17-Checkpoints ab.
+Der Prozentwert bildet ausschließlich definierte I18-Checkpoints ab.
 
 ## A – FESTER PLAN
 
-**Quelle:** I16-Drei-Schritte-Vorausplanung + I14/I15 Accessibility-Evidence.
+**Quelle:** I17-Drei-Schritte-Vorausplanung.
 
-**Ziel:** die echte PySide6-Shell inklusive I16-Dateivorschau auf einer realen Display-Session bei 100/150/200 %, Tastatur, Fokus, Kontrast, Reduced Motion und Laienprofil reproduzierbar prüfen.
+**Ziel:** Suche, Sortierung und größte-Dateien-Ansichten auf den bestehenden I15-Inventarfakten vorbereiten, ohne sichtbare GUI-Erweiterung und ohne neuen Dateisystem-Schreibpfad.
 
 **Checkpoints:**
 
-- 🟢 automatisierter Fokus-/Kontrast-/Skalierungsvertrag vorhanden
-- 🟢 I17-Zielsystem-Helfer implementiert
-- 🟢 PySide6-/Display-Fähigkeit wird vor Lauf geprüft
-- 🟢 einheitlicher Ein-Befehl-Start definiert
-- 🟢 manuelle 100/150/200-%-Gates definiert
-- 🟢 Tab/Shift+Tab-Prüfpfad definiert
-- 🟢 Dateivorschau-Abbruch-/Erfolgsprüfung definiert
-- 🟢 Laienprofil mit vier Verständnisfragen definiert
-- 🟢 feste Screenshot-Namen und Datenschutzregel definiert
-- 🟢 README-Screenshot-Regel definiert
-- 🟢 Regressionsmatrix „targeted first → full before merge“ dokumentiert
-- 🟨 echter Zielsystemlauf OPEN
-- 🟨 echte Screenshots OPEN
-- 🟨 reales Laien-/Accessibility-Ergebnis OPEN
-- 🟢 Repository-/PR-CI PASS
-- 🟢 finaler Diff ohne Scope-Drift
-- 🔵 Merge / Post-Merge
+- 🟢 immutable `InventoryViewSpec`
+- 🟢 immutable `InventoryView`
+- 🟢 Unicode-/Casefold-Suche
+- 🟢 Name auf-/absteigend
+- 🟢 Größe auf-/absteigend
+- 🟢 exakt 10/50/100 größte Dateien
+- 🟢 deterministische Tie-Breaks
+- 🟢 vollständige Summary trotz sichtbarem Limit
+- 🟢 ungültige Sortierung/Limit fail-closed
+- 🟢 gemeinsamer Application-Pfad `prepare_inventory_view()`
+- 🟢 keine Such-/Sortierlogik in GUI/CLI
+- 🟢 professioneller temporärer Core-Diagnoselauf
+- 🟢 Debugging-Klassifikation PRODUCT / TEST / INFRASTRUCTURE / EVIDENCE
+- 🟢 CI-Diagnostic-Gate ergänzt
+- 🔵 Repository-/PR-CI
+- 🔵 finaler Diff / Merge / Post-Merge
 
 ## B – VARIABLE FOLGEAUFGABE
 
-**Quelle letzter Lauf:** I16 war bereits gemergt und Post-Merge-CI grün, während `CURRENT_ITERATION.md` Merge/Post-Merge noch als offen auswies.
+**B = NONE**
 
-**Priorität:** Dokumentationsdrift.
+Aus dem letzten Lauf entstand kein neuer objektiver Produktfehler, der einen eigenen DELTA-Write-Batch rechtfertigt.
 
-**Maßnahme:** I17 startet vom bestätigten grünen I16-`main`; der alte offene Merge-/Post-Merge-Status wird ersetzt.
+Der reale I17-Zielsystemlauf bleibt als externe Evidence-Aufgabe OPEN und wird nicht künstlich in diesen Repository-Block umgedeutet.
 
-**Status:** 🟢 erledigt.
+## Warum noch keine sichtbare I18-GUI
 
-## Reale Zielsystem-Grenze
+Der nichtvisuelle Komfortkern kann vollständig automatisiert geprüft werden.
 
-Dieser Repository-Lauf kann keinen echten Bildschirm, keine reale Tastaturführung und keine menschliche Wahrnehmung simulieren.
+Die sichtbare Anbindung wird bewusst erst nach realer I17-100/150/200-%-/Tastatur-Evidence freigegeben, damit Layout-Probleme nicht in einen größeren UI-Ausbau hineinmultipliziert werden.
 
-Deshalb gilt:
-
-- CI kann die I17-Infrastruktur prüfen;
-- CI kann den automatisierten Accessibility-Vertrag prüfen;
-- CI darf **nicht** den realen Zielsystemlauf auf PASS setzen.
-
-## Ein-Befehl-Lauf auf Zielsystem
+## Core Diagnostic
 
 ```bash
-python3 scripts/i17_target_evidence.py --launch-gui
+python3 scripts/core_diagnostics.py
+python3 scripts/core_diagnostics.py --json
 ```
 
-## Screenshot-Set
+Der Lauf verwendet ausschließlich ein temporäres Dateisystem und prüft:
 
-- `i17-100-overview.png`
-- `i17-150-overview.png`
-- `i17-200-overview.png`
-- `i17-keyboard-focus.png`
-- `i17-file-preview.png`
-
-Nur echte Zielsystem-Screenshots dürfen als Produktabbildung im README verwendet werden.
-
-## Entwicklungs-/Regressionseffizienz
-
-Die neue Regressionsmatrix trennt:
-
-1. gezielten Erstlauf für den geänderten Verantwortungsbereich;
-2. angrenzende Cross-Core-Tests nur bei tatsächlicher Relevanz;
-3. vollständige Testsuite zwingend vor Merge;
-4. echte GUI-/Hardware-Evidence separat.
-
-Damit bleibt die Entwicklungsloop kurz, ohne die Merge-Abnahme abzusenken.
+- Symlink-Sperre;
+- Inventar;
+- größte-Dateien-Sicht;
+- gemeinsamen Application-Pfad;
+- Preview-Vertrag;
+- unveränderte Quellen.
 
 ## Datei-Besitz
 
 | Datei | Schreibender Besitzer | Prüfer |
 | --- | --- | --- |
-| `scripts/i17_target_evidence.py` | EVIDENCE-IMPLEMENT | VERIFY read-only |
-| `tests/test_i17_target_evidence.py` | TEST-SCOPE | VERIFY read-only |
-| `docs/I17_TARGET_ACCESSIBILITY_RUN.md` | DOC | VERIFY read-only |
+| `src/provoware_laientool/inventory_view.py` | DOMAIN-IMPLEMENT | VERIFY read-only |
+| `src/provoware_laientool/application_core.py` | APPLICATION-IMPLEMENT | VERIFY read-only |
+| `tests/test_inventory_view.py` | TEST-SCOPE | VERIFY read-only |
+| `scripts/core_diagnostics.py` | DIAGNOSTIC-IMPLEMENT | VERIFY read-only |
+| `tests/test_core_diagnostics.py` | TEST-SCOPE | VERIFY read-only |
+| `docs/I18_READONLY_INVENTORY_COMFORT.md` | DOC | VERIFY read-only |
+| `docs/DEBUGGING_STANDARD.md` | DOC/PROCESS | VERIFY read-only |
 | `docs/REGRESSION_MATRIX.md` | DOC/PROCESS | VERIFY read-only |
+| `.github/workflows/repo-quality.yml` | PROCESS-IMPLEMENT | VERIFY read-only |
+| `.github/PULL_REQUEST_TEMPLATE.md` | PROCESS-DOC | VERIFY read-only |
 | `docs/CURRENT_ITERATION.md` | ORGANIZE/DOC | VERIFY read-only |
 | `README.md` | DOC | VERIFY read-only |
 | `todo.txt` | DOC | VERIFY read-only |
@@ -95,36 +83,38 @@ Damit bleibt die Entwicklungsloop kurz, ohne die Merge-Abnahme abzusenken.
 
 ## Nicht-Ziele
 
-- keine Behauptung eines realen GUI-PASS;
-- keine produktive Dateiaktion;
-- kein Executor;
+- kein sichtbarer GUI-Ausbau vor realem I17;
+- keine neue CLI-Fachoberfläche;
+- keine Dateiänderung;
+- kein Hashing;
+- keine Duplikaterkennung;
 - keine Persistenz;
-- keine Copy-/Move-Freigabe;
-- kein UI-Feature-Ausbau vor dem realen I17-Befund;
-- keine Mockups als Evidence-Screenshots;
-- keine automatische Installation von PySide6.
+- kein Executor;
+- keine Copy-/Move-Zielwahl;
+- kein automatisches Reparieren eines Diagnosebefunds.
 
-## Exit-Gates dieser Repository-Phase
+## Exit-Gates
 
-1. I17-Helfertests PASS.
-2. vollständige Test-Suite PASS.
-3. Repository-Contract PASS.
-4. Info-Text-Impact PASS.
-5. bestehende B01–I16-Verträge regressionsfrei.
-6. finaler Diff ohne Scope-Drift.
-7. Post-Merge-CI PASS.
-8. realer I17-Zielsystemlauf bleibt bis tatsächlicher Ausführung OPEN.
+1. I18-View-Tests PASS.
+2. Core-Diagnostic-Test PASS.
+3. temporärer Core-Diagnoselauf PASS.
+4. vollständige Test-Suite PASS.
+5. Repository-Contract PASS.
+6. Info-Text-Impact PASS.
+7. B01–I17 repository-seitig regressionsfrei.
+8. finaler Diff ohne Scope-Drift.
+9. Post-Merge-CI PASS.
 
 ## Nächste drei vorgeplante Schritte
 
-### 1. 🔵 I17-B – echten Zielsystemlauf durchführen
-**Ziel:** den vorbereiteten Ein-Befehl-Lauf auf echter PySide6-/Display-Umgebung ausführen und die fünf Screenshots erzeugen.
-**Gate:** dokumentiertes PASS/FAIL/OPEN pro manuellem Gate.
+### 1. 🔵 I18-B – sichtbare Komfort-Anbindung nach realem I17
+**Ziel:** Such-/Sortier-/Top-Ansichten ausschließlich über `prepare_inventory_view()` in GUI und Zahlenmenü darstellen.
+**Gate:** reale 100/150/200-%-Evidence; GUI-/CLI-Parität.
 
-### 2. 🔵 I18 – read-only UI-/Inventar-Komfort
-**Ziel:** nach I17-Befund Oberfläche und Inventarkomfort zusammen weiterentwickeln: Suche, Sortierung, Größenansichten und „größte Dateien“ auf bestehendem Core.
-**Gate:** GUI-/CLI-Parität für Fachfunktionen; sichtbare UI-Änderungen erneut Accessibility-gaten.
+### 2. 🔵 I19 – Preview-Zielwahl-Decision-Gate
+**Ziel:** sichere Copy-/Move-Zielauswahl definieren.
+**Gate:** Vertrag/Entscheidung; weiterhin kein Executor.
 
-### 3. 🔵 I19 – Preview-Zielwahl-Decision-Gate
-**Ziel:** Copy-/Move-Zielwahl fachlich und sicher definieren.
-**Gate:** nur Vertrag/Entscheidung; weiterhin kein Executor.
+### 3. 🔵 I20 – Diagnose-/Recovery-Observability
+**Ziel:** datensparsame, exportierbare Diagnoseberichte für reale Fehlerfälle planen.
+**Gate:** Opt-in, Redaction, keine Secrets, keine automatischen Reparaturen.
