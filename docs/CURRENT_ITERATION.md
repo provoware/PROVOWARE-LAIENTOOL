@@ -1,121 +1,92 @@
 # PROVOWARE – Current Iteration
 
-## I18 – read-only Inventar-Komfortkern
+## I19 – Preview-Zielwahl Decision Gate + Read-only-Lock DELTA
 
 **Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
 **Fortschritt:** `█████████░ 90 %`
 
-Der Prozentwert bildet ausschließlich definierte I18-Checkpoints ab.
+## A – FESTER PLAN: Zielwahl-Decision-Gate
 
-## A – FESTER PLAN
+**Ziel:** sichere Copy-/Move-Zielauswahl definieren, ohne Produktimplementierung und ohne Executor.
 
-**Quelle:** I17-Drei-Schritte-Vorausplanung.
+**Entscheidung:**
 
-**Ziel:** Suche, Sortierung und größte-Dateien-Ansichten auf den bestehenden I15-Inventarfakten vorbereiten, ohne sichtbare GUI-Erweiterung und ohne neuen Dateisystem-Schreibpfad.
+- erste Zielwahl nur innerhalb derselben explizit freigegebenen B01-Wurzel;
+- keine zweite/externe Zielwurzel;
+- kein Cross-Device-Move;
+- Zielordner explizit auswählen;
+- Quelle = Ziel blockieren;
+- Symlinks bleiben gesperrt;
+- existierendes Ziel blockiert;
+- kein Overwrite;
+- kein automatisches Auto-Rename;
+- Preview bleibt read-only;
+- I13-Recovery-Semantik bleibt verpflichtend;
+- unmittelbar vor späterer Ausführung erneute Pfad-/Existenz-/Kapazitätsprüfung;
+- kein I12-Schema-Reopen für den initialen Same-Root-Vertrag.
 
-**Checkpoints:**
+**Status:** 🟢 Entscheidung dokumentiert.
 
-- 🟢 immutable `InventoryViewSpec`
-- 🟢 immutable `InventoryView`
-- 🟢 Unicode-/Casefold-Suche
-- 🟢 Name auf-/absteigend
-- 🟢 Größe auf-/absteigend
-- 🟢 exakt 10/50/100 größte Dateien
-- 🟢 deterministische Tie-Breaks
-- 🟢 vollständige Summary trotz sichtbarem Limit
-- 🟢 ungültige Sortierung/Limit fail-closed
-- 🟢 gemeinsamer Application-Pfad `prepare_inventory_view()`
-- 🟢 keine Such-/Sortierlogik in GUI/CLI
-- 🟢 professioneller temporärer Core-Diagnoselauf
-- 🟢 Debugging-Klassifikation PRODUCT / TEST / INFRASTRUCTURE / EVIDENCE
-- 🟢 CI-Diagnostic-Gate ergänzt
-- 🟢 Repository-/PR-CI PASS
-- 🟢 finaler Diff ohne Scope-Drift
-- 🔵 Merge / Post-Merge
+## B – DELTA: Read-only-Lock
 
-## B – VARIABLE FOLGEAUFGABE
+**Quelle:** ausdrücklicher Qualitäts-/Debugging-Auftrag.
 
-**B = NONE**
+**Ziel:** solange Executor und Persistenz gesperrt sind, offensichtliche Schreib-APIs im Produktionscode automatisch blockieren.
 
-Aus dem letzten Lauf entstand kein neuer objektiver Produktfehler, der einen eigenen DELTA-Write-Batch rechtfertigt.
+**Abgedeckt:**
 
-Der reale I17-Zielsystemlauf bleibt als externe Evidence-Aufgabe OPEN und wird nicht künstlich in diesen Repository-Block umgedeutet.
+- 🟢 pathlib-Schreibmethoden
+- 🟢 os-Schreiboperationen
+- 🟢 shutil-Schreiboperationen
+- 🟢 schreibende open()-Modi
+- 🟢 Modul- und Funktions-Aliase
+- 🟢 dynamische open()-Modi fail-closed
+- 🟢 aktueller Produktbaum muss vollständig read-only bleiben
+- 🟢 CI-Gate vor Full-Suite
 
-## Warum noch keine sichtbare I18-GUI
+## Warum Same-Root zuerst
 
-Der nichtvisuelle Komfortkern kann vollständig automatisiert geprüft werden.
+Der bestehende I12-Vertrag besitzt genau eine root für Quelle und Ziel.
 
-Die sichtbare Anbindung wird bewusst erst nach realer I17-100/150/200-%-/Tastatur-Evidence freigegeben, damit Layout-Probleme nicht in einen größeren UI-Ausbau hineinmultipliziert werden.
+Same-Root deckt den Kernfall „Downloads in Unterordner organisieren“ ab und vermeidet aktuell Multi-Root-Schema, Cross-Device-Sonderfälle, komplexere Recovery sowie zusätzliche Kapazitäts-/Mount-Verträge.
 
-## Core Diagnostic
-
-```bash
-python3 scripts/core_diagnostics.py
-python3 scripts/core_diagnostics.py --json
-```
-
-Der Lauf verwendet ausschließlich ein temporäres Dateisystem und prüft:
-
-- Symlink-Sperre;
-- Inventar;
-- größte-Dateien-Sicht;
-- gemeinsamen Application-Pfad;
-- Preview-Vertrag;
-- unveränderte Quellen.
-
-## Datei-Besitz
-
-| Datei | Schreibender Besitzer | Prüfer |
-| --- | --- | --- |
-| `src/provoware_laientool/inventory_view.py` | DOMAIN-IMPLEMENT | VERIFY read-only |
-| `src/provoware_laientool/application_core.py` | APPLICATION-IMPLEMENT | VERIFY read-only |
-| `tests/test_inventory_view.py` | TEST-SCOPE | VERIFY read-only |
-| `scripts/core_diagnostics.py` | DIAGNOSTIC-IMPLEMENT | VERIFY read-only |
-| `tests/test_core_diagnostics.py` | TEST-SCOPE | VERIFY read-only |
-| `docs/I18_READONLY_INVENTORY_COMFORT.md` | DOC | VERIFY read-only |
-| `docs/DEBUGGING_STANDARD.md` | DOC/PROCESS | VERIFY read-only |
-| `docs/REGRESSION_MATRIX.md` | DOC/PROCESS | VERIFY read-only |
-| `.github/workflows/repo-quality.yml` | PROCESS-IMPLEMENT | VERIFY read-only |
-| `.github/PULL_REQUEST_TEMPLATE.md` | PROCESS-DOC | VERIFY read-only |
-| `docs/CURRENT_ITERATION.md` | ORGANIZE/DOC | VERIFY read-only |
-| `README.md` | DOC | VERIFY read-only |
-| `todo.txt` | DOC | VERIFY read-only |
-| `scripts/repo_quality.py` | PROCESS-IMPLEMENT | VERIFY read-only |
+Externe Datenträger bleiben bis zu einem späteren Multi-Root-Decision-Gate BLOCKED.
 
 ## Nicht-Ziele
 
-- kein sichtbarer GUI-Ausbau vor realem I17;
-- keine neue CLI-Fachoberfläche;
-- keine Dateiänderung;
-- kein Hashing;
-- keine Duplikaterkennung;
-- keine Persistenz;
+- keine Copy-/Move-Implementierung;
 - kein Executor;
-- keine Copy-/Move-Zielwahl;
-- kein automatisches Reparieren eines Diagnosebefunds.
+- keine Persistenz;
+- keine externe Zielwurzel;
+- kein Cross-Device-Move;
+- kein Overwrite;
+- kein Auto-Rename;
+- keine sichtbare GUI-Erweiterung;
+- keine Abschwächung des Read-only-Locks.
 
 ## Exit-Gates
 
-1. I18-View-Tests PASS.
-2. Core-Diagnostic-Test PASS.
-3. temporärer Core-Diagnoselauf PASS.
-4. vollständige Test-Suite PASS.
-5. Repository-Contract PASS.
-6. Info-Text-Impact PASS.
-7. B01–I17 repository-seitig regressionsfrei.
+1. I19-Decision-Doku vollständig.
+2. Read-only-Guard-Tests PASS.
+3. aktueller Produktbaum Read-only-Lock PASS.
+4. Core-Diagnostic PASS.
+5. vollständige Suite PASS.
+6. Repository-Contract PASS.
+7. Info-Text-Impact PASS.
 8. finaler Diff ohne Scope-Drift.
 9. Post-Merge-CI PASS.
 
+**Repository-/PR-CI:** 🟢 PASS
+**Finaler Diff:** 🟢 ohne Scope-Drift
+**Merge/Post-Merge:** 🔵 ausstehend
+
 ## Nächste drei vorgeplante Schritte
 
-### 1. 🔵 I18-B – sichtbare Komfort-Anbindung nach realem I17
-**Ziel:** Such-/Sortier-/Top-Ansichten ausschließlich über `prepare_inventory_view()` in GUI und Zahlenmenü darstellen.
-**Gate:** reale 100/150/200-%-Evidence; GUI-/CLI-Parität.
+### 1. 🔵 I20 – Diagnose-/Recovery-Observability
+Datensparsame Diagnoseberichte für reale Fehlerfälle planen und als read-only Exportmodell vorbereiten. Gate: Redaction, Opt-in, keine Secrets, keine automatische Reparatur.
 
-### 2. 🔵 I19 – Preview-Zielwahl-Decision-Gate
-**Ziel:** sichere Copy-/Move-Zielauswahl definieren.
-**Gate:** Vertrag/Entscheidung; weiterhin kein Executor.
+### 2. 🔵 I21 – Same-Root Copy/Move Preview Application
+Ausschließlich Preview-Erzeugung für explizit gewählte Zielordner innerhalb derselben Root. Gate: kein Executor, kein Overwrite, GUI-/CLI-Parität.
 
-### 3. 🔵 I20 – Diagnose-/Recovery-Observability
-**Ziel:** datensparsame, exportierbare Diagnoseberichte für reale Fehlerfälle planen.
-**Gate:** Opt-in, Redaction, keine Secrets, keine automatischen Reparaturen.
+### 3. 🔵 I17-B / I18-B – reale GUI-Evidence und sichtbare Komfort-Anbindung
+Sobald Zielsystemzugriff möglich ist, 100/150/200-%-/Tastatur-Evidence abschließen und dann sichtbare Suche/Sortierung anbinden.

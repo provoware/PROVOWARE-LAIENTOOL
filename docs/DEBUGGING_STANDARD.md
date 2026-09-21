@@ -70,6 +70,20 @@ Keine Kaskaden-Patches auf Basis von Folgefehlern.
 - Regressionstest oder Evidence-Anweisung;
 - verbleibendes Risiko.
 
+## Read-only-Lock
+
+`scripts/read_only_guard.py` ist ein statischer Frühwarn-Gate solange produktive Schreibpfade gesperrt sind.
+
+Er blockiert unter anderem:
+
+- typische `pathlib`-Schreibmethoden;
+- `os`-/`shutil`-Schreiboperationen;
+- schreibende `open()`-Modi;
+- Import-Aliase solcher APIs;
+- dynamische `open()`-Modi, die nicht statisch als read-only belegbar sind.
+
+Ein späterer Executor darf diesen Guard nicht beiläufig umgehen. Die Öffnung des Schreibpfads benötigt einen ausdrücklichen Gate-/Vertragswechsel.
+
 ## Core Diagnostic
 
 `scripts/core_diagnostics.py` ist ein datensparsamer End-to-End-Smoke.
