@@ -29,8 +29,9 @@ Der Prozentwert bildet ausschließlich definierte I17-Checkpoints ab.
 - 🟨 echter Zielsystemlauf OPEN
 - 🟨 echte Screenshots OPEN
 - 🟨 reales Laien-/Accessibility-Ergebnis OPEN
-- 🔵 Repository-/PR-CI
-- 🔵 finaler Diff / Merge / Post-Merge
+- 🟢 Repository-/PR-CI PASS
+- 🟢 finaler Diff ohne Scope-Drift
+- 🔵 Merge / Post-Merge
 
 ## B – VARIABLE FOLGEAUFGABE
 
