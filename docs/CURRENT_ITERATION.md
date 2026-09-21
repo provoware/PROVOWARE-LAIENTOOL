@@ -2,8 +2,8 @@
 
 ## I09 – Zweitgeräte-Portabilitäts-Evidence
 
-**Status:** 🟨 IN ARBEIT
-**Fortschritt:** `██████░░░░ 60 %`
+**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN / PHYSISCH OPEN
+**Fortschritt:** `█████████░ 90 %`
 
 Der Prozentwert bildet ausschließlich die definierten Checkpoints dieser Iteration ab.
 
@@ -20,8 +20,8 @@ Der Prozentwert bildet ausschließlich die definierten Checkpoints dieser Iterat
 - 🟢 Datenschutz-Redaktion auf reale verschachtelte Struktur angepasst
 - 🟢 Unit-Tests für Redaktionsvertrag ergänzt
 - 🟢 Laien-Anleitung für Zweitgerät erstellt
-- 🔵 Repository-/CI-Gates
-- 🔵 finaler Diff
+- 🟢 Repository-/PR-CI-Gates PASS
+- 🟢 finaler Diff ohne Scope-Drift
 - 🔵 Merge/Post-Merge-Prüfung
 - 🟨 reale physische Ausführung auf Zweitgerät bleibt anschließend separat OPEN
 
