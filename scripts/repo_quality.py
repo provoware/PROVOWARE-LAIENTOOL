@@ -35,6 +35,7 @@ CORE_REQUIRED = (
     "scripts/info_text_guard.py",
     "scripts/accessibility_evidence.py",
     "scripts/i17_auto_evidence.py",
+    "scripts/i25_auto_evidence.py",
     "scripts/core_diagnostics.py",
     "scripts/read_only_guard.py",
     "scripts/diagnostic_snapshot.py",
@@ -82,6 +83,7 @@ if starter_sh.is_file():
         "validate_gui_runtime",
         "--gui",
         "--i25-evidence",
+        "--i25-offscreen",
         "--menu",
         "--preflight",
         "--json",
@@ -93,6 +95,7 @@ if starter_sh.is_file():
         "--second-device-evidence",
         "--second-device-evidence-json",
         "scripts/i17_auto_evidence.py",
+        "scripts/i25_auto_evidence.py",
         "scripts/diagnostic_snapshot.py",
     ):
         if marker not in starter_text:

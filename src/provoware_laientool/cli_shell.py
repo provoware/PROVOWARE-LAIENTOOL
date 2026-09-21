@@ -10,6 +10,7 @@ from .application_core import (
     action_requires_root,
     execute,
     prepare_inventory_view,
+    prepare_target_directories,
 )
 from .capability_registry import list_use_cases
 from .inventory_view import InventoryViewSpec, SORT_NAME_ASC
@@ -145,16 +146,35 @@ def run_transfer_preview_flow(
         "3/4 Aktion: "
         + ("Kopieren – nur Vorschau" if use_case_id.endswith("copy") else "Verschieben – nur Vorschau")
     )
-    target = input_fn("4/4 Zielordner innerhalb derselben Wurzel (0 = Zurück): ").strip()
-    if target == "0" or not target:
+
+    targets = prepare_target_directories(Path(root_text))
+    if targets.status != "PASS":
+        output_fn("Die Zielordner konnten nicht vollständig und sicher vorbereitet werden.")
+        return targets.status
+    output_fn("4/4 Zielordner wählen:")
+    for number, relative in enumerate(targets.directories, start=1):
+        label = "/ (gewählte Wurzel)" if relative == "." else relative
+        output_fn(f"{number}  {label}")
+    output_fn("0  Zurück")
+    raw_target = input_fn("Zielnummer: ").strip()
+    if raw_target == "0" or not raw_target:
         output_fn("Zurück. Es wurden keine Dateien verändert.")
         return "OPEN"
+    if not raw_target.isdigit():
+        output_fn("⚠️ Bitte nur eine angezeigte Zielnummer verwenden.")
+        return "OPEN"
+    target_number = int(raw_target)
+    if target_number < 1 or target_number > len(targets.directories):
+        output_fn("⚠️ Diese Zielnummer gibt es nicht.")
+        return "OPEN"
+    target_relative = targets.directories[target_number - 1]
+    target = Path(targets.root) if target_relative == "." else Path(targets.root) / target_relative
 
     result = execute(
         use_case_id,
         root=root_text,
         selected_relative_paths=selected,
-        target_dir=target,
+        target_dir=str(target),
     )
     output_fn(f"{result.title} – {result.status}")
     output_fn(result.body)

@@ -52,6 +52,17 @@ class VenvBootstrapContractTests(unittest.TestCase):
         ):
             self.assertIn(option, text)
 
+    def test_i25_evidence_routes_through_start_sh(self) -> None:
+        text = (ROOT / "start.sh").read_text(encoding="utf-8")
+        self.assertIn(
+            'exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i25_auto_evidence.py"',
+            text,
+        )
+        self.assertIn(
+            'exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i25_auto_evidence.py" --offscreen --auto-only',
+            text,
+        )
+
     def test_diagnostics_route_through_start_sh(self) -> None:
         text = (ROOT / "start.sh").read_text(encoding="utf-8")
         self.assertIn(

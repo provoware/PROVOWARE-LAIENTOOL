@@ -112,6 +112,7 @@ Empfohlene Befehle:
 ./start.sh --gui
 ./start.sh --i17
 ./start.sh --i25-evidence
+./start.sh --i25-offscreen
 ./start.sh --diagnostics
 ```
 
@@ -158,7 +159,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I25 ist implementiert, bleibt aber bewusst OPEN. Nächster sicherer Schritt ist die reale Folge-Evidence über `./start.sh --i25-evidence` für 100/150/200 %, Tastatur/Fokus, Mehrfachauswahl, Zielordnerwahl und Laienverständlichkeit. Erst danach dürfen `files.preview_copy` und `files.preview_move` auf READY wechseln.**
+**I25 wird autonom bis zur Wahrnehmungsgrenze geprüft. `./start.sh --i25-evidence` übernimmt 100/150/200 %, Tastatur/Fokus, Mehrfachauswahl, Same-Root-Zielwahl, Preview und Screenshots automatisch; menschlich bleibt nur eine finale Chromium-Frage zur Gesamtverständlichkeit. Erst danach dürfen `files.preview_copy` und `files.preview_move` auf READY wechseln.**
 
 
 ## Screenshots

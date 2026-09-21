@@ -36,7 +36,7 @@ GUI: OPEN-Funktionen bleiben im normalen Nutzerweg verborgen. Der reale Prüfmod
 ./start.sh --i25-evidence
 ```
 
-gestartet und zeigt die beiden Aktionen sichtbar als **Prüfmodus**. Mehrfachauswahl ist aktiviert; Ziel- und Sicherheitsentscheidung verbleiben im gemeinsamen Core.
+gestartet und zeigt die beiden Aktionen sichtbar als **Prüfmodus**. Mehrfachauswahl ist aktiviert. Zielordner werden nicht mehr über einen freien Dateidialog gewählt, sondern ausschließlich aus einer vom Core erzeugten Liste vorhandener, symlinkfreier Ordner innerhalb der Root. Der Core validiert das Ziel danach trotzdem erneut.
 
 ## Sicherheitsgrenzen
 
@@ -68,20 +68,23 @@ Der Read-only-Lock bleibt aktiv.
 - Read-only-Lock;
 - Core Diagnostic.
 
-## Reale Evidence vor READY
+## Evidence vor READY
 
-Noch erforderlich:
+Die technischen Punkte werden jetzt automatisch über `scripts/i25_auto_evidence.py` geprüft:
 
 - 100 / 150 / 200 %;
-- Tab / Shift+Tab;
-- sichtbarer Fokus;
-- Mehrfachauswahl;
-- Zielordnerwahl;
-- Preview vollständig erreichbar;
-- verständlicher Abbruch;
-- Laienverständlichkeit.
+- Tab / Shift+Tab und sichtbarer Fokus;
+- Mehrfachauswahlvertrag;
+- Same-Root-Zielwahlliste;
+- externe/Symlink-Ziele nicht auswählbar;
+- Copy-/Move-Preview;
+- unveränderte Quelldateien;
+- verständliche Abbruch-/Statuspfade;
+- Screenshots und maschinenlesbare Auswertung.
 
-Erst bei realem PASS dürfen die Registry-Einträge in einem separaten kleinen Freeze-Batch auf `READY` wechseln.
+Der Nutzerstart `./start.sh --i25-evidence` führt diese Prüfungen automatisch aus und zeigt nur bei technischem PASS noch genau eine finale Chromium-Frage zur Gesamtverständlichkeit. `./start.sh --i25-offscreen` führt nur den technischen Teil aus.
+
+Erst bei technischem PASS plus finalem Human-PASS dürfen die Registry-Einträge in einem separaten kleinen Freeze-Batch auf `READY` wechseln.
 
 ## Prozessbefund
 
