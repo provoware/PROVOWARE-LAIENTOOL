@@ -2,8 +2,8 @@
 
 ## Ergebnis
 
-**I17-AUTO:** PASS  
-**I17-HUMAN:** PASS  
+**I17-AUTO:** PASS
+**I17-HUMAN:** PASS
 **I17 GESAMT:** PASS
 
 ## Zielsystemlauf

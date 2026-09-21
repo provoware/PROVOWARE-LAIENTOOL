@@ -2,7 +2,7 @@
 
 ## I25 – Adapter-Implementierung nach grünem I17-Freeze
 
-**Status:** 🔵 FREIGEGEBEN FÜR PLANUNG  
+**Status:** 🔵 FREIGEGEBEN FÜR PLANUNG
 **Fortschritt:** `░░░░░░░░░░ 0 %`
 
 ## Abgeschlossener Vorgänger

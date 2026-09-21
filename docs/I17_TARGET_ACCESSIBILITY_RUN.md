@@ -2,8 +2,8 @@
 
 ## Status
 
-**I17-AUTO:** 🟢 PASS  
-**I17-HUMAN:** 🟢 PASS  
+**I17-AUTO:** 🟢 PASS
+**I17-HUMAN:** 🟢 PASS
 **I17 GESAMT:** 🟢 FROZEN PASS
 
 Realer Zielsystemlauf bestätigt auf Commit `1678f050083f9e172fd9122f2808b0a7c45dea05`.
