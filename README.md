@@ -99,6 +99,23 @@ Subagenten sind **triggerbasiert**, nicht standardmäßig aktiv. Explorer, Imple
 
 Die vollständigen Trigger und Stop-Bedingungen stehen in [AGENTS.md](AGENTS.md). Der Update-Prozess wird zusätzlich durch den [Update-Organisator mit Zwei-Spuren-Modell](docs/UPDATE_ORCHESTRATION.md) geregelt. Der aktuelle A/B-Stand, die Besitzmatrix, der Iterationsfortschritt und die nächsten drei vorgeplanten Schritte stehen in [CURRENT_ITERATION.md](docs/CURRENT_ITERATION.md). Pro Write-Batch hat jede Datei genau einen schreibenden Besitzer; Prüfer bleiben read-only. Jede Iteration endet außerdem mit einer kurzen Drei-Schritte-Vorausplanung.
 
+## Lokale Python-Umgebung
+
+Der Standardweg ist **Venv-first**. System-Python wird nur verwendet, um die lokale `.venv` anzulegen; GUI und I17 laufen anschließend ausschließlich über `.venv/bin/python`.
+
+Empfohlene Befehle:
+
+```bash
+./start.sh --check
+./start.sh --setup
+./start.sh --gui
+./start.sh --i17
+```
+
+`start.sh` installiert niemals per `sudo`/`apt` und schreibt keine Python-Pakete in das System. Fehlt die lokale Umgebung oder die festgelegte GUI-Abhängigkeit, wird vor dem Erzeugen bzw. vor dem PyPI-Download ausdrücklich gefragt. Für bewusst nicht-interaktive Einrichtung existiert `--yes`.
+
+Die GUI-Abhängigkeit ist in `requirements-gui.txt` reproduzierbar auf **PySide6 6.11.2** festgelegt. `.venv/` bleibt über `.gitignore` außerhalb des Repositories.
+
 ## Automatische Qualitätsprüfung
 
 `.github/workflows/repo-quality.yml` läuft ohne Projektabhängigkeiten und prüft Repository-Verträge:
