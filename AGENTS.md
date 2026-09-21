@@ -95,28 +95,28 @@ Subagent standardmäßig **AUS**. Aktivierung nur, wenn alle Bedingungen erfüll
 - keine konkurrierende Schreibhoheit an derselben Datei.
 
 ### Explorer 🔎
-Trigger: unbekannter Codepfad, mehrere mögliche Besitzer oder Architekturfrage vor einem Patch.  
-Modus: read-only.  
+Trigger: unbekannter Codepfad, mehrere mögliche Besitzer oder Architekturfrage vor einem Patch.
+Modus: read-only.
 Stop: relevante Dateien, Datenfluss und maximal drei Risiken benannt.
 
 ### Implementierer 🛠️
-Trigger: fachlich abtrennbares Modul mit exklusivem Dateibesitz und stabiler Schnittstelle.  
-Modus: write nur im zugewiesenen Scope.  
+Trigger: fachlich abtrennbares Modul mit exklusivem Dateibesitz und stabiler Schnittstelle.
+Modus: write nur im zugewiesenen Scope.
 Stop: Patch + direkte Tests + geänderte Dateien + Restrisiken.
 
 ### Testprüfer 🧪
-Trigger: nicht-trivialer Patch, Regression oder Release-Gate.  
-Modus: bevorzugt read-only; repariert eigene Befunde nicht selbst.  
+Trigger: nicht-trivialer Patch, Regression oder Release-Gate.
+Modus: bevorzugt read-only; repariert eigene Befunde nicht selbst.
 Stop: PASS/FAIL/OPEN mit reproduzierbarer Prüfanweisung.
 
 ### UX-/Accessibility-Prüfer ♿
-Trigger: sichtbare GUI-, Fokus-, Navigation-, Theme-, Skalierungs- oder Textänderung.  
-Modus: read-only Bewertung.  
+Trigger: sichtbare GUI-, Fokus-, Navigation-, Theme-, Skalierungs- oder Textänderung.
+Modus: read-only Bewertung.
 Stop: Befunde für 100/150/200 %, Tastatur, Fokus, Kontrast, Reduced Motion.
 
 ### Sicherheitsprüfer 🛡️
-Trigger: Pfade, Schreiben/Löschen/Verschieben, Recovery, Diagnose, Paketierung, Plugins, Netzwerk oder Berechtigungen.  
-Modus: read-only Gegenprüfung.  
+Trigger: Pfade, Schreiben/Löschen/Verschieben, Recovery, Diagnose, Paketierung, Plugins, Netzwerk oder Berechtigungen.
+Modus: read-only Gegenprüfung.
 Stop: Angriff-/Fehlerpfade, vorhandene Gates, offene Blocker.
 
 ### Minimaler Auftrag

@@ -4,8 +4,8 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 
 ## Projektstatus
 
-**Gesamtstatus:** 🟨 PLANUNG / REPOSITORY-FOUNDATION  
-**Schreibende Dateioperationen:** 🔒 GESPERRT  
+**Gesamtstatus:** 🟨 PLANUNG / REPOSITORY-FOUNDATION
+**Schreibende Dateioperationen:** 🔒 GESPERRT
 **Produktcode:** 0 % – noch kein freigegebener Anwendungskern auf `main`
 
 | Bereich | Stand | Anzeige |

@@ -40,6 +40,6 @@ Ein Satz:
 
 ## Abschluss
 
-**Status:** 🟢 / 🟨 / 🔴  
-**Offen:**  
+**Status:** 🟢 / 🟨 / 🔴
+**Offen:**
 **Nächster Schritt:**
