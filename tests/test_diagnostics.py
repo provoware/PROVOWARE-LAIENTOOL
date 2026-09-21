@@ -95,6 +95,16 @@ class DiagnosticReportTests(unittest.TestCase):
         self.assertNotIn("/home/alice", joined)
         self.assertIn("$HOME/private.txt", joined)
 
+    def test_start_profile_is_present_as_single_entry(self) -> None:
+        report = build_diagnostic_report(preflight=sample_preflight())
+        matches = [
+            entry
+            for entry in report.entries
+            if entry.category == "start" and entry.key == "profile"
+        ]
+        self.assertEqual(len(matches), 1)
+        self.assertEqual(matches[0].value, "gui-ready")
+
     def test_open_preflight_produces_open_health(self) -> None:
         report = build_diagnostic_report(preflight=sample_preflight("OPEN"))
         self.assertEqual(report.health_status, "OPEN")
