@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Build / package
+build/
+dist/
+*.zip
+
+# Local diagnostics and temporary data
+*.log
+*.tmp
+*.bak
+*~
+diagnose-*.txt
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
