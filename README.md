@@ -26,7 +26,9 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I18 Inventar-Komfort | read-only Suche, Sortierung und Top-10/50/100-Größenansichten im Domain-/Application-Core; sichtbare GUI-Anbindung wartet auf realen I17-Lauf | 🟨 CI ausstehend |
 | I19 Zielwahl-Decision | Same-Root-Zielwahl ohne Overwrite beschlossen; externe Ziele bleiben gesperrt; statischer Read-only-Lock blockiert Schreib-APIs im Produktcode | 🟨 CI ausstehend |
 | I20 Diagnose-Observability | redigierter read-only Diagnosebericht als Klartext/JSON, CLI-only Use Case und stdout-Helfer; kein Datei-Export | 🟢 Repository grün |
-| I21 Same-Root Copy/Move Preview | gemeinsamer Core erzeugt Copy-/Move-Preview nur innerhalb derselben Root; Overwrite, externe Ziele und Auto-Rename blockiert | 🟨 CI ausstehend |\n| Schreibpfade | 0 freigegeben | 🔒 gesperrt |
+| I21 Same-Root Copy/Move Preview | gemeinsamer Core erzeugt Copy-/Move-Preview nur innerhalb derselben Root; Overwrite, externe Ziele und Auto-Rename blockiert | 🟢 Repository grün |
+| I22 Diagnose-Export Decision | späterer expliziter redigierter lokaler Export grundsätzlich zulässig, aber nur mit eigenem Writer-/Guard-REOPEN; aktuell keine Implementierung | 🟨 Decision Gate |
+| Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
 
@@ -129,7 +131,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I21 Same-Root Copy/Move-Preview über CI einfrieren. Danach I22 ausschließlich als Diagnose-Export Decision Gate eröffnen; Executor und Persistenz bleiben gesperrt.**
+**I22 Diagnose-Export-Entscheidung über CI einfrieren. Danach I23 nur als Adapter-Decision planen; sichtbarer GUI-Ausbau bleibt bis zum realen I17-Lauf gegated.**
 
 
 ## Screenshots
