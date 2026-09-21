@@ -27,8 +27,9 @@ Der Prozentwert bildet ausschließlich definierte I14-Evidence-Checkpoints ab.
 - 🟨 sichtbarer Fokus im realen Rendering OPEN
 - 🟨 Reduced-Motion-/Bewegungsprüfung OPEN
 - 🟨 Laienverständlichkeit OPEN
-- 🔵 Repository-/PR-CI-Gates
-- 🔵 finaler Diff / Merge / Post-Merge
+- 🟢 Repository-/PR-CI-Gates PASS
+- 🟢 finaler Diff ohne Scope-Drift
+- 🔵 Merge / Post-Merge
 
 ## B – VARIABLE FOLGEAUFGABE
 
