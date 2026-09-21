@@ -2,8 +2,8 @@
 
 ## I13 – B06 Recovery-/Journal-Zustandsvertrag
 
-**Status:** 🟨 IN ARBEIT
-**Fortschritt:** `███████░░░ 70 %`
+**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
+**Fortschritt:** `█████████░ 90 %`
 
 Der Prozentwert bildet ausschließlich definierte I13-Checkpoints ab.
 
@@ -25,8 +25,9 @@ Der Prozentwert bildet ausschließlich definierte I13-Checkpoints ab.
 - 🟢 Crash-Matrix definiert
 - 🟢 automatische Wiederholung in allen Crash-Zuständen gesperrt
 - 🟢 Unit-Tests für Happy Path, Blockaden und Crashfälle angelegt
-- 🔵 Repository-/PR-CI-Gates
-- 🔵 finaler Diff / Merge / Post-Merge
+- 🟢 Repository-/PR-CI-Gates PASS
+- 🟢 finaler Diff ohne Scope-Drift
+- 🔵 Merge / Post-Merge
 
 ## B – VARIABLE FOLGEAUFGABE
 
