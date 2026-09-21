@@ -1,41 +1,40 @@
 # PROVOWARE – Current Iteration
 
-## I11 – Read-only GUI-/CLI-Shell
+## I12 – B05 Immutable Preview-Modell
 
-**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN / VISUELLE EVIDENCE OPEN
-**Fortschritt:** `█████████░ 90 %`
+**Status:** 🟨 IN ARBEIT
+**Fortschritt:** `███████░░░ 70 %`
 
-Der Prozentwert bildet ausschließlich definierte I11-Checkpoints ab.
+Der Prozentwert bildet ausschließlich definierte I12-Checkpoints ab.
 
 ## A – FESTER PLAN
 
-**Quelle:** I10-Drei-Schritte-Vorausplanung + B02/B03 + GUI-/CLI-Paritätsvertrag.
+**Quelle:** I11-Drei-Schritte-Vorausplanung + B05 + AQ-001/AQ-003/AQ-004.
 
-**Ziel:** gemeinsamen read-only Application-/Navigation-Core schaffen und darauf sowohl ein laienfreundliches Zahlenmenü als auch eine optionale PySide6-Grundshell setzen.
+**Ziel:** einen immutable, fail-closed Preview-Vertrag für spätere Dateiaktionen schaffen, der Wirkung, Umfang, Pfadgrenzen und Rückweg beschreibt, ohne irgendeinen Executor oder Schreibzugriff einzuführen.
 
 **Checkpoints:**
 
-- 🟢 gemeinsamer Application-Core
-- 🟢 Registry um drei reale read-only Use Cases erweitert
-- 🟢 Zahlenmenü ausschließlich aus Registry abgeleitet
-- 🟢 PySide6-Shell ausschließlich als Adapter
-- 🟢 vier dokumentierte Theme-Familien umgesetzt
-- 🟢 Größenwahl 100/125/150/175/200 %
-- 🟢 Starter-Routing für `--menu` und `--gui`
-- 🟢 bestehende B01-Default-Startsemantik erhalten
-- 🟢 technische Paritätstests angelegt
-- 🟢 Repository-/PR-CI-Gates PASS
-- 🟢 finaler Diff ohne Scope-Drift
-- 🔵 Merge / Post-Merge
-- 🟨 reale visuelle Accessibility-Evidence bleibt separat OPEN
+- 🟢 `PreviewItem` immutable definiert
+- 🟢 `PreviewPlan` immutable definiert
+- 🟢 `PreviewCheck` immutable definiert
+- 🟢 `writes_enabled=False` fest im Plan
+- 🟢 Aktionen auf `copy | move | trash` begrenzt
+- 🟢 irreversible Direktlöschung nicht modelliert
+- 🟢 Quellen an B01-Pfadvertrag gebunden
+- 🟢 Ziele an B01-Pfadvertrag mit Planungsmodus gebunden
+- 🟢 Wirkung, Byte-Umfang, Reversibilität und Recovery-Hinweis verpflichtend validiert
+- 🟢 Tests für Außenpfad, fehlende Quelle, Doppel-ID, negative Größe, identische Quelle/Ziel und Trash-Reversibilität angelegt
+- 🔵 Repository-/PR-CI-Gates
+- 🔵 finaler Diff / Merge / Post-Merge
 
 ## B – VARIABLE FOLGEAUFGABE
 
-**Quelle letzter Lauf:** I10 war bereits gemergt und Post-Merge-CI grün, während `CURRENT_ITERATION.md` noch „Merge / Post-Merge“ als offen auswies.
+**Quelle letzter Lauf:** I11 war bereits gemergt und Post-Merge-CI grün, während `CURRENT_ITERATION.md` noch „Merge / Post-Merge“ als offen auswies.
 
 **Priorität:** Dokumentationsdrift.
 
-**Maßnahme:** I11 startet vom bestätigten grünen I10-`main`; der alte Status wird damit ersetzt.
+**Maßnahme:** I12 startet vom bestätigten grünen I11-`main`; der alte Status wird damit ersetzt.
 
 **Status:** 🟢 erledigt.
 
@@ -43,55 +42,49 @@ Der Prozentwert bildet ausschließlich definierte I11-Checkpoints ab.
 
 | Datei | Schreibender Besitzer | Prüfer |
 | --- | --- | --- |
-| `src/provoware_laientool/application_core.py` | IMPLEMENT | VERIFY read-only |
-| `src/provoware_laientool/cli_shell.py` | IMPLEMENT | VERIFY read-only |
-| `src/provoware_laientool/gui_shell.py` | IMPLEMENT | VERIFY read-only |
-| `src/provoware_laientool/ui_themes.py` | IMPLEMENT | VERIFY read-only |
-| `src/provoware_laientool/capability_registry.py` | IMPLEMENT nach Core-Batch | VERIFY read-only |
-| `start.py` | IMPLEMENT nach Adapter-Batch | VERIFY read-only |
-| `tests/test_i11_shell.py` | IMPLEMENT/TEST-SCOPE | VERIFY read-only |
-| `tests/test_capability_registry.py` | TEST-SCOPE nach Vertragsänderung | VERIFY read-only |
-| `docs/I11_READONLY_SHELL.md` | DOC | VERIFY read-only |
+| `src/provoware_laientool/preview_model.py` | IMPLEMENT | VERIFY read-only |
+| `tests/test_preview_model.py` | IMPLEMENT/TEST-SCOPE | VERIFY read-only |
+| `docs/I12_PREVIEW_MODEL.md` | DOC | VERIFY read-only |
 | `docs/CURRENT_ITERATION.md` | ORGANIZE/DOC | VERIFY read-only |
 | `README.md` | DOC | VERIFY read-only |
 | `todo.txt` | DOC | VERIFY read-only |
 | `scripts/repo_quality.py` | PROCESS-IMPLEMENT | VERIFY read-only |
 
-Die Änderungen wurden serialisiert: zuerst Core/Adapter-Dateien, danach Registry/Starter-Vertrag.
-
 ## Nicht-Ziele
 
-- keine Datei-Inventarisierung;
-- keine Dateioperation;
-- keine persistente Einstellung;
+- kein Dateiinventar;
+- kein Klassifizieren;
 - kein Executor;
-- kein Preview-/Recovery-Vorgriff;
-- keine automatische Installation von PySide6;
-- kein behauptetes visuelles Accessibility-PASS ohne reale Evidence.
+- kein Copy/Move/Delete/Trash-Echtlauf;
+- kein Journal;
+- kein Undo;
+- kein Recovery-Mechanismus;
+- keine GUI-/CLI-Erweiterung;
+- keine TOCTOU-Freigabe.
 
 ## Exit-Gates
 
-1. I11 Unit-/Paritätstests PASS.
+1. Preview-Unit-Tests PASS.
 2. vollständige Test-Suite PASS.
 3. Repository-Contract PASS.
 4. Info-Text-Impact PASS.
-5. bestehender Preflight Text/JSON PASS.
+5. bestehender B01/I11-Stand regressionsfrei.
 6. finaler Diff ohne Scope-Drift.
 7. Post-Merge-CI PASS.
 
 ## Nächste drei vorgeplante Schritte
 
-### 1. 🔵 I12 – B05 Preview-Modell
-**Ziel:** immutable Vorschauvertrag für spätere Dateiaktionen definieren.
-**Abhängigkeit:** gemeinsamer Application-Core aus I11.
-**Gate:** Quelle, Ziel, Wirkung, Umfang, Sicherheitsgrenzen und Rückweg modelliert; kein Executor.
-
-### 2. 🔵 I13 – B06 Recovery-Zustandsvertrag
+### 1. 🔵 I13 – B06 Recovery-Zustandsvertrag
 **Ziel:** Journal-/Undo-/Crash-/Recovery-Zustände fachlich definieren.
-**Abhängigkeit:** Preview-Vertrag aus I12.
-**Gate:** Zustandsautomat und Failure-Matrix vollständig; produktive Schreibpfade weiter gesperrt.
+**Abhängigkeit:** I12 Preview-Vertrag grün.
+**Gate:** Zustandsautomat + Failure-Matrix vollständig; keine produktive Dateioperation.
 
-### 3. 🔵 I14 – reale Shell-/Accessibility-Evidence
-**Ziel:** I11 auf echter PySide6-/Display-Umgebung bei 100/150/200 %, Tastatur, Fokus und Kontrast reproduzierbar prüfen.
-**Abhängigkeit:** stabiler I11-Merge.
-**Gate:** technisches PASS plus dokumentiertes Laien-/Accessibility-Ergebnis; offene Punkte bleiben OPEN.
+### 2. 🔵 I14 – reale Shell-/Accessibility-Evidence
+**Ziel:** I11 auf echter PySide6-/Display-Umgebung mit 100/150/200 %, Tastatur, Fokus und Kontrast prüfen.
+**Abhängigkeit:** stabiler I11/I12-`main`.
+**Gate:** technisches PASS plus dokumentiertes Laien-/Accessibility-Ergebnis.
+
+### 3. 🔵 I15 – read-only Dateiinventar
+**Ziel:** B05 erstmals reale Downloads ausschließlich lesend inventarisieren und daraus Preview-Eingaben erzeugen.
+**Abhängigkeit:** Preview- und Recovery-Verträge eingefroren.
+**Gate:** keine Schreiboperation; Pfad-/Symlink-Grenzen; große Mengen/Sondernamen/Fehlerfälle getestet.
