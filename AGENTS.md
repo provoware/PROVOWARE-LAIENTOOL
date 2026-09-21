@@ -52,6 +52,23 @@ Regeln:
 - fehlende Prüfung = `OPEN`, niemals implizit `PASS`;
 - Fehler nicht durch Abschalten oder Aufweichen von Tests lösen.
 
+### Anti-Endlosschleifen- und Retry-Regeln
+
+Für Tests, Diagnose, Agentenläufe und Reparaturschleifen gilt zusätzlich:
+
+- jeder automatisierte Lauf erhält eine endliche Laufzeit oder ein übergeordnetes Timeout;
+- identischer fehlgeschlagener Befehl darf ohne Code-, Fixture-, Umgebungs- oder Konfigurationsänderung höchstens **einmal** zur Reproduktionsbestätigung wiederholt werden;
+- derselbe ursächliche Fehler erhält höchstens **zwei** gezielte `WRITE → TARGETED TEST`-Reparaturzyklen; danach **STOP → neu planen**, statt weiter zu patchen;
+- Full Suite erst nach grünem targeted Test; nicht nach jedem Zwischenpatch erneut die gesamte Suite starten;
+- ein Timeout ist ein eigener Befund und wird nicht automatisch als Produktfehler gewertet;
+- automatische Retries benötigen explizites `max_attempts`, begrenzten Backoff und eine sichtbare Abbruchbedingung;
+- Endlosschleifen bzw. unbegrenzte Poll-/Wait-Schleifen sind in Tests und Entwicklungswerkzeugen verboten;
+- Tests dürfen nicht durch Abschwächung, Skip oder höhere Retry-Zahl "grün gemacht" werden;
+- jeder Wiederholungslauf muss eine konkrete Hypothese prüfen oder neue Evidence erzeugen. Reine Wiederholung ohne Informationsgewinn ist verboten;
+- bei Hänger/Timeout zuerst Prozess, Child-Prozesse und Ressourcenlage prüfen; nicht sofort denselben Test erneut starten.
+
+**Stop-Signale:** gleicher Fehler zweimal unverändert, Timeout zweimal am selben Punkt, wachsender Scope oder mehr als zwei Reparaturzyklen ohne Ursachenbeleg. Dann wird der Block als `OPEN`/`FAIL` beendet und neu geplant.
+
 ## 4. Sicherheitsgrenzen
 
 - Keine stille Installation oder Downloads.

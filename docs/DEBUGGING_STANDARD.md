@@ -128,6 +128,35 @@ Logs und Evidence vermeiden:
 
 Bei notwendigen Pfadangaben bevorzugt redigieren oder temporäre reproduzierbare Fixtures verwenden.
 
+## Begrenzte Ausführung und Anti-Schleifen-Regel
+
+Debugging darf nicht in eine unbegrenzte Reparatur- oder Testschleife übergehen.
+
+### Laufzeitgrenzen
+
+- CI-Jobs erhalten ein festes `timeout-minutes`.
+- Lokale Tests/Diagnosen werden mit einer angemessenen Zeitgrenze gestartet; für den aktuellen kleinen Repository-Stand sind 2 Minuten pro Einzelgate und 5 Minuten für die vollständige Testsuite der Standard.
+- Ein legitimer Test, der mehr Zeit benötigt, bekommt eine **begründete, dokumentierte Ausnahme** statt eines pauschal höheren Limits.
+- Exit-Code `124` eines GNU-`timeout`-Aufrufs bedeutet **TIMEOUT/INFRASTRUCTURE bis zur Ursachenklärung**, nicht automatisch PRODUCT.
+
+### Wiederholungsbudget
+
+1. Erster Fehlerlauf: Ursache klassifizieren.
+2. Ein identischer zweiter Lauf ist nur zur Reproduktionsbestätigung erlaubt.
+3. Ohne Zustandsänderung gibt es keinen dritten identischen Lauf.
+4. Pro bestätigter Root Cause höchstens zwei gezielte Reparaturzyklen.
+5. Danach: STOP, Befund dokumentieren, Scope/Plan neu bestimmen.
+
+### Testökonomie
+
+`targeted → relevantes Cross-Core-Gate → Full Suite → CI`
+
+- Full Suite nicht als Suchwerkzeug verwenden.
+- Nach einem Full-Suite-Fehler zuerst den kleinsten fehlgeschlagenen Test isolieren.
+- Nach reiner Doku-/Prozessänderung keine fachfremden Produkt-Smokes hinzufügen.
+- Keine "vorsorglichen" Testwiederholungen bei bereits grünem, unverändertem Stand.
+- Flaky-Verhalten wird als Befund behandelt; es wird nicht durch automatische Wiederholung verdeckt.
+
 ## Stop-Regel
 
 Ein VERIFY-/Diagnose-Schritt darf einen gefundenen Produktfehler nicht im selben Prüferauftrag heimlich reparieren.
