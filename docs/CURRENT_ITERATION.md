@@ -2,8 +2,8 @@
 
 ## I31 – Diagnose-Export GUI-/CLI-Prüfmodus
 
-**Status:** 🟨 RC · AUTO-EVIDENCE AUSSTEHEND
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🟢 AUTO PASS · HUMAN-GATE OPEN
+**Fortschritt:** `█████████▌ 95 %`
 
 ## Implementiert
 
@@ -37,6 +37,12 @@ Der I31-Prüfmodus schreibt ausschließlich in eigens erzeugte temporäre Testor
 9. Full Suite/Core Diagnostic/Preflight.
 10. Registry bleibt OPEN.
 
-## Danach
+## AUTO-Ergebnis
 
-Bei komplett grünem AUTO-Stand bleibt ausschließlich eine finale Human-Gesamtabnahme. Vor deren PASS wird kein normaler Exportweg freigeschaltet.
+Der technische I31-Pfad ist vollständig grün. Verbleibend ist ausschließlich die finale Human-Gesamtabnahme des sichtbaren Prüfmodus.
+
+## Nächste drei Schritte
+
+1. 🟢 I31 Evidence an RC `2a90de7a45ca900d9cc203f4d6db4c4ee806e6c3` binden und mergen.
+2. 🟨 irgendwann genau eine Human-Gesamtabnahme über `./start.sh --i31-evidence`; keine weiteren Einzeltests.
+3. 🔒 erst bei Human-PASS einen separaten Freeze-/READY-Decision-Block eröffnen; bis dahin bleibt der normale Produktweg gesperrt.

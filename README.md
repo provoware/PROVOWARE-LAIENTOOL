@@ -36,7 +36,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I28 Diagnose-Writer Testlab | isolierter create-only/no-clobber Writer mit Hash/Größe, Directory-fsync und automatischer Race/Crash/ENOSPC/PermissionError-Matrix; ohne Adapter/Registry | 🟢 AUTO PASS · produktiv nicht erreichbar |
 | I29 Diagnose-Export Authorization Decision | Doppelbestätigung, Plan-Fingerprint, Cancel-Semantik, GUI/CLI-Parität und neue Registry-Sicherheitsklasse festgelegt | 🟢 Decision eingefroren |
 | I30 Diagnose-Export Autorisierung | nichtvisuelle zweistufige sessiongebundene Autorisierung mit Fingerprint-, Stale-, Manipulations- und Replay-Schutz; Writer one-shot; Registry bleibt OPEN | 🟢 AUTO PASS · keine Standardadapter |
-| I31 Diagnose-Export Adapter-Evidence | GUI-/CLI-Prüfmodus auf demselben I26/I30/I28-Pfad; synthetische Daten, temporäre Ziele, Doppelbestätigung, Cancel und Auto-Evidence | 🟨 RC · Registry weiter OPEN |
+| I31 Diagnose-Export Adapter-Evidence | GUI-/CLI-Prüfmodus auf demselben I26/I30/I28-Pfad; 100/150/200 %, Tastatur, Doppelbestätigung, Cancel, BLOCKED und exakt-eine-Datei-PASS automatisch belegt | 🟢 AUTO PASS · Human-Gate offen · Registry OPEN |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -171,7 +171,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I25 bleibt an seiner einzigen Human-Wahrnehmungsfrage gegated. I31 prüft den sichtbaren Diagnoseexport ausschließlich mit synthetischen Daten im gegateten GUI-/CLI-Prüfmodus; Registry bleibt bis vollständig grüner Auto-Evidence und einer finalen Human-Gesamtabnahme OPEN.**
+**I25 und I31 besitzen jeweils nur noch eine finale Human-Wahrnehmungsfrage. I31 ist technisch vollständig AUTO PASS; bis zur einen Gesamtabnahme bleibt diagnostics.export_local OPEN und im normalen Produktweg unsichtbar.**
 
 
 ## Screenshots
