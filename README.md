@@ -36,9 +36,9 @@ Wichtige Leitplanken:
 
 Die geplante GUI basiert auf **PySide6/Qt**. **Tkinter ist im Produktionscode ausgeschlossen.** Datei- und Tabellenansichten sollen Qt-Modelle/Delegates verwenden; Thumbnails und Vorschauen werden bedarfsgesteuert und außerhalb des UI-Threads geladen.
 
-GUI und Linux-Konsole sind zwei Adapter desselben Fachkerns. Nicht rein visuelle Funktionen erhalten grundsätzlich denselben fachlichen Ablauf, damit Sicherheitsregeln nicht doppelt implementiert werden.
+GUI und Linux-Konsole sind zwei Adapter desselben Fachkerns. Jede fachliche GUI-Funktion benötigt einen gleichwertigen laienfreundlichen Konsolenweg über ein Zahlen-Auswahlmenü; rein visuelle Ausnahmen müssen ausdrücklich begründet sein. Beide Adapter verwenden dieselben Use Cases, Sicherheitsregeln, Preview-/Recovery-Verträge und Fachresultate.
 
-Siehe [ADR-0001](docs/adr/ADR-0001-ui-cli-foundation.md), das [UI-Designsystem](docs/UI_DESIGN_SYSTEM.md), die [Theme-Tokens](docs/theme-tokens.md), den [messbaren Laien-Qualitätsstandard](docs/LAIEN_QUALITY_STANDARD.md) und die [Info-Text-Governance](docs/INFO_TEXT_GOVERNANCE.md).
+Siehe [ADR-0001](docs/adr/ADR-0001-ui-cli-foundation.md), das [UI-Designsystem](docs/UI_DESIGN_SYSTEM.md), die [Theme-Tokens](docs/theme-tokens.md), den [messbaren Laien-Qualitätsstandard](docs/LAIEN_QUALITY_STANDARD.md), die [Info-Text-Governance](docs/INFO_TEXT_GOVERNANCE.md) und den [GUI-/Konsolen-Paritätsvertrag](docs/GUI_CLI_PARITY.md).
 
 ## Repository-Struktur
 
@@ -49,6 +49,7 @@ Siehe [ADR-0001](docs/adr/ADR-0001-ui-cli-foundation.md), das [UI-Designsystem](
 ├── README.md                         # zentrale Projektübersicht
 ├── todo.txt                          # operative priorisierte Arbeitsliste
 ├── docs/
+│   ├── CURRENT_ITERATION.md          # A/B-Iteration, Besitzmatrix, Status, nächste 3 Schritte
 │   ├── adr/                          # Architekturentscheidungen
 │   └── evidence/                     # Regeln für reproduzierbare Nachweise
 ├── scripts/repo_quality.py           # dependency-freier Repository-Gate
@@ -78,7 +79,7 @@ Vor jeder Änderung:
 
 Subagenten sind **triggerbasiert**, nicht standardmäßig aktiv. Explorer, Implementierer, Testprüfer, UX/Accessibility-Prüfer und Sicherheitsprüfer werden nur eingesetzt, wenn ihre Arbeit unabhängig, überschneidungsfrei und messbar günstiger ist. Schreibbesitz an einer Datei hat immer nur ein Agent.
 
-Die vollständigen Trigger und Stop-Bedingungen stehen in [AGENTS.md](AGENTS.md). Der Update-Prozess wird zusätzlich durch den [Update-Organisator mit Zwei-Spuren-Modell](docs/UPDATE_ORCHESTRATION.md) geregelt.
+Die vollständigen Trigger und Stop-Bedingungen stehen in [AGENTS.md](AGENTS.md). Der Update-Prozess wird zusätzlich durch den [Update-Organisator mit Zwei-Spuren-Modell](docs/UPDATE_ORCHESTRATION.md) geregelt. Der aktuelle A/B-Stand, die Besitzmatrix, der Iterationsfortschritt und die nächsten drei vorgeplanten Schritte stehen in [CURRENT_ITERATION.md](docs/CURRENT_ITERATION.md). Pro Write-Batch hat jede Datei genau einen schreibenden Besitzer; Prüfer bleiben read-only. Jede Iteration endet außerdem mit einer kurzen Drei-Schritte-Vorausplanung.
 
 ## Automatische Qualitätsprüfung
 
