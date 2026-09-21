@@ -20,7 +20,6 @@ FORBIDDEN_ATTRS = {
     "write_bytes",
     "unlink",
     "rename",
-    "replace",
     "mkdir",
     "touch",
     "chmod",
@@ -81,9 +80,60 @@ def _qualified_name(node: ast.AST, aliases: dict[str, str]) -> str | None:
     return None
 
 
+def _is_path_expr(
+    node: ast.AST,
+    *,
+    path_names: set[str],
+    aliases: dict[str, str],
+) -> bool:
+    if isinstance(node, ast.Name):
+        return node.id in path_names
+    if isinstance(node, ast.Call):
+        name = _qualified_name(node.func, aliases)
+        if name in {"Path", "pathlib.Path"}:
+            return True
+        if isinstance(node.func, ast.Attribute) and node.func.attr in {
+            "resolve",
+            "absolute",
+            "expanduser",
+        }:
+            return _is_path_expr(node.func.value, path_names=path_names, aliases=aliases)
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
+        return _is_path_expr(node.left, path_names=path_names, aliases=aliases)
+    if isinstance(node, ast.Attribute) and node.attr in {"parent"}:
+        return _is_path_expr(node.value, path_names=path_names, aliases=aliases)
+    return False
+
+
+def _path_variable_names(tree: ast.AST, aliases: dict[str, str]) -> set[str]:
+    names: set[str] = set()
+    changed = True
+    while changed:
+        changed = False
+        for node in ast.walk(tree):
+            target: ast.AST | None = None
+            value: ast.AST | None = None
+            if isinstance(node, ast.Assign) and len(node.targets) == 1:
+                target = node.targets[0]
+                value = node.value
+            elif isinstance(node, ast.AnnAssign):
+                target = node.target
+                value = node.value
+            if (
+                isinstance(target, ast.Name)
+                and value is not None
+                and target.id not in names
+                and _is_path_expr(value, path_names=names, aliases=aliases)
+            ):
+                names.add(target.id)
+                changed = True
+    return names
+
+
 def analyze_source(source: str, *, filename: str = "<memory>") -> tuple[str, ...]:
     tree = ast.parse(source, filename=filename)
     aliases = _import_aliases(tree)
+    path_names = _path_variable_names(tree, aliases)
     violations: list[str] = []
 
     for node in ast.walk(tree):
@@ -100,6 +150,20 @@ def analyze_source(source: str, *, filename: str = "<memory>") -> tuple[str, ...
         if isinstance(node.func, ast.Attribute) and node.func.attr in FORBIDDEN_ATTRS:
             violations.append(
                 f"{filename}:{line}: verbotene Schreib-API .{node.func.attr}()"
+            )
+            continue
+
+        if (
+            isinstance(node.func, ast.Attribute)
+            and node.func.attr == "replace"
+            and _is_path_expr(
+                node.func.value,
+                path_names=path_names,
+                aliases=aliases,
+            )
+        ):
+            violations.append(
+                f"{filename}:{line}: verbotene Path-Schreib-API .replace()"
             )
             continue
 
