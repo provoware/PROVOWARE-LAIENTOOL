@@ -75,6 +75,18 @@ REGISTRY: tuple[UseCaseCapability, ...] = (
         status=STATUS_READY,
     ),
     UseCaseCapability(
+        id="diagnostics.snapshot",
+        label="Diagnose anzeigen",
+        gui_available=False,
+        cli_available=True,
+        diagnostic_cli_only=True,
+        safety_class=SAFETY_READ_ONLY,
+        preview_required=False,
+        recovery_required=False,
+        required_capability=None,
+        status=STATUS_READY,
+    ),
+    UseCaseCapability(
         id="app.help",
         label="Hilfe",
         gui_available=True,
