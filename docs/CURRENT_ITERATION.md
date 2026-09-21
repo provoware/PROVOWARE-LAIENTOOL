@@ -2,8 +2,8 @@
 
 ## I12 – B05 Immutable Preview-Modell
 
-**Status:** 🟨 IN ARBEIT
-**Fortschritt:** `███████░░░ 70 %`
+**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
+**Fortschritt:** `█████████░ 90 %`
 
 Der Prozentwert bildet ausschließlich definierte I12-Checkpoints ab.
 
@@ -25,8 +25,9 @@ Der Prozentwert bildet ausschließlich definierte I12-Checkpoints ab.
 - 🟢 Ziele an B01-Pfadvertrag mit Planungsmodus gebunden
 - 🟢 Wirkung, Byte-Umfang, Reversibilität und Recovery-Hinweis verpflichtend validiert
 - 🟢 Tests für Außenpfad, fehlende Quelle, Doppel-ID, negative Größe, identische Quelle/Ziel und Trash-Reversibilität angelegt
-- 🔵 Repository-/PR-CI-Gates
-- 🔵 finaler Diff / Merge / Post-Merge
+- 🟢 Repository-/PR-CI-Gates PASS
+- 🟢 finaler Diff ohne Scope-Drift
+- 🔵 Merge / Post-Merge
 
 ## B – VARIABLE FOLGEAUFGABE
 
