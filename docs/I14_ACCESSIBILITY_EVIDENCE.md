@@ -86,26 +86,15 @@ Dafür muss die echte PySide6-Shell auf einer Zielmaschine ausgeführt werden.
 
 ## Lauf auf Zielsystem
 
+Der historische I14-Runner bleibt als interner, read-only Diagnoseweg erhalten. Der aktuelle Nutzerweg für die reale Zielsystem-Evidence ist inzwischen:
+
 ```bash
-python3 scripts/accessibility_evidence.py
-python3 start.py --gui
+./start.sh --i17
 ```
 
-Dann in allen vier Themes jeweils:
+I17-D automatisiert 100/150/200 %, Tab/Shift+Tab, Fokus, synthetische Dateivorschau und Screenshots. Chromium zeigt anschließend den Bericht und genau eine finale menschliche Laienabnahme.
 
-1. 100 % wählen und Kernansicht prüfen;
-2. 150 % wählen und erneut prüfen;
-3. 200 % wählen und erneut prüfen;
-4. ausschließlich mit Tab / Shift+Tab navigieren;
-5. jeden fokussierbaren Kernbereich auf sichtbaren Fokus prüfen;
-6. Übersicht → System prüfen → Hilfe durchlaufen;
-7. beantworten:
-   - Was kann ich als Nächstes tun?
-   - Werden Dateien verändert?
-   - Wie komme ich zurück?
-   - Was tue ich bei einem Problem?
-
-Fehlende oder unklare Antworten bleiben `OPEN` oder werden `FAIL`.
+Der historische I14-Befund wird dadurch nicht rückwirkend umgeschrieben; neue Zielsystem-Evidence gehört zu I17-D.
 
 ## Evidence-Regel
 
