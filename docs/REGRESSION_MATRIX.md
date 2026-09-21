@@ -90,3 +90,5 @@ READ
 ```
 
 Kein absichtlich roter Push und keine fachfremden Tests in frühen Schleifen.
+
+| I33 Wheelhouse-Integrität | `tests/test_i33_wheelhouse_integrity.py` + Portable-Package-Gate; exact set/version/platform/hash before offline pip |

@@ -1,61 +1,48 @@
 # PROVOWARE – Current Iteration
 
-## I32 – Portable Offline-Paketierung
+## I33 – Offline-Wheelhouse Integrität
 
-**Status:** 🟢 AUTO PASS · CI-LINUX-X86_64
+**Status:** 🟢 AUTO PASS · FREEZE-BEREIT
 **Fortschritt:** `██████████ 100 %`
 
 ## A – PLAN
 
-B07 wird als reproduzierbares Linux-x86_64-Portable-Paket umgesetzt:
-
-- deterministisches ZIP;
-- lokales Wheelhouse für PySide6;
-- Offline-first Installation via `start.sh`;
-- Desktop-Klickstarter delegiert ausschließlich an `start.sh --gui`;
-- Manifest + SHA-256;
-- Fremdpfad mit Unicode/Leerzeichen;
-- Offline-Bootstrap-Test.
+I32/B07 wird gegen Wheelhouse-Drift und unerwartete Offline-Abhängigkeiten gehärtet.
 
 ## B – DELTA
 
-Aus I31 entstand kein blockierender Produktfehler. B = **NONE**. Die I31-Human-Abnahme bleibt bewusst geparkt.
+Der redundante Parallel-PR #49 wurde als superseded geschlossen; keine Änderung daraus wird transplantiert.
+
+## Implementiert
+
+- exakt vier erlaubte Qt-Wheels;
+- exakt Version 6.11.2;
+- manylinux-x86_64 Pflicht;
+- keine Extra-/Duplicate-Wheels;
+- Build-Gate;
+- ZIP-Validierung;
+- Runtime-Manifest-/Hashprüfung unmittelbar vor `pip --no-index`;
+- Tamper-/Wrong-Version-/Wrong-Platform-/Incomplete-Tests.
 
 ## Sicherheitsgrenze
 
-- keine Produkt-READY-Änderung;
-- kein neuer Fach-Write;
-- keine Systeminstallation im Nutzerstarter;
-- keine stille Paketinstallation;
-- Wheelhouse vorhanden → strikt `--no-index`;
-- physische Zweitgeräte-Evidence bleibt OPEN.
+Die Manifestprüfung ist Korruptions-/Konsistenzschutz, keine Signatur oder Herkunftsauthentisierung.
 
 ## Exit-Gates
 
-1. Paketbuilder deterministisch.
-2. Manifest/Hashes exakt.
-3. ZIP ohne Dev-/lokale Laufzeitreste.
-4. Desktop-Launcher → `start.sh --gui`.
-5. reales gepinntes PySide6-Wheelhouse im CI.
-6. Extraktion in Unicode-/Leerzeichen-Fremdpfad.
-7. Offline-`--setup` ohne Index.
-8. `start.sh --check` im extrahierten Paket.
-9. Full Suite / Read-only-Lock / Core Diagnostic / Preflight.
-10. Paketartefakt + Validierungsbericht.
-
-## Weiter offen
-
-- reales zweites Gerät;
-- ARM;
-- Desktop-Dateimanager-Vertrauensdialog;
-- I25/I31 Human-Gates.
+1. I33 targeted tests PASS.
+2. I32 Paketregression PASS.
+3. reales CI-Wheelhouse erfüllt Exact-Set-Vertrag.
+4. Offline-Bootstrap PASS.
+5. Full Repository Gate PASS.
+6. Paketartefakt/Validation PASS.
 
 ## AUTO-Ergebnis
 
-Der Portable-Package-Gate ist auf dem exakten Source-Head `bfee18f528e6a06feb9b3b43d1da9575578f2e89` vollständig grün.
+Alle I33-Gates sind grün, einschließlich realem Linux-x86_64-Wheelhouse, Offline-Bootstrap und unabhängigen I25/I31-Regressionsgates.
 
 ## Nächste drei Schritte
 
-1. 🟢 I32 Evidence an `bfee18f528e6a06feb9b3b43d1da9575578f2e89` binden und mergen.
-2. 🔵 danach den nächsten rein automatisierbaren Release-/Sicherheitsblock wählen.
-3. 🔒 B01-Zweitgerät sowie I25/I31 Human-Gates weiter gesammelt offen halten; keine Einzeltestserie starten.
+1. 🟢 I33 Evidence an RC `2ed2d09cf60d88617997edbaca1c2c6d97e33e77` binden und mergen.
+2. 🔵 danach den nächsten rein automatisierbaren Release-/Security-Block wählen.
+3. 🔒 I25/I31 Human-Gates sowie B01-Zweitgerät weiter gesammelt offen halten.

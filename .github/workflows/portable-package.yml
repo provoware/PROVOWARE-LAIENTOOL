@@ -9,7 +9,10 @@ on:
       - "requirements-gui.txt"
       - "scripts/build_portable_package.py"
       - "scripts/validate_portable_package.py"
+      - "scripts/wheelhouse_integrity.py"
+      - "scripts/verify_wheelhouse_integrity.py"
       - "tests/test_i32_portable_package.py"
+      - "tests/test_i33_wheelhouse_integrity.py"
       - ".github/workflows/portable-package.yml"
   push:
     branches:
@@ -21,7 +24,10 @@ on:
       - "requirements-gui.txt"
       - "scripts/build_portable_package.py"
       - "scripts/validate_portable_package.py"
+      - "scripts/wheelhouse_integrity.py"
+      - "scripts/verify_wheelhouse_integrity.py"
       - "tests/test_i32_portable_package.py"
+      - "tests/test_i33_wheelhouse_integrity.py"
       - ".github/workflows/portable-package.yml"
 
 concurrency:

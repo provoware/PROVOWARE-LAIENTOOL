@@ -14,6 +14,11 @@ import sys
 import tempfile
 import zipfile
 
+try:
+    from .wheelhouse_integrity import validate_wheel_names
+except ImportError:
+    from wheelhouse_integrity import validate_wheel_names
+
 REQUIRED = {
     "README.md",
     "PROVOWARE.desktop",
@@ -134,10 +139,12 @@ def validate_archive(archive: Path, *, require_wheelhouse: bool = False) -> dict
                 failures.append("Wheelhouse-Flag und Archivinhalt widersprechen sich.")
             if manifest.get("wheel_count") != len(wheel_names):
                 failures.append("Wheel-Anzahl im Manifest stimmt nicht.")
-            if require_wheelhouse and len(wheel_names) < 4:
-                failures.append(
-                    f"Offline-Paket benötigt vollständiges PySide6-Wheelhouse; gefunden: {len(wheel_names)} Wheels."
+            if wheel_names:
+                failures.extend(
+                    validate_wheel_names(tuple(Path(rel).name for rel in wheel_names))
                 )
+            elif require_wheelhouse:
+                failures.append("Offline-Paket benötigt das vollständige PySide6-Wheelhouse.")
 
         start_info = next((info for info in infos if info.filename.endswith("/start.sh")), None)
         desktop_info = next((info for info in infos if info.filename.endswith("/PROVOWARE.desktop")), None)

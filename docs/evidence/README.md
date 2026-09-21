@@ -40,3 +40,5 @@ Dateiname: `EV-YYYYMMDD-NNN-kurzname.md`
 - `EV-20260922-009-i31-diagnostic-export-adapter-evidence.md` – I31 GUI-/CLI-AUTO-Nachweis mit 100/150/200 %, Tastatur, Doppelbestätigung, Cancel, BLOCKED und exakt-eine-Datei-PASS.
 
 - `EV-20260922-010-i32-portable-offline-package.md` – I32 deterministisches Linux-x86_64-ZIP, Offline-Wheelhouse, Fremdpfad- und Bootstrap-Nachweis.
+
+- `EV-20260922-011-i33-wheelhouse-integrity.md` – I33 Exact-Set-/Version-/Plattform-/Manifest-/SHA-256-Nachweis für das Linux-x86_64-Offline-Wheelhouse.

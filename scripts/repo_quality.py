@@ -40,6 +40,8 @@ CORE_REQUIRED = (
     "scripts/i31_auto_evidence.py",
     "scripts/build_portable_package.py",
     "scripts/validate_portable_package.py",
+    "scripts/wheelhouse_integrity.py",
+    "scripts/verify_wheelhouse_integrity.py",
     "scripts/core_diagnostics.py",
     "scripts/read_only_guard.py",
     "scripts/diagnostic_writer_guard.py",
@@ -111,6 +113,7 @@ if starter_sh.is_file():
         "scripts/i17_auto_evidence.py",
         "scripts/i25_auto_evidence.py",
         "scripts/i31_auto_evidence.py",
+        "scripts/verify_wheelhouse_integrity.py",
         "scripts/diagnostic_snapshot.py",
     ):
         if marker not in starter_text:
