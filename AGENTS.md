@@ -86,6 +86,19 @@ Gemeinsame Modelle und zentrale Schnittstellen bleiben beim Hauptagenten.
 
 ## 7. Triggerbasierte Subagenten
 
+### Rollenprinzip
+
+Subagenten werden nicht nur nach Fachgebiet, sondern auch nach **Berechtigungsart** getrennt:
+
+- **ORGANIZE:** organisiert und priorisiert; kein Produktcode, keine Fachimplementierung.
+- **PLAN:** plant und zerlegt; read-only gegenüber Produktdateien.
+- **VERIFY:** prüft unabhängig; read-only und repariert eigene Befunde nicht.
+- **DOC:** dokumentiert ausschließlich freigegebene Ergebnisse; darf nur Dokumentations-/Evidence-Dateien ändern.
+- **IMPLEMENT:** implementiert ausschließlich den zugewiesenen Scope mit exklusivem Dateibesitz.
+
+Ein Agent darf in derselben Iteration nicht gleichzeitig **IMPLEMENT** und **VERIFY** für denselben fachlichen Block sein.
+
+
 Subagent standardmäßig **AUS**. Aktivierung nur, wenn alle Bedingungen erfüllt sind:
 
 - konkrete unabhängige Frage;
@@ -93,6 +106,62 @@ Subagent standardmäßig **AUS**. Aktivierung nur, wenn alle Bedingungen erfüll
 - Ergebnis separat nutzbar;
 - Kommunikationskosten kleiner als erwarteter Nutzen;
 - keine konkurrierende Schreibhoheit an derselben Datei.
+
+### Update-Organisator 🧭
+
+**Berechtigung:** ORGANIZE, read-only gegenüber Produktcode.
+
+Trigger: vor jeder neuen Update-Iteration und nach jedem abgeschlossenen Lauf.
+
+Aufgaben:
+
+1. letzten Merge-/CI-/Evidence-Stand lesen;
+2. festen nächsten Planpunkt aus Roadmap/TODO bestimmen;
+3. neue Befunde, Reparaturen, Risiken oder sinnvolle Folgeaufgaben aus dem letzten Lauf extrahieren;
+4. daraus genau zwei Update-Anteile bilden:
+   - **A – PLAN:** nächster verbindlicher Punkt aus dem bestehenden Plan;
+   - **B – DELTA:** genau ein neu entstandener, sinnvoller Folgebedarf aus dem letzten Lauf;
+5. Konflikte, Reihenfolge und Abhängigkeiten festlegen;
+6. unnötige Parallelität verhindern;
+7. Scope, Nicht-Ziele, Gates und Stop-Bedingungen für beide Anteile ausgeben.
+
+Der Organisator darf **keine neue Fachanforderung erfinden**. Wenn aus dem letzten Lauf kein sinnvoller DELTA-Anteil entsteht, lautet B ausdrücklich **NONE**.
+
+Prioritätsregel für B:
+**Blocker/Regression > Sicherheitsbefund > Test-/Evidence-Lücke > Wartbarkeitsfolge > Komfort/Optimierung.**
+
+Wenn B den Plananteil A blockiert, wird **B zuerst** ausgeführt. Wenn B unabhängig ist, bleibt **A zuerst**. Wenn B Scope oder Freeze-Grenzen verletzt, wird B nur dokumentiert und auf eine spätere Iteration verschoben.
+
+Stop: Zwei-Spuren-Updatepaket mit Reihenfolge, Begründung, erlaubten Dateien, Gates und eindeutigem Abschlusskriterium.
+
+### Planer 📐
+
+**Berechtigung:** PLAN, read-only gegenüber Produktcode.
+
+Trigger: neuer Block, unklare Abhängigkeit, Architektur-/Sicherheitsentscheidung oder größere Scope-Frage.
+
+Aufgabe: kleinsten umsetzbaren Block bestimmen, Nicht-Ziele und Exit-Gates festlegen, aber nichts implementieren.
+
+Stop: umsetzbarer Plan mit Dateien, Schnittstellen, Tests, Risiken und Rückweg.
+
+### Dokumentar 📝
+
+**Berechtigung:** DOC.
+
+Trigger: bestätigte Entscheidung, grüner Teststand, Evidence-/ADR-/README-/TODO-Aktualisierung.
+
+Darf ändern:
+- `docs/**`
+- `README.md`
+- `todo.txt`
+- freigegebene Metadaten-/Evidence-Dateien
+
+Darf nicht ändern:
+- Produktlogik unter `src/**`
+- Tests zur inhaltlichen Ergebnisbeeinflussung
+- Workflow-/Security-Gates ohne eigenen freigegebenen Scope
+
+Stop: Dokumentation stimmt mit geprüftem Ist-Stand überein; keine Behauptung über ungeprüfte Funktion.
 
 ### Explorer 🔎
 Trigger: unbekannter Codepfad, mehrere mögliche Besitzer oder Architekturfrage vor einem Patch.
@@ -105,19 +174,61 @@ Modus: write nur im zugewiesenen Scope.
 Stop: Patch + direkte Tests + geänderte Dateien + Restrisiken.
 
 ### Testprüfer 🧪
+
+**Berechtigung:** VERIFY, strikt read-only gegenüber dem geprüften Fachblock.
+
 Trigger: nicht-trivialer Patch, Regression oder Release-Gate.
-Modus: bevorzugt read-only; repariert eigene Befunde nicht selbst.
-Stop: PASS/FAIL/OPEN mit reproduzierbarer Prüfanweisung.
+
+Regeln:
+- repariert eigene Befunde nicht selbst;
+- verändert keine erwarteten Ergebnisse, um Tests grün zu machen;
+- trennt Produktfehler, Testfehler und Infrastrukturfehler;
+- meldet PASS/FAIL/OPEN mit reproduzierbarer Prüfanweisung.
+
+Stop: unabhängiger Prüfbericht mit maximal drei Hauptbefunden plus exakten Reproduktionsschritten.
 
 ### UX-/Accessibility-Prüfer ♿
+
+**Berechtigung:** VERIFY, read-only.
+
 Trigger: sichtbare GUI-, Fokus-, Navigation-, Theme-, Skalierungs- oder Textänderung.
-Modus: read-only Bewertung.
-Stop: Befunde für 100/150/200 %, Tastatur, Fokus, Kontrast, Reduced Motion.
+
+Stop: Befunde für 100/150/200 %, Tastatur, Fokus, Kontrast und Reduced Motion; keine Reparaturen im selben Prüfauftrag.
 
 ### Sicherheitsprüfer 🛡️
+
+**Berechtigung:** VERIFY, strikt read-only.
+
 Trigger: Pfade, Schreiben/Löschen/Verschieben, Recovery, Diagnose, Paketierung, Plugins, Netzwerk oder Berechtigungen.
-Modus: read-only Gegenprüfung.
-Stop: Angriff-/Fehlerpfade, vorhandene Gates, offene Blocker.
+
+Stop: Angriff-/Fehlerpfade, vorhandene Gates und offene Blocker; keine Selbstreparatur im selben Prüfauftrag.
+
+### Zwei-Anteile-Regel für jeden Update-Prozess
+
+Jede neue Iteration startet mit einem vom Update-Organisator erzeugten Paket:
+
+**A – PLAN-Anteil**
+- kommt ausschließlich aus Roadmap, TODO, freigegebenem Masterplan oder offenem Exit-Gate;
+- ist der feste Fortschrittsanteil;
+- darf nicht durch spontane Optimierungen ersetzt werden.
+
+**B – DELTA-Anteil**
+- stammt ausschließlich aus dem unmittelbar vorherigen Lauf;
+- Beispiele: CI-Befund, neue Testlücke, erkannte Portabilitätskante, notwendige Doku-/Evidence-Korrektur, klarer technischer Folgepunkt;
+- maximal ein DELTA-Thema pro Iteration;
+- falls nichts Relevantes entstand: `B = NONE`.
+
+Der Organisator entscheidet:
+- Reihenfolge;
+- ob B blockierend oder unabhängig ist;
+- ob beide Anteile in einem gemeinsamen Branch vertretbar sind;
+- ob B wegen Scope-/Freeze-Grenzen nur dokumentiert wird.
+
+**Kein dritter spontaner Arbeitsstrang.**
+
+Standardablauf:
+
+`ORGANIZE → PLAN(A+B) → IMPLEMENT → VERIFY → DOC → EVIDENCE → MERGE → POST-MERGE ORGANIZE`
 
 ### Minimaler Auftrag
 Jeder Subagent erhält nur:

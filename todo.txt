@@ -9,3 +9,4 @@
 [P1] B07 Paketierung – unterstützte portable Startform ist offen – ZIP und Klickstart sind noch nicht reproduzierbar – nach B01 Packaging-Entscheidung mit Offline- und Fremdpfad-Test treffen
 [P1] B08 Diagnose-Datenschutz – Exportformat Redaction und Crash-Pfad fehlen – Diagnose könnte sensible Pfade offenlegen oder falsche Sicherheit geben – Fakten Vermutungen offene Ursache und Opt-in technisch trennen
 [P2] B09 Plugin-Grenze – Plugin-Wunsch ist dokumentiert aber nicht releasekritisch – frühe Aktivierung würde Angriffs- und Wartungsfläche vergrößern – zunächst nur stabile Erweiterungsschnittstelle dokumentieren und Auto-Install verbieten
+[P1] Update-Organisator – Zwei-Spuren-Regel ist definiert und muss bei jeder neuen Iteration angewendet werden – spontane Scope-Ausweitung würde Planstabilität schwächen – vor jedem Update A=PLAN und B=DELTA oder NONE erzeugen und nach Merge erneut organisieren
