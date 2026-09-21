@@ -1,69 +1,92 @@
 # PROVOWARE – Current Iteration
 
-## I16 – Preview-Application-Use-Case
+## I17 – realer Accessibility-Zielsystemlauf
 
-**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
-**Fortschritt:** `█████████░ 90 %`
+**Status:** 🟨 EVIDENCE-INFRASTRUKTUR BEREIT / REALER ZIELSYSTEMLAUF OPEN
+**Fortschritt:** `███████░░░ 70 %`
 
-Der Prozentwert bildet ausschließlich definierte I16-Checkpoints ab.
+Der Prozentwert bildet ausschließlich definierte I17-Checkpoints ab.
 
 ## A – FESTER PLAN
 
-**Quelle:** I15-Drei-Schritte-Vorausplanung + B05 + GUI-/CLI-Paritätsvertrag.
+**Quelle:** I16-Drei-Schritte-Vorausplanung + I14/I15 Accessibility-Evidence.
 
-**Ziel:** I15-Inventarfakten ausschließlich über den gemeinsamen Application-Core in valide I12-Preview-Modelle überführen und denselben Use Case in GUI und Zahlenmenü verfügbar machen.
+**Ziel:** die echte PySide6-Shell inklusive I16-Dateivorschau auf einer realen Display-Session bei 100/150/200 %, Tastatur, Fokus, Kontrast, Reduced Motion und Laienprofil reproduzierbar prüfen.
 
 **Checkpoints:**
 
-- 🟢 Registry-Use-Case `files.preview_trash`
-- 🟢 GUI- und CLI-Verfügbarkeit aus derselben Registry
-- 🟢 explizite Root-Eingabe zentral über `action_requires_root()`
-- 🟢 gemeinsamer `prepare_trash_preview()`-Pfad
-- 🟢 I15 `scan_inventory()` wird ausschließlich im Application-Core aufgerufen
-- 🟢 unvollständiges Inventar erzeugt keinen PreviewPlan
-- 🟢 InventoryItem → reversible Trash-PreviewItem
-- 🟢 I12 `make_plan()` wiederverwendet
-- 🟢 I12 `validate_preview()` erneut ausgeführt
-- 🟢 `writes_enabled=False` bleibt erhalten
-- 🟢 GUI sammelt nur Ordnerauswahl ein
-- 🟢 CLI sammelt nur Ordnerpfad ein
-- 🟢 keine duplizierte Inventar-/Preview-Fachlogik in Adaptern
-- 🟢 Unit-/Paritätstests angelegt
-- 🟢 Repository-/PR-CI PASS
-- 🟢 finaler Diff ohne Scope-Drift
-- 🔵 Merge / Post-Merge
+- 🟢 automatisierter Fokus-/Kontrast-/Skalierungsvertrag vorhanden
+- 🟢 I17-Zielsystem-Helfer implementiert
+- 🟢 PySide6-/Display-Fähigkeit wird vor Lauf geprüft
+- 🟢 einheitlicher Ein-Befehl-Start definiert
+- 🟢 manuelle 100/150/200-%-Gates definiert
+- 🟢 Tab/Shift+Tab-Prüfpfad definiert
+- 🟢 Dateivorschau-Abbruch-/Erfolgsprüfung definiert
+- 🟢 Laienprofil mit vier Verständnisfragen definiert
+- 🟢 feste Screenshot-Namen und Datenschutzregel definiert
+- 🟢 README-Screenshot-Regel definiert
+- 🟢 Regressionsmatrix „targeted first → full before merge“ dokumentiert
+- 🟨 echter Zielsystemlauf OPEN
+- 🟨 echte Screenshots OPEN
+- 🟨 reales Laien-/Accessibility-Ergebnis OPEN
+- 🔵 Repository-/PR-CI
+- 🔵 finaler Diff / Merge / Post-Merge
 
 ## B – VARIABLE FOLGEAUFGABE
 
-**Quelle letzter Lauf:** I15 war bereits gemergt und Post-Merge-CI grün, während `CURRENT_ITERATION.md` Merge/Post-Merge noch als offen auswies.
+**Quelle letzter Lauf:** I16 war bereits gemergt und Post-Merge-CI grün, während `CURRENT_ITERATION.md` Merge/Post-Merge noch als offen auswies.
 
 **Priorität:** Dokumentationsdrift.
 
-**Maßnahme:** I16 startet vom bestätigten grünen I15-`main`; der alte offene Merge-/Post-Merge-Status wird ersetzt.
+**Maßnahme:** I17 startet vom bestätigten grünen I16-`main`; der alte offene Merge-/Post-Merge-Status wird ersetzt.
 
 **Status:** 🟢 erledigt.
 
-## Warum I16 nur Trash-Preview erzeugt
+## Reale Zielsystem-Grenze
 
-Copy und Move benötigen ein ausdrücklich gewähltes Ziel. Eine solche Zielauswahl ist noch nicht freigegeben und wird nicht erfunden.
+Dieser Repository-Lauf kann keinen echten Bildschirm, keine reale Tastaturführung und keine menschliche Wahrnehmung simulieren.
 
-I16 nutzt deshalb ausschließlich den bereits reversibel modellierten `trash`-Previewpfad:
+Deshalb gilt:
 
-- keine Zielwahl;
-- keine Dateiaktion;
-- keine Executor-Freigabe.
+- CI kann die I17-Infrastruktur prüfen;
+- CI kann den automatisierten Accessibility-Vertrag prüfen;
+- CI darf **nicht** den realen Zielsystemlauf auf PASS setzen.
+
+## Ein-Befehl-Lauf auf Zielsystem
+
+```bash
+python3 scripts/i17_target_evidence.py --launch-gui
+```
+
+## Screenshot-Set
+
+- `i17-100-overview.png`
+- `i17-150-overview.png`
+- `i17-200-overview.png`
+- `i17-keyboard-focus.png`
+- `i17-file-preview.png`
+
+Nur echte Zielsystem-Screenshots dürfen als Produktabbildung im README verwendet werden.
+
+## Entwicklungs-/Regressionseffizienz
+
+Die neue Regressionsmatrix trennt:
+
+1. gezielten Erstlauf für den geänderten Verantwortungsbereich;
+2. angrenzende Cross-Core-Tests nur bei tatsächlicher Relevanz;
+3. vollständige Testsuite zwingend vor Merge;
+4. echte GUI-/Hardware-Evidence separat.
+
+Damit bleibt die Entwicklungsloop kurz, ohne die Merge-Abnahme abzusenken.
 
 ## Datei-Besitz
 
 | Datei | Schreibender Besitzer | Prüfer |
 | --- | --- | --- |
-| `src/provoware_laientool/application_core.py` | IMPLEMENT | VERIFY read-only |
-| `src/provoware_laientool/capability_registry.py` | IMPLEMENT | VERIFY read-only |
-| `src/provoware_laientool/cli_shell.py` | ADAPTER-IMPLEMENT | VERIFY read-only |
-| `src/provoware_laientool/gui_shell.py` | ADAPTER-IMPLEMENT | VERIFY read-only |
-| `tests/test_i16_preview_application.py` | TEST-SCOPE | VERIFY read-only |
-| `docs/I16_PREVIEW_APPLICATION.md` | DOC | VERIFY read-only |
-| `docs/GUI_CLI_PARITY.md` | DOC | VERIFY read-only |
+| `scripts/i17_target_evidence.py` | EVIDENCE-IMPLEMENT | VERIFY read-only |
+| `tests/test_i17_target_evidence.py` | TEST-SCOPE | VERIFY read-only |
+| `docs/I17_TARGET_ACCESSIBILITY_RUN.md` | DOC | VERIFY read-only |
+| `docs/REGRESSION_MATRIX.md` | DOC/PROCESS | VERIFY read-only |
 | `docs/CURRENT_ITERATION.md` | ORGANIZE/DOC | VERIFY read-only |
 | `README.md` | DOC | VERIFY read-only |
 | `todo.txt` | DOC | VERIFY read-only |
@@ -71,41 +94,36 @@ I16 nutzt deshalb ausschließlich den bereits reversibel modellierten `trash`-Pr
 
 ## Nicht-Ziele
 
-- keine echte Dateiaktion;
-- kein Copy/Move;
-- keine Zielauswahl;
-- keine Schreibbestätigung;
-- keine Journal-Persistenz;
-- kein Undo-/Recovery-Executor;
+- keine Behauptung eines realen GUI-PASS;
+- keine produktive Dateiaktion;
 - kein Executor;
 - keine Persistenz;
-- keine Suche/Sortierung/Größenkomfortschicht;
-- keine automatische Downloads-Wurzel;
-- keine neue Sicherheitslogik in GUI/CLI.
+- keine Copy-/Move-Freigabe;
+- kein UI-Feature-Ausbau vor dem realen I17-Befund;
+- keine Mockups als Evidence-Screenshots;
+- keine automatische Installation von PySide6.
 
-## Exit-Gates
+## Exit-Gates dieser Repository-Phase
 
-1. I16-Unit-/Integrations-/Paritätstests PASS.
+1. I17-Helfertests PASS.
 2. vollständige Test-Suite PASS.
 3. Repository-Contract PASS.
 4. Info-Text-Impact PASS.
-5. bestehende B01/I12/I13/I14/I15-Verträge regressionsfrei.
+5. bestehende B01–I16-Verträge regressionsfrei.
 6. finaler Diff ohne Scope-Drift.
 7. Post-Merge-CI PASS.
+8. realer I17-Zielsystemlauf bleibt bis tatsächlicher Ausführung OPEN.
 
 ## Nächste drei vorgeplante Schritte
 
-### 1. 🔵 I17 – realer I14-Zielsystemlauf
-**Ziel:** echte PySide6-Shell mit 100/150/200 %, Tab/Shift+Tab, Fokus, Kontrast, Reduced Motion und Laienprofil prüfen.
-**Abhängigkeit:** automatisierter Fokusvertrag grün und I16 stabil.
-**Gate:** dokumentiertes PASS/FAIL/OPEN ohne künstliche Hochstufung.
+### 1. 🔵 I17-B – echten Zielsystemlauf durchführen
+**Ziel:** den vorbereiteten Ein-Befehl-Lauf auf echter PySide6-/Display-Umgebung ausführen und die fünf Screenshots erzeugen.
+**Gate:** dokumentiertes PASS/FAIL/OPEN pro manuellem Gate.
 
-### 2. 🔵 I18 – read-only Inventar-Komfort
-**Ziel:** Suche, Sortierung, Größenansichten und „größte Dateien“ ausschließlich auf I15-Inventarfakten aufbauen.
-**Abhängigkeit:** I16 Application-Pfad stabil.
-**Gate:** GUI-/CLI-Parität; keine Dateiänderung.
+### 2. 🔵 I18 – read-only UI-/Inventar-Komfort
+**Ziel:** nach I17-Befund Oberfläche und Inventarkomfort zusammen weiterentwickeln: Suche, Sortierung, Größenansichten und „größte Dateien“ auf bestehendem Core.
+**Gate:** GUI-/CLI-Parität für Fachfunktionen; sichtbare UI-Änderungen erneut Accessibility-gaten.
 
 ### 3. 🔵 I19 – Preview-Zielwahl-Decision-Gate
-**Ziel:** erst nach I18 entscheiden, wie Copy/Move-Ziele sicher, laiengerecht und portabel ausgewählt werden.
-**Abhängigkeit:** stabile read-only Inventar-/Preview-Nutzung.
-**Gate:** nur Entscheidungs-/Vertragsarbeit; weiterhin kein Executor.
+**Ziel:** Copy-/Move-Zielwahl fachlich und sicher definieren.
+**Gate:** nur Vertrag/Entscheidung; weiterhin kein Executor.
