@@ -6,7 +6,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 
 **Gesamtstatus:** 🟨 PLANUNG / REPOSITORY-FOUNDATION
 **Schreibende Dateioperationen:** 🔒 GESPERRT
-**Produktcode:** 0 % – noch kein freigegebener Anwendungskern auf `main`
+**Produktkern:** 🟨 read-only B01-Kern vorhanden (`preflight` + Pfadgrenzen); noch keine produktive GUI und keine Schreiboperationen
 
 | Bereich | Stand | Anzeige |
 |---|---:|---|
@@ -38,7 +38,7 @@ Die geplante GUI basiert auf **PySide6/Qt**. **Tkinter ist im Produktionscode au
 
 GUI und Linux-Konsole sind zwei Adapter desselben Fachkerns. Nicht rein visuelle Funktionen erhalten grundsätzlich denselben fachlichen Ablauf, damit Sicherheitsregeln nicht doppelt implementiert werden.
 
-Siehe [ADR-0001](docs/adr/ADR-0001-ui-cli-foundation.md) sowie das [UI-Designsystem](docs/UI_DESIGN_SYSTEM.md) und die [Theme-Tokens](docs/theme-tokens.md).
+Siehe [ADR-0001](docs/adr/ADR-0001-ui-cli-foundation.md), das [UI-Designsystem](docs/UI_DESIGN_SYSTEM.md), die [Theme-Tokens](docs/theme-tokens.md), den [messbaren Laien-Qualitätsstandard](docs/LAIEN_QUALITY_STANDARD.md) und die [Info-Text-Governance](docs/INFO_TEXT_GOVERNANCE.md).
 
 ## Repository-Struktur
 
@@ -58,7 +58,7 @@ Siehe [ADR-0001](docs/adr/ADR-0001-ui-cli-foundation.md) sowie das [UI-Designsys
     └── workflows/repo-quality.yml
 ```
 
-Produktverzeichnisse unter `src/` und `tests/` werden erst angelegt, wenn der zugehörige Block freigegeben und in derselben Iteration sinnvoll testbar ist. Leere Architektur wird nicht vorgetäuscht.
+Produktcode unter `src/` und zugehörige Tests werden nur blockweise angelegt, wenn Scope und Abnahme definiert sind. Aktuell existieren der read-only B01-Preflight und die Pfad-/Symlink-Grenzen samt Unit-Tests; leere Architektur wird nicht auf Vorrat erzeugt.
 
 ## Entwicklungsdisziplin
 
@@ -89,7 +89,9 @@ Die vollständigen Trigger und Stop-Bedingungen stehen in [AGENTS.md](AGENTS.md)
 - Baseline enthält REQ-BASELINE-1 und B00–B11;
 - keine Tkinter-Imports in zukünftigem Python-Produktionscode;
 - GitHub Actions besitzen minimale `permissions:` und externe Actions sind auf Commit-SHAs gepinnt;
-- kein Trailing-Whitespace in zentralen Text-/Codeformaten.
+- kein Trailing-Whitespace in zentralen Text-/Codeformaten;
+- dokumentationsrelevante Änderungen führen über einen diff-basierten Info-Text-Impact-Guard;
+- `todo.txt` bleibt schema- und prioritätsgeprüft, ohne eine künstlich feste Eintragszahl.
 
 Sobald Produktcode entsteht, wird dieser Gate gezielt um echte Unit-/Integrations-/GUI-Tests erweitert.
 
