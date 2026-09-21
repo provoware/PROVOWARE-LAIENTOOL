@@ -36,6 +36,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Restore pip wheel cache
+        uses: actions/cache@3edfce9056124e459a23f683a21433670d47daca
+        with:
+          path: ~/.cache/pip
+          key: i25-pip-${{ runner.os }}-${{ hashFiles('requirements-gui.txt') }}
+          restore-keys: |
+            i25-pip-${{ runner.os }}-
       - name: Create isolated GUI environment
         run: |
           sudo apt-get update

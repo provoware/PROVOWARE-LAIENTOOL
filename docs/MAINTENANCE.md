@@ -120,6 +120,7 @@ Regeln:
 - `i25-gui-evidence` prüft nur I25-relevante Pfade, dafür sowohl im PR als auch nach Merge auf `main`;
 - Post-Merge-Gates sind unabhängige Bestätigung des tatsächlich gemergten Heads, keine Aufforderung zu einem erneuten manuellen Nutzertest;
 - I25-AUTO bewahrt ausschließlich synthetische Evidence (Screenshots, JSON, TXT, HTML) für 14 Tage als CI-Artefakt auf; keine realen Nutzdateien werden dafür verwendet;
+- der GUI-Gate darf den pip-Downloadcache wiederverwenden, wenn der Cache-Key den Fingerprint von `requirements-gui.txt` enthält; die Test-Venv selbst bleibt pro Lauf frisch;
 - technische GUI-Evidence kann dadurch nachträglich aus GitHub geprüft werden, ohne den Nutzer denselben Ablauf erneut ausführen zu lassen;
 - ein grüner unveränderter Stand wird nicht manuell erneut gestartet.
 
