@@ -1,61 +1,49 @@
 # PROVOWARE – Current Iteration
 
-## I32 – Portable Offline-Paketierung
+## I33 – Offline-Wheelhouse Supply-Chain-Lock
 
-**Status:** 🟢 AUTO PASS · CI-LINUX-X86_64
-**Fortschritt:** `██████████ 100 %`
+**Status:** 🟨 RC · AUTOMATISCHE GATES LAUFEN
+**Fortschritt:** `████████░░ 80 %`
 
 ## A – PLAN
 
-B07 wird als reproduzierbares Linux-x86_64-Portable-Paket umgesetzt:
+I33 härtet den I32-Paketpfad gegen unerwartete Wheel-Dateien:
 
-- deterministisches ZIP;
-- lokales Wheelhouse für PySide6;
-- Offline-first Installation via `start.sh`;
-- Desktop-Klickstarter delegiert ausschließlich an `start.sh --gui`;
-- Manifest + SHA-256;
-- Fremdpfad mit Unicode/Leerzeichen;
-- Offline-Bootstrap-Test.
+- committed Lock für Linux x86_64;
+- exakte vier Wheel-Dateien;
+- exakte Größen + SHA-256;
+- Requirements-Fingerprint;
+- Prüfung vor Paketbuild;
+- Prüfung im extrahierten Paket;
+- Prüfung in `start.sh` vor lokaler Installation.
 
 ## B – DELTA
 
-Aus I31 entstand kein blockierender Produktfehler. B = **NONE**. Die I31-Human-Abnahme bleibt bewusst geparkt.
+I32 zeigte, dass Paketmanifest und Source-Head sauber reproduzierbar sind. Die verbleibende Supply-Chain-Lücke lag **vor** dem Manifest: der Download selbst war noch nicht gegen eine vorab bekannte Hashbaseline gebunden.
 
 ## Sicherheitsgrenze
 
+- kein Lock-Autoupdate;
+- kein Netzwerk-Fallback bei Lockfehler;
+- kein Installieren unbekannter Extra-Wheels;
 - keine Produkt-READY-Änderung;
-- kein neuer Fach-Write;
-- keine Systeminstallation im Nutzerstarter;
-- keine stille Paketinstallation;
-- Wheelhouse vorhanden → strikt `--no-index`;
-- physische Zweitgeräte-Evidence bleibt OPEN.
+- B01/I25/I31 bleiben geparkt.
 
 ## Exit-Gates
 
-1. Paketbuilder deterministisch.
-2. Manifest/Hashes exakt.
-3. ZIP ohne Dev-/lokale Laufzeitreste.
-4. Desktop-Launcher → `start.sh --gui`.
-5. reales gepinntes PySide6-Wheelhouse im CI.
-6. Extraktion in Unicode-/Leerzeichen-Fremdpfad.
-7. Offline-`--setup` ohne Index.
-8. `start.sh --check` im extrahierten Paket.
-9. Full Suite / Read-only-Lock / Core Diagnostic / Preflight.
-10. Paketartefakt + Validierungsbericht.
-
-## Weiter offen
-
-- reales zweites Gerät;
-- ARM;
-- Desktop-Dateimanager-Vertrauensdialog;
-- I25/I31 Human-Gates.
-
-## AUTO-Ergebnis
-
-Der Portable-Package-Gate ist auf dem exakten Source-Head `bfee18f528e6a06feb9b3b43d1da9575578f2e89` vollständig grün.
+1. Lock-Schema/Requirements-Fingerprint.
+2. exakte Wheel-Dateiliste.
+3. Größenprüfung.
+4. SHA-256-Prüfung.
+5. Missing/Extra/Tamper fail-closed.
+6. CI prüft Lock vor ZIP-Build.
+7. Paketvalidator prüft Lock nach Extraktion.
+8. start.sh prüft Lock vor pip.
+9. Portable-Package Offline-Bootstrap PASS.
+10. Full Suite / GUI-Cross-Regressions PASS.
 
 ## Nächste drei Schritte
 
-1. 🟢 I32 Evidence an `bfee18f528e6a06feb9b3b43d1da9575578f2e89` binden und mergen.
-2. 🔵 danach den nächsten rein automatisierbaren Release-/Sicherheitsblock wählen.
-3. 🔒 B01-Zweitgerät sowie I25/I31 Human-Gates weiter gesammelt offen halten; keine Einzeltestserie starten.
+1. 🟨 I33 vollständig automatisch prüfen.
+2. 🔵 bei Grün Evidence binden und mergen.
+3. 🔒 danach nächsten automatisierbaren Datenschutz-/Release-Vertrag bearbeiten; Human-Gates weiter bündeln.

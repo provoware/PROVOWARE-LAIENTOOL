@@ -14,6 +14,7 @@ CORE_REQUIRED = (
     "PROVOWARE.desktop",
     "start.sh",
     "requirements-gui.txt",
+    "wheelhouse-lock-linux-x86_64.json",
     "AGENTS.md",
     "PROVOWARE_TODO_INPUT_POOL0.md",
     "todo.txt",
@@ -40,6 +41,7 @@ CORE_REQUIRED = (
     "scripts/i31_auto_evidence.py",
     "scripts/build_portable_package.py",
     "scripts/validate_portable_package.py",
+    "scripts/verify_wheelhouse_lock.py",
     "scripts/core_diagnostics.py",
     "scripts/read_only_guard.py",
     "scripts/diagnostic_writer_guard.py",
@@ -111,6 +113,7 @@ if starter_sh.is_file():
         "scripts/i17_auto_evidence.py",
         "scripts/i25_auto_evidence.py",
         "scripts/i31_auto_evidence.py",
+        "scripts/verify_wheelhouse_lock.py",
         "scripts/diagnostic_snapshot.py",
     ):
         if marker not in starter_text:

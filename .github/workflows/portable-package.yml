@@ -56,6 +56,12 @@ jobs:
         run: |
           mkdir -p build/wheelhouse
           timeout 8m python3 -m pip download             --disable-pip-version-check             --only-binary=:all:             --dest build/wheelhouse             --requirement requirements-gui.txt
+      - name: Verify downloaded wheels against committed lock
+        run: |
+          timeout 3m python3 scripts/verify_wheelhouse_lock.py \
+            --wheelhouse build/wheelhouse \
+            --lock wheelhouse-lock-linux-x86_64.json \
+            --requirements requirements-gui.txt
       - name: Build deterministic portable ZIP
         run: |
           timeout 3m python3 scripts/build_portable_package.py             --output-dir dist             --wheelhouse build/wheelhouse

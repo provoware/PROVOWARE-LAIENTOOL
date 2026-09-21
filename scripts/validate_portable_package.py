@@ -14,11 +14,14 @@ import sys
 import tempfile
 import zipfile
 
+from verify_wheelhouse_lock import verify_wheelhouse
+
 REQUIRED = {
     "README.md",
     "PROVOWARE.desktop",
     "PACKAGE_MANIFEST.json",
     "requirements-gui.txt",
+    "wheelhouse-lock-linux-x86_64.json",
     "start.py",
     "start.sh",
 }
@@ -189,6 +192,17 @@ def runtime_check(archive: Path, *, require_wheelhouse: bool) -> dict[str, objec
             )
 
         if require_wheelhouse:
+            wheel_check = verify_wheelhouse(
+                wheelhouse=package / "wheelhouse",
+                lock_path=package / "wheelhouse-lock-linux-x86_64.json",
+                requirements_path=package / "requirements-gui.txt",
+            )
+            if wheel_check["status"] != "PASS":
+                failures.extend(
+                    f"Extrahiertes Wheelhouse: {item}"
+                    for item in wheel_check["failures"]
+                )
+
             env = os.environ.copy()
             env.update(
                 {

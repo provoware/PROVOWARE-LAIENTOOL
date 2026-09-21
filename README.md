@@ -38,6 +38,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I30 Diagnose-Export Autorisierung | nichtvisuelle zweistufige sessiongebundene Autorisierung mit Fingerprint-, Stale-, Manipulations- und Replay-Schutz; Writer one-shot; Registry bleibt OPEN | 🟢 AUTO PASS · keine Standardadapter |
 | I31 Diagnose-Export Adapter-Evidence | GUI-/CLI-Prüfmodus auf demselben I26/I30/I28-Pfad; 100/150/200 %, Tastatur, Doppelbestätigung, Cancel, BLOCKED und exakt-eine-Datei-PASS automatisch belegt | 🟢 AUTO PASS · Human-Gate offen · Registry OPEN |
 | I32 Portable Offline-Paket | deterministisches Linux-x86_64-ZIP, lokales PySide6-Wheelhouse, Manifest/Hashes, KDE-Klickstarter und Offline-Fremdpfad-Validierung | 🟢 AUTO PASS · B01-Zweitgerät bleibt OPEN |
+| I33 Offline-Wheelhouse Lock | exakte Linux-x86_64-Wheel-Dateien, Größen und SHA-256 vor Paketbau, nach Extraktion und vor Offline-Installation | 🟨 RC · Supply-Chain-Gate |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -158,8 +159,9 @@ Der Gate umfasst inzwischen die vollständige Unit-/Integrationssuite, den read-
 4. **I18–I21:** Inventar-Komfort, Read-only-Lock, Diagnose-Observability und Same-Root Copy/Move-Preview sind im Repository grün.
 5. **I25:** Copy-/Move-Preview ist über denselben Application-Core in CLI und GUI-Prüfmodus angebunden; neue Registry-Einträge bleiben bis realer Folge-Evidence OPEN.
 6. **I22–I24/I26–I31:** Diagnose-Export ist entschieden, vorvalidiert, statisch gegated und besitzt I30 one-shot Autorisierung; I31 bindet GUI/CLI ausschließlich im synthetischen Prüfmodus an. Normaler Produktweg bleibt gesperrt.
-7. **I32/B07:** Portable Linux-x86_64 ZIP mit Offline-Wheelhouse und reproduzierbarer Validierung wird automatisiert aufgebaut; physische Zweitgerätefreigabe bleibt separat offen.
-8. **Produktiv erreichbare Schreibpfade:** weiterhin `0`.
+7. **I32/B07:** Portable Linux-x86_64 ZIP mit Offline-Wheelhouse und reproduzierbarer Validierung ist AUTO PASS; physische Zweitgerätefreigabe bleibt separat offen.
+8. **I33:** Offline-Wheels werden zusätzlich gegen einen committed exakten Dateigrößen-/SHA-256-Lock geprüft, bevor Paketbau oder lokale Installation zulässig ist.
+9. **Produktiv erreichbare Schreibpfade:** weiterhin `0`.
 
 ## Quellen der Wahrheit
 
@@ -173,7 +175,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I25 und I31 bleiben mit je einer finalen Human-Wahrnehmungsfrage geparkt. I32/B07 ist für CI-Linux-x86_64 technisch AUTO PASS: reproduzierbares Portable-ZIP, Offline-Wheelhouse und Fremdpfad-Validierung sind belegt; die physische B01-Zweitgeräte-Evidence bleibt unabhängig OPEN.**
+**I25 und I31 bleiben mit je einer finalen Human-Wahrnehmungsfrage geparkt. I33 härtet zuerst vollständig automatisch das I32-Offline-Wheelhouse mit einer committed Dateiliste sowie Größen-/SHA-256-Locks; B01-Zweitgeräte-Evidence bleibt unabhängig OPEN.**
 
 
 ## Screenshots

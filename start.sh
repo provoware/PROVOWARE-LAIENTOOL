@@ -6,6 +6,7 @@ VENV_DIR="$ROOT_DIR/.venv"
 VENV_PYTHON="$VENV_DIR/bin/python"
 REQUIREMENTS="$ROOT_DIR/requirements-gui.txt"
 WHEELHOUSE="$ROOT_DIR/wheelhouse"
+WHEELHOUSE_LOCK="$ROOT_DIR/wheelhouse-lock-linux-x86_64.json"
 EXPECTED_PYSIDE6="6.11.2"
 ACTION="${1:---gui}"
 ASSUME_YES=0
@@ -181,7 +182,10 @@ if [[ "$CURRENT_PYSIDE6" != "$EXPECTED_PYSIDE6" ]]; then
 
   if [[ -d "$WHEELHOUSE" ]] && compgen -G "$WHEELHOUSE/*.whl" >/dev/null; then
     status "📦 Lokales Offline-Wheelhouse erkannt. Es wird kein Paketindex verwendet."
-    confirm "PySide6 $EXPECTED_PYSIDE6 jetzt ausschließlich aus dem lokalen wheelhouse/ in .venv installieren?" || die "Abgebrochen. Keine Paketinstallation durchgeführt." 7
+    [[ -f "$WHEELHOUSE_LOCK" ]] || die "Wheelhouse-Lock fehlt. Offline-Installation wird sicherheitshalber abgebrochen." 8
+    "$BASE_PYTHON" "$ROOT_DIR/scripts/verify_wheelhouse_lock.py"       --wheelhouse "$WHEELHOUSE"       --lock "$WHEELHOUSE_LOCK"       --requirements "$REQUIREMENTS"       || die "Wheelhouse stimmt nicht exakt mit dem Sicherheits-Lock überein. Nichts installiert." 8
+    status "🔐 Wheelhouse-Hashes und Dateiliste: PASS"
+    confirm "PySide6 $EXPECTED_PYSIDE6 jetzt ausschließlich aus dem geprüften lokalen wheelhouse/ in .venv installieren?" || die "Abgebrochen. Keine Paketinstallation durchgeführt." 7
     "$VENV_PYTHON" -m pip install       --disable-pip-version-check       --no-index       --find-links "$WHEELHOUSE"       --requirement "$REQUIREMENTS"
   else
     status "🌐 Kein lokales Wheelhouse vorhanden. PyPI wäre für die bestätigte Installation erforderlich."

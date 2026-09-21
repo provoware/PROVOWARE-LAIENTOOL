@@ -24,6 +24,7 @@ RUNTIME_TOP_LEVEL = {
     "README.md",
     "PROVOWARE.desktop",
     "requirements-gui.txt",
+    "wheelhouse-lock-linux-x86_64.json",
     "start.py",
     "start.sh",
 }
@@ -147,6 +148,7 @@ def build_package(
         )
 
     requirements_data = (ROOT / "requirements-gui.txt").read_bytes()
+    lock_data = (ROOT / "wheelhouse-lock-linux-x86_64.json").read_bytes()
     manifest: dict[str, object] = {
         "schema_version": "1",
         "product": "PROVOWARE-LAIENTOOL",
@@ -154,6 +156,7 @@ def build_package(
         "platform_tag": tag,
         "python_supported": ">=3.10,<3.15",
         "requirements_sha256": sha256_bytes(requirements_data),
+        "wheelhouse_lock_sha256": sha256_bytes(lock_data),
         "offline_wheelhouse": bool(wheel_files),
         "wheel_count": len(wheel_files),
         "files": manifest_files,
