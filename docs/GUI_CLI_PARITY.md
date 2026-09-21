@@ -70,7 +70,7 @@ Die zentrale Capability-/Use-Case-Registry ist ab I10 unter `src/provoware_laien
 - benötigte Capability;
 - Status: `READY | OPEN | BLOCKED`.
 
-GUI und Konsole lesen dieselbe Registry. Dadurch kann Paritätsdrift automatisch geprüft werden. Aktuell ist ausschließlich der bereits vorhandene diagnostische Use Case `system.preflight` als READY registriert; zukünftige Produktfunktionen werden nicht vorgetäuscht.
+GUI und Konsole lesen dieselbe Registry. Dadurch kann Paritätsdrift automatisch geprüft werden. Neben Übersicht, Systemcheck und Hilfe ist seit I16 auch `files.preview_trash` als read-only READY-Use-Case registriert. GUI und CLI sammeln dafür nur die explizite Ordnerauswahl ein; Inventar- und Preview-Fachlogik liegen ausschließlich im gemeinsamen Application-Core.
 
 ## 4. Paritätsgate
 
@@ -102,3 +102,18 @@ CLI Adapter ─┘
 ```
 
 Die Adapter dürfen darstellen, navigieren und Eingaben übersetzen. Sie dürfen keine eigene Fachentscheidung treffen.
+
+
+## 7. I16 Root-Eingabe-Vertrag
+
+Der gemeinsame Core entscheidet über `action_requires_root(use_case_id)`, ob ein Use Case eine explizite Wurzel benötigt.
+
+Für `files.preview_trash` gilt:
+
+- GUI: Ordnerauswahldialog;
+- CLI: genau eine Pfadeingabe;
+- beide rufen anschließend denselben `execute(..., root=...)`-Pfad auf;
+- leere/abgebrochene Auswahl bleibt `OPEN`;
+- Adapter dürfen weder `scan_inventory()` noch Preview-Modelle direkt aufrufen.
+
+Damit bleibt auch die Eingabeanforderung zentral definiert, während die Oberflächen nur die jeweils passende Eingabemethode bereitstellen.

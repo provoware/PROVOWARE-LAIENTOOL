@@ -20,7 +20,9 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I12 B05 Preview-Modell | immutable Preview-Vertrag mit B01-Pfadgrenzen implementiert; kein Executor | 🟢 `██████████` 100 % Modellstand |
 | I13 B06 Recovery-Vertrag | Zustandsautomat, Journal-/Undo-Vertrag und Crash-Matrix implementiert; keine Persistenz/kein Executor | 🟢 Repository grün |
 | I14 Accessibility-Evidence | Fokusvertrag für Button/ComboBox/TextEdit automatisiert grün; reale Desktop-/Laienprüfung bleibt OPEN | 🟨 reale Evidence OPEN |
-| I15 Read-only Inventar | rekursiver B01-gebundener Nur-Lese-Inventarkern mit Symlink-Sperre, Unicode/Leerzeichen, Größenfakten und strukturierten Befunden implementiert | 🟨 CI ausstehend |\n| Schreibpfade | 0 freigegeben | 🔒 gesperrt |
+| I15 Read-only Inventar | rekursiver B01-gebundener Nur-Lese-Inventarkern mit Symlink-Sperre, Unicode/Leerzeichen, Größenfakten und strukturierten Befunden implementiert | 🟢 Repository grün |
+| I16 Preview-Application | Inventar → reversible Trash-Preview über gemeinsamen Application-Core; GUI/CLI sammeln nur die Ordnerwahl ein | 🟨 CI ausstehend |
+| Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
 
@@ -107,7 +109,9 @@ Sobald Produktcode entsteht, wird dieser Gate gezielt um echte Unit-/Integration
 2. **B01:** B01-A Preflight und B01-B Pfad-/Symlink-Grenzen sind implementiert; der read-only Zweitgeräte-Evidence-Runner ist vorbereitet, die reale physische Ausführung bleibt offen.
 3. **I10/I11:** gemeinsame Registry sowie read-only Application-/CLI-/GUI-Shell sind implementiert; reale visuelle Accessibility-Evidence bleibt OPEN.
 4. **I12/B05:** immutable Preview-Vertrag ist implementiert; kein Executor und keine Schreibfreigabe.
-5. **I13/B06:** Journal-/Undo-/Recovery-Zustandsvertrag ist implementiert; Persistenz und Executor bleiben weiterhin gesperrt.\n6. **I14/B04:** automatisierte Accessibility-Evidence ist reproduzierbar; aktueller expliziter Fokusvertrag ist noch nicht vollständig und reale Zielsystem-Evidence bleibt OPEN.
+5. **I13/B06:** Journal-/Undo-/Recovery-Zustandsvertrag ist implementiert; Persistenz und Executor bleiben weiterhin gesperrt.
+6. **I14/B04:** automatisierter Fokus-/Kontrast-/Skalierungsvertrag ist grün; reale Zielsystem-Evidence bleibt OPEN.
+7. **I15/I16:** read-only Inventar und gemeinsamer Inventory→Preview-Application-Pfad sind implementiert; Executor und Persistenz bleiben gesperrt.
 
 ## Quellen der Wahrheit
 
@@ -121,4 +125,4 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I15 read-only Inventarkern vollständig über CI einfrieren; danach I16 Inventarfakten ausschließlich über den gemeinsamen Application-Core in Preview-Modelle überführen. Schreibpfade bleiben gesperrt.**
+**I16 vollständig über CI einfrieren; danach I17 als realen Accessibility-Zielsystemlauf durchführen. Schreibpfade bleiben weiterhin gesperrt.**

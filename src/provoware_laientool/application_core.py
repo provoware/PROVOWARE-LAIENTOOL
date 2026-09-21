@@ -3,9 +3,19 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
 from .capability_registry import get_use_case, list_use_cases
+from .inventory import InventoryResult, scan_inventory
 from .preflight import format_text, run_preflight
+from .preview_model import (
+    ACTION_TRASH,
+    PreviewCheck,
+    PreviewItem,
+    PreviewPlan,
+    make_plan,
+    validate_preview,
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -16,6 +26,14 @@ class ActionResult:
     status: str = "PASS"
 
 
+@dataclass(frozen=True, slots=True)
+class PreviewPreparation:
+    inventory: InventoryResult
+    plan: PreviewPlan | None
+    check: PreviewCheck | None
+    status: str
+
+
 def available_actions() -> tuple[str, ...]:
     return tuple(
         entry.id
@@ -24,7 +42,136 @@ def available_actions() -> tuple[str, ...]:
     )
 
 
-def execute(use_case_id: str) -> ActionResult:
+def action_requires_root(use_case_id: str) -> bool:
+    """Return whether an adapter must collect one explicit root path."""
+    return use_case_id == "files.preview_trash"
+
+
+def prepare_trash_preview(root: Path) -> PreviewPreparation:
+    """Turn a complete read-only inventory into a reversible trash preview."""
+    inventory = scan_inventory(root)
+
+    if not inventory.root_allowed:
+        return PreviewPreparation(inventory, None, None, "BLOCKED")
+
+    if not inventory.complete:
+        return PreviewPreparation(inventory, None, None, "OPEN")
+
+    if not inventory.items:
+        return PreviewPreparation(inventory, None, None, "OPEN")
+
+    resolved_root = Path(inventory.root)
+    items = tuple(
+        PreviewItem(
+            id=f"inventory-{index:06d}",
+            action=ACTION_TRASH,
+            source=str(resolved_root / item.relative_path),
+            target=None,
+            bytes_estimate=item.size_bytes,
+            effect=f"„{item.relative_path}“ würde in den Papierkorb verschoben.",
+            reversible=True,
+            recovery_hint="Die Datei soll aus dem Papierkorb wiederherstellbar bleiben.",
+        )
+        for index, item in enumerate(inventory.items, start=1)
+    )
+    plan = make_plan(resolved_root, items)
+    check = validate_preview(plan)
+
+    return PreviewPreparation(
+        inventory=inventory,
+        plan=plan,
+        check=check,
+        status="PASS" if check.allowed else "BLOCKED",
+    )
+
+
+def _format_preview(preparation: PreviewPreparation) -> ActionResult:
+    inventory = preparation.inventory
+
+    if not inventory.root_allowed:
+        reason = inventory.issues[0].message if inventory.issues else "Wurzel ist blockiert."
+        return ActionResult(
+            use_case_id="files.preview_trash",
+            title="Dateivorschau",
+            body=(
+                f"Was ist passiert? Der gewählte Ordner wurde blockiert: {reason}\n"
+                "Was bedeutet das? Es wurde kein Inventar und keine Vorschau freigegeben.\n"
+                "Was kann ich tun? Wähle einen vorhandenen, sicher auflösbaren Ordner."
+            ),
+            status="BLOCKED",
+        )
+
+    if not inventory.complete:
+        return ActionResult(
+            use_case_id="files.preview_trash",
+            title="Dateivorschau",
+            body=(
+                "Was ist passiert? Der Ordner konnte nicht vollständig gelesen werden.\n"
+                f"Gefundene Dateien: {inventory.file_count}; Befunde: {len(inventory.issues)}.\n"
+                "Was bedeutet das? Aus unvollständigen Daten wird keine Aktionsvorschau erzeugt.\n"
+                "Was kann ich tun? Prüfe die gemeldeten Zugriffs-/Pfadprobleme und starte erneut.\n\n"
+                "🔒 Es wurden keine Dateien verändert."
+            ),
+            status="OPEN",
+        )
+
+    if preparation.plan is None:
+        return ActionResult(
+            use_case_id="files.preview_trash",
+            title="Dateivorschau",
+            body=(
+                "Der gewählte Ordner enthält keine regulären Dateien für diese Vorschau.\n\n"
+                "🔒 Es wurden keine Dateien verändert."
+            ),
+            status="OPEN",
+        )
+
+    if preparation.check is None or not preparation.check.allowed:
+        errors = preparation.check.errors if preparation.check else ("Preview-Prüfung fehlt.",)
+        return ActionResult(
+            use_case_id="files.preview_trash",
+            title="Dateivorschau",
+            body=(
+                "Was ist passiert? Die Vorschau wurde aus Sicherheitsgründen blockiert.\n"
+                "Was bedeutet das? Mindestens eine Preview-Regel ist nicht erfüllt.\n"
+                "Befunde:\n- "
+                + "\n- ".join(errors)
+                + "\nWas kann ich tun? Nutze keine Dateiaktion und prüfe zuerst die Befunde.\n\n"
+                "🔒 Es wurden keine Dateien verändert."
+            ),
+            status="BLOCKED",
+        )
+
+    plan = preparation.plan
+    skipped = len(inventory.issues)
+    lines = [
+        "🔒 Reine Vorschau – es wird nichts ausgeführt.",
+        "",
+        f"Ordner: {inventory.root}",
+        f"Reguläre Dateien: {plan.total_items}",
+        f"Gesamtgröße: {plan.total_bytes_estimate} Byte",
+        f"Bewusst übersprungene Hinweise: {skipped}",
+        "",
+        "Geplante Wirkung:",
+        "Die aufgeführten regulären Dateien würden später nur reversibel in den Papierkorb verschoben.",
+        "Ein Executor ist weiterhin gesperrt.",
+    ]
+    if plan.items:
+        lines.extend(["", "Erste Einträge:"])
+        for item in plan.items[:10]:
+            lines.append(f"- {Path(item.source).relative_to(Path(plan.root)).as_posix()}")
+        if len(plan.items) > 10:
+            lines.append(f"- … plus {len(plan.items) - 10} weitere")
+
+    return ActionResult(
+        use_case_id="files.preview_trash",
+        title="Dateivorschau",
+        body="\n".join(lines),
+        status="PASS",
+    )
+
+
+def execute(use_case_id: str, *, root: str | None = None) -> ActionResult:
     entry = get_use_case(use_case_id)
     if entry is None:
         return ActionResult(
@@ -57,8 +204,9 @@ def execute(use_case_id: str) -> ActionResult:
             body=(
                 "🔒 Sicherer Lese-Modus\n\n"
                 "Dieses PROVOWARE-Grundgerüst verändert keine Dateien.\n"
-                "Du kannst den Systemcheck starten oder die Hilfe öffnen.\n"
-                "Schreibende Funktionen bleiben gesperrt, bis Preview und Recovery belegt sind."
+                "Du kannst den Systemcheck starten, eine reine Dateivorschau erzeugen "
+                "oder die Hilfe öffnen.\n"
+                "Schreibende Funktionen bleiben weiterhin gesperrt."
             ),
         )
 
@@ -69,8 +217,10 @@ def execute(use_case_id: str) -> ActionResult:
             body=(
                 "1. Beginne mit „Übersicht“.\n"
                 "2. Nutze „System prüfen“, um die lokalen Voraussetzungen zu sehen.\n"
-                "3. In der Konsole wählst du Funktionen nur über Zahlen.\n"
-                "4. Mit 0 gehst du zurück oder beendest das Menü.\n\n"
+                "3. „Dateivorschau“ liest einen von dir gewählten Ordner und zeigt nur, "
+                "was später passieren würde.\n"
+                "4. In der Konsole wählst du Funktionen nur über Zahlen.\n"
+                "5. Mit 0 gehst du zurück oder beendest das Menü.\n\n"
                 "🔒 Im aktuellen Entwicklungsstand werden keine Nutzerdaten verändert."
             ),
         )
@@ -83,6 +233,20 @@ def execute(use_case_id: str) -> ActionResult:
             body=format_text(result),
             status=result.status,
         )
+
+    if use_case_id == "files.preview_trash":
+        if root is None or not root.strip():
+            return ActionResult(
+                use_case_id=use_case_id,
+                title="Dateivorschau",
+                body=(
+                    "Was ist passiert? Es wurde kein Ordner ausgewählt.\n"
+                    "Was bedeutet das? Es wurde nichts gelesen und keine Datei verändert.\n"
+                    "Was kann ich tun? Wähle ausdrücklich einen Ordner für die reine Vorschau."
+                ),
+                status="OPEN",
+            )
+        return _format_preview(prepare_trash_preview(Path(root)))
 
     return ActionResult(
         use_case_id=use_case_id,

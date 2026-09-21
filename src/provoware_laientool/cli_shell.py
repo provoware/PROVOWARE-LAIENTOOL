@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from .application_core import execute
+from .application_core import action_requires_root, execute
 from .capability_registry import list_use_cases
 
 
@@ -53,7 +53,11 @@ def run(
             )
             continue
 
-        result = execute(mapping[int(raw)])
+        use_case_id = mapping[int(raw)]
+        root = None
+        if action_requires_root(use_case_id):
+            root = input_fn("Ordnerpfad für die reine Vorschau: ").strip()
+        result = execute(use_case_id, root=root)
         output_fn("")
         output_fn(f"{result.title} – {result.status}")
         output_fn(result.body)
