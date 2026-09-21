@@ -25,6 +25,9 @@ REQUIRED = (
     "docs/LAIEN_QUALITY_STANDARD.md",
     "docs/INFO_TEXT_GOVERNANCE.md",
     "scripts/info_text_guard.py",
+    "docs/LAIEN_QUALITY_STANDARD.md",
+    "docs/INFO_TEXT_GOVERNANCE.md",
+    "scripts/info_text_guard.py",
     "docs/evidence/EV-20260921-002-b01a-preflight.md",
     ".github/PULL_REQUEST_TEMPLATE.md",
     ".github/CODEOWNERS",
@@ -57,6 +60,8 @@ if todo.is_file():
         fail("todo.txt enthält keine operativen Einträge")
     seen: set[str] = set()
     last_priority = -1
+    seen: set[str] = set()
+    last_priority = -1
     for number, line in enumerate(entries, 1):
         parts = line.split(" – ")
         if len(parts) != 4:
@@ -65,6 +70,14 @@ if todo.is_file():
         match = re.match(r"^\[(P[0-3])\]\s+\S", parts[0])
         if not match or match.group(1) not in PRIORITIES:
             fail(f"todo.txt Zeile {number}: ungültige Priorität/Area")
+        else:
+            priority = int(match.group(1)[1])
+            if priority < last_priority:
+                fail(f"todo.txt Zeile {number}: Prioritäten müssen P0 → P3 sortiert sein")
+            last_priority = priority
+        if line in seen:
+            fail(f"todo.txt Zeile {number}: doppelter Eintrag")
+        seen.add(line)
         else:
             priority = int(match.group(1)[1])
             if priority < last_priority:
