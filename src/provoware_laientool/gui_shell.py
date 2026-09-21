@@ -37,7 +37,7 @@ def create_main_window(*, evidence_mode: bool = False):
             QWidget,
         )
     except ImportError as exc:
-        raise RuntimeError("PySide6 ist lokal nicht installiert.") from exc
+        raise RuntimeError(f"PySide6/QtWidgets konnte nicht geladen werden: {exc}") from exc
 
     class MainWindow(QMainWindow):
         def __init__(self) -> None:
