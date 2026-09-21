@@ -29,7 +29,8 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I21 Same-Root Copy/Move Preview | gemeinsamer Core erzeugt Copy-/Move-Preview nur innerhalb derselben Root; Overwrite, externe Ziele und Auto-Rename blockiert | 🟢 Repository grün |
 | I22 Diagnose-Export Decision | späterer expliziter redigierter lokaler Export grundsätzlich zulässig, aber nur mit eigenem Writer-/Guard-REOPEN; aktuell keine Implementierung | 🟢 Decision eingefroren |
 | I23 Zielauswahl Adapter-Decision | gemeinsamer späterer GUI-/CLI-Workflow für I18-Auswahl + I21 Copy/Move-Preview festgelegt; sichtbare Implementierung wartet auf realen I17-Lauf | 🟢 Decision eingefroren |
-| I24 Diagnose-Export Writer Design | create-only/no-overwrite, Partial-/Crash-Strategie und gezielter Guard-REOPEN technisch festgelegt; noch kein Writer | 🟨 CI ausstehend |\n| Schreibpfade | 0 freigegeben | 🔒 gesperrt |
+| I24 Diagnose-Export Writer Design | create-only/no-overwrite, Partial-/Crash-Strategie und gezielter Guard-REOPEN technisch festgelegt; noch kein Writer | 🟨 CI ausstehend |
+| Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
 
