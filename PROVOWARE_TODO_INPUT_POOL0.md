@@ -253,3 +253,179 @@ Naechster sicherer Schritt in Stufe 2, sobald eine Projektgrundlage angelegt bzw
 12. EXPORTSTATUS
 
 Dieser Bericht ist der Stufe-1-Planungsstand. PDF, Markdown und TXT werden aus derselben Inhaltsbasis erzeugt. ZIP und Manifest werden anschliessend technisch validiert. Ein erfolgreicher Export ist keine Produktfreigabe.
+# PROVOWARE – Implementierungs-Input-Pool
+
+**Zweck:** Kompakte Arbeits- und Prüfliste für Codex, GitHub und menschliche Bearbeitung.
+**Regel:** Erst lesen → kleinste sinnvolle Änderung → testen → Evidence → abhaken.
+**Quelle der Wahrheit:** `AGENTS.md` + Anforderungen/CRs. Diese Datei wiederholt nur das Nötigste.
+
+## Arbeitsdisziplin
+
+* [ ] Aufgabe einer `REQ-*` oder `CR-*` zuordnen.
+* [ ] Scope in **einem Satz** festlegen.
+* [ ] Nicht-Ziele festlegen; keine Nebenrefactors.
+* [ ] Aktuellen Stand/Fingerprint/Git-Status prüfen.
+* [ ] Startfähigkeit, Pfade, Rechte und Abhängigkeiten prüfen.
+* [ ] Keine stille Installation, kein stiller Download, keine Rechteausweitung.
+* [ ] Kein `chmod 777`.
+* [ ] Vor jedem Schreiben Rückweg/Checkpoint festlegen.
+* [ ] Nur **einen zusammenhängenden Write-Batch** durchführen.
+* [ ] Danach sofort relevante Tests ausführen.
+* [ ] Fehler nicht „wegkonfigurieren“ oder Tests abschwächen.
+* [ ] Evidence speichern; fehlende Prüfung = `OPEN`.
+* [ ] Geänderte Dateien und Auswirkungen dokumentieren.
+
+## Nutzer- und UX-Regeln
+
+* [ ] Standardweg muss für Laien ohne Terminal funktionieren.
+* [ ] Erst sichere Standardoption zeigen; Details progressiv öffnen.
+* [ ] Laien-/Profi-/Expertenmodus sauber trennen.
+* [ ] Entwickleroptionen nicht im normalen Nutzerfluss anzeigen.
+* [ ] Nächsten Schritt sichtbar und verständlich hervorheben.
+* [ ] Keine wichtige Information ausschließlich über Farbe vermitteln.
+* [ ] Schrift, Fokus und Bedienelemente gut sichtbar halten.
+* [ ] 100 %, 150 % und 200 % Skalierung berücksichtigen.
+* [ ] Tastaturbedienung für Kernworkflow sicherstellen.
+* [ ] Drag & Drop nur zusätzlich; Dateidialog bleibt verfügbar.
+* [ ] Animationen dezent und abschaltbar/Reduced-Motion-fähig gestalten.
+* [ ] Fehlertexte sagen: **Was ist passiert? Was kann ich jetzt tun?**
+
+## Datei- und Datensicherheit
+
+* [ ] Pfade und Dateinamen als untrusted input behandeln.
+* [ ] Leerzeichen, Unicode, lange Namen und Sonderzeichen testen.
+* [ ] Symlink- und Traversal-Grenzen prüfen.
+* [ ] Nur ausdrücklich freigegebene Zielordner bearbeiten.
+* [ ] Vor Dateiänderungen immer Preview anbieten.
+* [ ] Löschen möglichst reversibel gestalten.
+* [ ] Undo/Rollback/Recovery für relevante Operationen vorsehen.
+* [ ] Abbruch darf keinen undefinierten Zwischenzustand erzeugen.
+* [ ] Mehrfachstart/Parallelzugriffe kontrollieren.
+* [ ] Temporäre Dateien eindeutig verwalten und aufräumen.
+* [ ] Crash-/Recovery-Pfad separat testen.
+
+## Logging und Datenschutz
+
+* [ ] Normale Nutzeroberfläche frei von Debug-Rauschen halten.
+* [ ] Entwicklerlogs strukturiert und reproduzierbar erzeugen.
+* [ ] Keine Tokens, Secrets oder vertraulichen Inhalte loggen.
+* [ ] Pfade/Dateinamen als potenziell personenbezogen behandeln.
+* [ ] Diagnoseexport nur nach klarer Nutzeraktivierung.
+* [ ] Diagnose trennt **Fakten / Vermutungen / offene Ursache**.
+* [ ] Normaler Exit und Crash-Diagnose als getrennte Fälle behandeln.
+* [ ] Fehlender Diagnoseexport darf niemals Nutzdaten gefährden.
+
+## Abhängigkeiten und Portabilität
+
+* [ ] Bestehende Abhängigkeiten zuerst wiederverwenden.
+* [ ] Neue Abhängigkeit fachlich begründen.
+* [ ] Versionsbindung/Lockfile aktualisieren, falls erforderlich.
+* [ ] Keine versteckte Netzwerkabhängigkeit einführen.
+* [ ] Offline-Verhalten prüfen.
+* [ ] Start außerhalb des Entwicklungsordners testen.
+* [ ] Transport-/ZIP-Struktur reproduzierbar halten.
+* [ ] Fehlende Abhängigkeit verständlich melden statt still nachzuinstallieren.
+* [ ] Paket-/Dateiintegrität per Hash/Manifest prüfbar halten.
+
+## Architektur und Wartbarkeit
+
+* [ ] GUI und Kernlogik sauber trennen.
+* [ ] GUI/CLI – falls beide existieren – denselben Fachkern verwenden.
+* [ ] Keine unnötige Kopplung zwischen UI, Dateisystem und Diagnose.
+* [ ] Konfiguration mit Schema-/Versionskennung versehen.
+* [ ] Keine stillen Konfigurationsmigrationen.
+* [ ] Öffentliche interne Schnittstellen dokumentieren.
+* [ ] Plugin-Grenzen vorbereiten, aber keine unnötige Plugin-Komplexität einführen.
+* [ ] Plugins niemals automatisch installieren/aktivieren.
+* [ ] Sicherheits- und Berechtigungsgrenzen für Erweiterungen definieren.
+* [ ] Architekturentscheidung bei größerem Eingriff als ADR dokumentieren.
+
+## Tests pro Änderung
+
+* [ ] Normalfall testen.
+* [ ] Fehlereingabe testen.
+* [ ] fehlende/falsche Rechte testen.
+* [ ] Leerzeichen/Unicode-Pfad testen.
+* [ ] Abbruch testen.
+* [ ] Recovery/Wiederholung testen.
+* [ ] parallelen Start testen, falls relevant.
+* [ ] Offline-Modus testen, falls relevant.
+* [ ] beschädigte Konfiguration testen, falls relevant.
+* [ ] knappen Speicher/Datenträger sicher simulieren, falls relevant.
+* [ ] Regression bestehender Kernfunktionen ausführen.
+* [ ] Relevanten Bug mit Regressionstest oder reproduzierbarer Prüfanweisung absichern.
+
+## Evidence-Minimum
+
+* [ ] Evidence-ID vergeben.
+* [ ] Datum/Uhrzeit erfassen.
+* [ ] Version/Commit/Fingerprint erfassen.
+* [ ] relevante `REQ-*`/`CR-*` nennen.
+* [ ] Testumgebung nennen.
+* [ ] Ablauf/Befehl dokumentieren.
+* [ ] Erwartung dokumentieren.
+* [ ] Beobachtung dokumentieren.
+* [ ] Exit-Code erfassen, sofern vorhanden.
+* [ ] Ergebnis als `PASS / FAIL / OPEN / SKIPPED` markieren.
+* [ ] Logs/Artefakte verlinken.
+* [ ] wichtige Ergebnisdateien hashen, falls sinnvoll.
+
+## GitHub / Codex
+
+* [ ] `AGENTS.md` vor Bearbeitung lesen.
+* [ ] Nur bei Bedarf spezialisierten Subagenten verwenden.
+* [ ] Prüferrollen möglichst read-only halten.
+* [ ] Gleichzeitige Änderungen derselben Dateien vermeiden.
+* [ ] PR klein und thematisch eindeutig halten.
+* [ ] PR mit betroffenen `REQ-*`/`CR-*` verknüpfen.
+* [ ] CI vollständig grün oder Abweichung explizit dokumentieren.
+* [ ] GitHub Actions mit minimalen `permissions:` betreiben.
+* [ ] Fremde Actions möglichst unveränderlich pinnen.
+* [ ] Dependency-/Security-Warnungen vor Merge bewerten.
+* [ ] Kein Secret in Repo, Issue, PR, Log oder Evidence einchecken.
+
+## Release-Candidate-Gate
+
+* [ ] Scope vollständig.
+* [ ] Akzeptanzkriterien nachgewiesen.
+* [ ] Kein P0 offen.
+* [ ] Keine sicherheitskritische rote Prüfung offen.
+* [ ] relevante Regressionen grün.
+* [ ] Recovery/Rollback geprüft.
+* [ ] bekannte Einschränkungen dokumentiert.
+* [ ] Evidence-Index vollständig.
+* [ ] Paketintegrität geprüft.
+* [ ] Version/Fingerprint eingefroren.
+* [ ] Nach RC-Freeze keine Änderung mehr am Kandidaten.
+
+## STUFE 3 – Audit
+
+* [ ] Frischen Prüfpfad verwenden.
+* [ ] Eingefrorenen RC erneut identifizieren/hashen.
+* [ ] Keine Reparaturen am RC durchführen.
+* [ ] Keine neue Abhängigkeit in den RC installieren.
+* [ ] Start/Portabilität erneut prüfen.
+* [ ] Kernworkflow erneut prüfen.
+* [ ] Preview/Echtlauf erneut prüfen.
+* [ ] Abbruch/Recovery erneut prüfen.
+* [ ] Logging/Datenschutz erneut prüfen.
+* [ ] Paket-/Versionsintegrität erneut prüfen.
+* [ ] Traceability `REQ/CR → Code → Test → Evidence → Audit` schließen.
+* [ ] Bei Blocker: Audit einfrieren → zurück zu Stufe 2 → neuer RC → kompletter Audit-Neustart.
+
+## Bearbeitungsabschluss
+
+* [ ] Was wurde geändert?
+* [ ] Warum wurde es geändert?
+* [ ] Welche Dateien?
+* [ ] Welche Tests?
+* [ ] Welche Evidence?
+* [ ] Welche offenen Punkte?
+* [ ] Gibt es neue Risiken?
+* [ ] Ist Re-Freeze erforderlich?
+
+**Arbeitsregel für Codex:**
+Nicht versuchen, möglichst viel auf einmal zu erledigen. Bevorzuge kleine, nachvollziehbare, testbare Änderungen mit geringem Token-, Diff-, Netzwerk- und Abhängigkeitsumfang.
+
+**Statusregel:**
+`[ ]` offen · `[x]` nachgewiesen erledigt · `[!]` Blocker · `[-]` nicht zutreffend mit Begründung.
