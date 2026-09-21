@@ -7,11 +7,11 @@
 
 **Basis vor M01:** `fcbdd9048eb082cd86a73cff74bacc43dbf6d299`
 
-Der I26-Merge war auf `main` bereits abgeschlossen. Der anschlieÃŸende `repo-quality`-Push-Lauf **#83** (`35633942745`) war vollstÃ¤ndig grÃ¼n. M01 verÃ¤ndert keine Produktlogik.
+Der I26-Merge war auf `main` bereits abgeschlossen. Der anschlieÃŸende `repo-quality`-Push-Lauf **#83** (ID `35633942745`) war vollstÃ¤ndig grÃ¼n. M01 verÃ¤ndert keine Produktlogik.
 
 ## A â€“ FESTER PLAN
 
-**Ziel:** Informationsdateien und Repository-Wartbarkeit vollstÃ¤ndig prÃ¼fen, nachgewiesene Drift beheben und kÃ¼nftige Inkonsistenzen automatisiert frÃ¼her stoppen.
+**Ziel:** Informationsdateien und Repository-Wartbarkeit vollstÃ¤ndig prÃ¼fen, nachgewiesene Drift beheben und kÃ¼nftige Inkonsistenzen frÃ¼her automatisch stoppen.
 
 ### Analysebefunde
 
@@ -21,7 +21,7 @@ Der I26-Merge war auf `main` bereits abgeschlossen. Der anschlieÃŸende `repo-qua
 - ğŸŸ¡ `application_core.py` liegt bei rund 500 Zeilen: Beobachtungsschwelle, aber aktuell kein begrÃ¼ndeter Zwangsrefactor.
 - ğŸ”´ README und TODO enthielten mehrere bereits Ã¼berholte â€CI ausstehend/Ã¼ber CI einfrierenâ€œ-Angaben.
 - ğŸ”´ diese Datei meldete I26 Merge/Post-Merge noch als ausstehend, obwohl `main` und Lauf #83 grÃ¼n waren.
-- ğŸ”´ `docs/REGRESSION_MATRIX.md` enthielt einen wÃ¶rtlichen `\n`-Trenner innerhalb der Tabelle.
+- ğŸ”´ `docs/REGRESSION_MATRIX.md` enthielt einen wÃ¶rtlichen Backslash-n-Tabellenumbruch.
 - ğŸŸ¡ `scripts/repo_quality.py` fÃ¼hrte fast jede Iterationsdatei einzeln als Pflichtdatei; das erzeugte unnÃ¶tige Pflegekopplung.
 - ğŸŸ¡ ein zentraler navigierbarer Dokumentationsindex fehlte.
 
@@ -42,6 +42,45 @@ Der I26-Merge war auf `main` bereits abgeschlossen. Der anschlieÃŸende `repo-qua
 
 **Quelle:** Vollanalyse der Informationsarchitektur.
 
-**Befund:** Der bisherige Prozess versuchte CI-/Merge-LivezustÃ¤nde in dauerhaften Dateien zu spiegeln. Dadurch entstand nach erfolgreichen Merges regelmÃ¤ÃŸig Statusdrift.
+**Befund:** Der bisherige Prozess spiegelte PR-/Merge-/CI-LivezustÃ¤nde in dauerhaften Dateien. Dadurch entstand unmittelbar nach erfolgreichen Merges wieder Statusdrift.
 
-**MaÃŸnahme:** GitHub blee‰ĞEÕ•±±”›ñÈ…­ÑÕ•±±•¸AH´½]½É­™±½Ü´½5•É”µiÕÍÑ…¹ì‘…Õ•É¡…™Ñ”I•Á¼µQ•áÑ”ÍÁ•¥¡•É¸¹ÕÈ™…¡±¥ ‰•±•Ñ”iÕÍÓ‘¹‘”Õ¹¡¥ÍÑ½É¥Í¡”Ù¥‘•¹”¸((¨©MÑ…ÑÕÌè¨¨ƒÂ~~ˆ¥¸½Ù•É¹…¹”Õ¹5…¥¹Ñ•¹…¹”µY•ÉÑÉ…œƒñ‰•É›ñ¡ÉĞ¸((ŒŒM¥¡•É¡•¥ÑÍÉ•¹é”()4ÀÄÙ•Ë‘¹‘•ÉĞ…ÕÍÍ¡±¥—}±¥ ½­Õµ•¹Ñ…Ñ¥½¸°I•Á½Í¥Ñ½ÉäµAËñ™½‘”Õ¹AHµAÉ½é•ÍÍµ•Ñ…‘…Ñ•¸¸()-•¥¸è((´AÉ½‘Õ­ÑÙ•É¡…±Ñ•¸ì(´…Ñ•¤µá•ÕÑ½Èì(´A•ÉÍ¥ÍÑ•¹èì(´Õ…ÉµI=A8ì(´9•Ñéİ•É­Á™…¥´AÉ½‘Õ­Ğì(´•Á•¹‘•¹äµiÕİ…¡Ì¸((ŒŒá¥Ğµ…Ñ•Ì((Ä¸I•Á½Í¥Ñ½Éäµ½¹ÑÉ…ĞAML¸(È¸%¹™¼µQ•áĞµ%µÁ…ĞAML¸(Ì¸I•…µ½¹±äµ1½¬AML¸(Ğ¸Ù½±±ÍÓ‘¹‘¥”I•É•ÍÍ¥½¸µMÕ¥Ñ”AML¸(Ô¸½É”¥…¹½ÍÑ¥ŒAML¸(Ø¸¥…¹½ÍÑ¥ŒM¹…ÁÍ¡½ĞAML¸(Ü¸MÑ…ÉÑ•ÈµAÉ•™±¥¡Ğ-±…ÉÑ•áĞ½)M=8AML¸(à¸™¥¹…±•È¥™˜½¡¹”AÉ½‘Õ­Ñ±½¥¬¸(ä¸AHµ$AML¸(ÄÀ¸A½ÍĞµ5•É”µ5…¥¸µ$AML¸((ŒŒ;‘¡ÍÑ”‘É•¤Ù½É•Á±…¹Ñ”AÉ½‘Õ­ÑÍ¡É¥ÑÑ”((ŒŒŒ€Ä¸ƒÂ~RÔ$ÄÜµƒŠLÉ•…±•ÈU$µi¥•±ÍåÍÑ•µ±…Õ˜)]•¥Ñ•É¡¥¸•¥¹é¥•ÌÍ¥¡Ñ‰…É•ÌU$´½•ÍÍ¥‰¥±¥Ñäµ…Ñ”¸((ŒŒŒ€È¸ƒÂ~RÔ$ÈÔƒŠL‘…ÁÑ•Èµ%µÁ±•µ•¹Ñ¥•ÉÕ¹œ)ÉÍĞ¹… Ëñ¹•´É•…±•´$ÄÜµ	•™Õ¹¸((ŒŒŒ€Ì¸ƒÂ~RÔ$ÈÜƒŠL]É¥Ñ•ÈµÍÁ•é¥™¥Í¡•ÈÕ…É•¥Í¥½¸½AÉ½Ñ½ÑåÁ”)iÕ•ÉÍĞ•á…­Ñ”Õ…ÉµÉ¡¥Ñ•­ÑÕÈÕ¹9¼µ±½‰‰•ÈµA±…ÑÑ™½Éµ‰•İ•¥Ìì¹½ ­•¥¸ÁÉ½‘Õ­Ñ¥Ù•ÈáÁ½ÉĞµ‘…ÁÑ•È¸(
+**MaÃŸnahme:** GitHub bleibt Quelle fÃ¼r aktuellen PR-/Workflow-/Merge-Zustand. Dauerhafte Repo-Texte speichern Capability-, OPEN-/LOCKED- und historische Evidence-ZustÃ¤nde.
+
+**Status:** ğŸŸ¢ in Governance und Wartungsvertrag Ã¼berfÃ¼hrt.
+
+## Sicherheitsgrenze
+
+M01 verÃ¤ndert ausschlieÃŸlich Dokumentation, Repository-PrÃ¼fcode und PR-Prozessmetadaten.
+
+Kein:
+
+- Produktverhalten;
+- Datei-Executor;
+- Persistenz;
+- Guard-REOPEN;
+- Netzwerkpfad im Produkt;
+- Dependency-Zuwachs.
+
+## Exit-Gates
+
+1. Repository-Contract PASS.
+2. Info-Text-Impact PASS.
+3. Read-only-Lock PASS.
+4. vollstÃ¤ndige Regression-Suite PASS.
+5. Core Diagnostic PASS.
+6. Diagnostic Snapshot PASS.
+7. Starter-Preflight Klartext/JSON PASS.
+8. finaler Diff ohne Produktlogik.
+9. PR-CI PASS.
+10. Post-Merge-Main-CI PASS.
+
+## NÃ¤chste drei vorgeplante Produktschritte
+
+### 1. ğŸ”µ I17-B â€“ realer GUI-Zielsystemlauf
+Weiterhin einziges sichtbares UI-/Accessibility-Gate.
+
+### 2. ğŸ”µ I25 â€“ Adapter-Implementierung
+Erst nach grÃ¼nem realem I17-Befund.
+
+### 3. ğŸ”µ I27 â€“ Writer-spezifischer Guard Decision/Prototype
+Zuerst exakte Guard-Architektur und No-clobber-Plattformbeweis; noch kein produktiver Export-Adapter.

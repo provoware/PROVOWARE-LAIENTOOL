@@ -138,7 +138,11 @@ markdown_link = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
 for path in ROOT.rglob("*.md"):
     if ".git" in path.parts:
         continue
-    text = path.read_text(encoding="utf-8")
+    try:
+        text = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        fail(f"Markdown-Datei ist nicht UTF-8: {path.relative_to(ROOT)}: {exc}")
+        continue
     if re.search(r"\|\\n\|", text):
         fail(f"Wörtliches \\n zwischen Markdown-Tabellenzeilen: {path.relative_to(ROOT)}")
     for target in markdown_link.findall(text):
