@@ -18,7 +18,8 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I10 GUI-/CLI-Registry | gemeinsame immutable Registry implementiert und geprüft | 🟢 `██████████` 100 % |
 | I11 read-only Shell | gemeinsamer Core + Zahlenmenü + optionale PySide6-Shell implementiert; reale visuelle Accessibility-Evidence offen | 🟨 `████████░░` 80 % |
 | I12 B05 Preview-Modell | immutable Preview-Vertrag mit B01-Pfadgrenzen implementiert; kein Executor | 🟢 `██████████` 100 % Modellstand |
-| I13 B06 Recovery-Vertrag | Zustandsautomat, Journal-/Undo-Vertrag und Crash-Matrix implementiert; keine Persistenz/kein Executor | 🟨 `████████░░` 80 % |
+| I13 B06 Recovery-Vertrag | Zustandsautomat, Journal-/Undo-Vertrag und Crash-Matrix implementiert; keine Persistenz/kein Executor | 🟢 Repository grün |
+| I14 Accessibility-Evidence | Theme-Kontrast + Skalierungsvertrag geprüft; Fokusvertrag für ComboBox/TextEdit FAIL; reale Desktop-/Laienprüfung OPEN | 🔴/🟨 `██████░░░░` 60 % |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -106,7 +107,7 @@ Sobald Produktcode entsteht, wird dieser Gate gezielt um echte Unit-/Integration
 2. **B01:** B01-A Preflight und B01-B Pfad-/Symlink-Grenzen sind implementiert; der read-only Zweitgeräte-Evidence-Runner ist vorbereitet, die reale physische Ausführung bleibt offen.
 3. **I10/I11:** gemeinsame Registry sowie read-only Application-/CLI-/GUI-Shell sind implementiert; reale visuelle Accessibility-Evidence bleibt OPEN.
 4. **I12/B05:** immutable Preview-Vertrag ist implementiert; kein Executor und keine Schreibfreigabe.
-5. **I13/B06:** Journal-/Undo-/Recovery-Zustandsvertrag ist implementiert; Persistenz und Executor bleiben weiterhin gesperrt.
+5. **I13/B06:** Journal-/Undo-/Recovery-Zustandsvertrag ist implementiert; Persistenz und Executor bleiben weiterhin gesperrt.\n6. **I14/B04:** automatisierte Accessibility-Evidence ist reproduzierbar; aktueller expliziter Fokusvertrag ist noch nicht vollständig und reale Zielsystem-Evidence bleibt OPEN.
 
 ## Quellen der Wahrheit
 
@@ -120,4 +121,4 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I13 vollständig über CI einfrieren; danach entweder reale I11-Accessibility-Evidence oder read-only Inventar beginnen. Produktive Schreibpfade bleiben gesperrt.**
+**Den I14-Fokusbefund als separaten DELTA beheben und parallel den nächsten festen Planpunkt I15 ausschließlich read-only halten. Reale Accessibility bleibt bis zum Zielsystemlauf OPEN.**
