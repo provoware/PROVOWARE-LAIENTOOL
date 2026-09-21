@@ -120,8 +120,9 @@ def validate_preview(plan: PreviewPlan) -> PreviewCheck:
 
         target_decisions.append(target_decision)
 
-        if item.action == ACTION_TRASH and not item.reversible:
-            errors.append(f"Trash muss als reversibel markiert sein: {item.id}")
+        if item.action in {ACTION_MOVE, ACTION_TRASH} and not item.reversible:
+            label = "Move" if item.action == ACTION_MOVE else "Trash"
+            errors.append(f"{label} muss als reversibel markiert sein: {item.id}")
 
     return PreviewCheck(
         allowed=not errors,

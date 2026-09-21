@@ -1,65 +1,81 @@
 # PROVOWARE – Current Iteration
 
-## I25 – Transfer-Preview Adapter
+## I27 – Diagnostic Writer Guard / Branch-Hygiene
 
-**Status:** 🟨 AUTONOME HÄRTUNG / AUTO-EVIDENCE
-**Fortschritt:** `█████████▌ 95 %`
+**Status:** 🟢 AUTOMATISCH PASS · MERGE-READY
+**Fortschritt:** `██████████ 100 %`
 
 ## A – FESTER PLAN
 
-I23/I18/I21 sind als gemeinsamer read-only Workflow umgesetzt:
+I24 und I26 verlangen vor jedem echten Diagnose-Writer:
 
-- `files.preview_copy` und `files.preview_move` im gemeinsamen Application-Core;
-- I18-Inventaransicht liefert die auswählbaren Dateien;
-- I21 erzeugt ausschließlich Same-Root Copy-/Move-Preview;
-- CLI besitzt nummerierte Mehrfachauswahl;
-- GUI besitzt Mehrfachauswahl im expliziten I25-Prüfmodus;
-- GUI und CLI bieten nur vom Core bestätigte Same-Root-Zielordner an;
-- `./start.sh --i25-evidence` automatisiert die technische I25-Evidence und reduziert die menschliche Abnahme auf eine finale Chromium-Frage;
-- kein Executor, kein produktiver Datei-Write.
+- exakten REOPEN nur für `src/provoware_laientool/diagnostic_export.py`;
+- create-only / no-clobber;
+- keinen Overwrite-Fallback;
+- Writer-spezifischen statischen Guard;
+- Race-/Crash-/Failure-Evidence erst im späteren Writer-Block.
 
-Die beiden Registry-Einträge bleiben absichtlich `OPEN`. I23 erlaubt `READY` erst nach realer Accessibility-/Laien-Evidence des neuen sichtbaren Workflows.
+I27 implementiert ausschließlich diesen Guard. Noch existiert kein `diagnostic_export.py`.
 
-## B – DELTA AUS DEM RC-LAUF
+## B – DELTA AUS DER ALTBRANCH-ANALYSE
 
-Der erste I25-RC belegte einen Prozesskonflikt: `info_text_guard.py` lief vor den Produktgates und stoppte einen bewusst noch nicht finalisierten RC, bevor Full Suite und Safety-Gates ausgeführt wurden.
+Vier Remote-Altbranches wurden gegen aktuellen `main` klassifiziert:
 
-Korrektur:
+- `design/i24-diagnostic-export-writer`: vollständig superseded;
+- `application/i21-transfer-preview`: alte Implementierung superseded durch heutigen I21/`transfer_application.py`;
+- `domain/i12-preview-contract`: Architektur superseded, aber MOVE-Reversibilitätsinvariante gerettet;
+- `security/i27-diagnostic-writer-guard`: Konzept relevant, alter Stand jedoch nicht ausreichend gehärtet; auf frischem Main transplantiert.
 
-- Produkt-/Safety-Gates laufen im CI zuerst;
-- Info-Text-Impact bleibt hart, läuft aber als finales PR-Gate;
-- fehlende Finalisierungsdoku bleibt damit merge-blockierend;
-- Produktfehler können trotzdem unabhängig von Doku-Finalisierung diagnostiziert werden.
+Details: `docs/evidence/EV-20260921-006-branch-hygiene-i27.md`.
 
-Zusätzlich wurde der spätere READY-Pfad des Zahlenmenüs explizit auf `run_transfer_preview_flow()` verdrahtet.
+## I27 Guard-Vertrag
+
+Außerhalb des exakten Diagnose-Writers bleiben sämtliche Low-Level-Write-APIs blockiert.
+
+Im Spezialwriter darf später nur ein statisch beweisbarer Pfad entstehen:
+
+```text
+partial_path
+→ os.open(O_CREAT | O_EXCL | O_WRONLY/O_RDWR)
+→ nachweislich daraus stammender Partial-FD
+→ os.write/fsync
+→ Hash/Größe zur Laufzeit verifizieren
+→ os.link(partial_path, final_path, follow_symlinks=False)
+→ eigene partial_path entfernen
+```
+
+Dynamische Flags, numerische Rohflags, `O_TRUNC`, `O_APPEND`, `O_TMPFILE`, freie FDs, freie Hardlinks, `rename`, `replace`, alternative Writer-/Escape-Bibliotheken und freie Deletes bleiben BLOCKED.
+
+## Zusätzlich gerettete Preview-Invariante
+
+`MOVE` und `TRASH` müssen zentral `reversible=True` besitzen. I21 erzeugte MOVE bereits korrekt; das Preview-Modell erzwingt dies nun ebenfalls fail-closed.
 
 ## Weiterhin gesperrt
 
-- Executor;
-- produktives Kopieren/Verschieben;
+- echter Diagnose-Writer;
+- produktiver Diagnose-Dateiexport;
+- allgemeiner Executor;
+- Copy/Move-Write;
 - Overwrite;
 - Auto-Rename;
-- externe Zielwurzel;
-- Cross-Device Move;
 - Persistenz;
 - Rechteausweitung;
-- READY ohne reale Folge-Evidence.
+- I25 READY ohne finale Human-Abnahme.
 
 ## Exit-Gates
 
-1. Repository-Contract PASS.
+1. I27-Guard-Tests PASS.
 2. Read-only-Lock PASS.
-3. vollständige Unit-/Integrationssuite PASS.
-4. Core Diagnostic PASS.
-5. Diagnose/Preflight PASS.
-6. Info-Text-Impact PASS.
-7. finaler Diff ohne Scope-Drift.
-8. I25-AUTO: 100/150/200 %, Hauptfenster- und Dialog-Tastaturpfade, Mehrfachauswahl, Same-Root-Zielwahl, Cancel-Verhalten, Preview und Screenshots.
-9. I25-HUMAN: genau eine finale Frage zur Gesamtverständlichkeit.
-10. erst danach Registry `READY`.
+3. Preview-Reversibilitätsregression PASS.
+4. Repository-Contract PASS.
+5. vollständige Unit-/Integrationssuite PASS.
+6. Core Diagnostic PASS.
+7. Diagnose/Preflight PASS.
+8. finaler Diff ohne allgemeinen Write-Reopen.
+9. Post-Merge-Main-Gate PASS.
 
 ## Nächste drei Schritte
 
-1. 🟨 autonome I25-Härtung inklusive Auto-Evidence und CI vollständig abschließen.
-2. 🔵 danach genau einen realen `./start.sh --i25-evidence`-Lauf verwenden; technische Gates laufen automatisch.
-3. 🔒 nur bei AUTO PASS + einer finalen Human-PASS-Frage die Registry in einem kleinen Freeze-Batch auf `READY` setzen; Executor bleibt gesperrt.
+1. 🟨 I27-RC automatisch vollständig prüfen und nur bei Grün mergen.
+2. 🔵 danach den dedizierten Diagnose-Writer als separaten kleinen Testlab-Block planen/implementieren; zunächst ohne GUI/CLI-Adapter.
+3. 🔒 Writer erst nach Race/Crash/ENOSPC/PermissionError/Hash-/No-clobber-Evidence fachlich freigeben; I25-Human-Gate bleibt unabhängig offen.

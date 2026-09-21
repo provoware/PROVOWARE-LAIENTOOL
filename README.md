@@ -32,6 +32,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I24 Diagnose-Export Writer Design | create-only/no-overwrite, Partial-/Crash-Strategie und gezielter Guard-REOPEN technisch festgelegt; noch kein Writer | 🟢 Design eingefroren |
 | I25 Transfer-Preview Adapter | gemeinsamer I18/I21-Pfad für Copy-/Move-Vorschau, CLI-Mehrfachauswahl und GUI-Prüfmodus implementiert; Registry bleibt bis neuer realer Accessibility-Evidence OPEN | 🟨 Implementiert · READY gegated |
 | I26 Diagnose-Export Preflight | immutable ExportPlan + serialisierter Payload, zweites Redaction-Gate, SHA-256/Größe und No-overwrite-Zielprüfung; vollständig read-only | 🟢 Repository-/Post-Merge-Gate grün |
+| I27 Diagnostic Writer Guard | exakter Writer-REOPEN-Vertrag, statische Partial-FD-Provenienz und No-clobber Partial→Final-Publish-Regeln; noch kein Writer | 🟨 Sicherheitsgate implementiert · produktiver Write weiter gesperrt |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -148,7 +149,7 @@ Der Gate umfasst inzwischen die vollständige Unit-/Integrationssuite, den read-
 3. **I17:** I17-AUTO und I17-HUMAN sind im realen Chromium-Zielsystemlauf grün; I17 ist eingefroren.
 4. **I18–I21:** Inventar-Komfort, Read-only-Lock, Diagnose-Observability und Same-Root Copy/Move-Preview sind im Repository grün.
 5. **I25:** Copy-/Move-Preview ist über denselben Application-Core in CLI und GUI-Prüfmodus angebunden; neue Registry-Einträge bleiben bis realer Folge-Evidence OPEN.
-6. **I22–I24/I26:** Diagnose-Export ist entschieden und bis zum vollständig read-only ExportPlan-/Payload-Preflight vorgezogen; echter Writer und Guard-REOPEN bleiben gesperrt.
+6. **I22–I24/I26–I27:** Diagnose-Export ist entschieden, read-only vorvalidiert und besitzt nun einen engen statischen Writer-Guard; der echte Writer selbst bleibt gesperrt.
 7. **Schreibpfade:** weiterhin `0` produktiv freigegeben.
 
 ## Quellen der Wahrheit
@@ -163,7 +164,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I25 wird autonom bis zur Wahrnehmungsgrenze geprüft. `./start.sh --i25-evidence` übernimmt 100/150/200 %, Tastatur/Fokus, Mehrfachauswahl, Same-Root-Zielwahl, Preview und Screenshots automatisch; menschlich bleibt nur eine finale Chromium-Frage zur Gesamtverständlichkeit. Erst danach dürfen `files.preview_copy` und `files.preview_move` auf READY wechseln.**
+**I25 bleibt an seiner einzigen realen Human-Wahrnehmungsfrage gegated. Parallel wird I27 als rein automatisierbarer Sicherheitsblock abgeschlossen: exakter Diagnose-Writer-Guard, Preview-MOVE-Reversibilität und Altbranch-Hygiene – weiterhin ohne echten Writer oder produktiven Datei-Write.**
 
 
 ## Screenshots

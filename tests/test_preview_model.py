@@ -68,6 +68,12 @@ class PreviewModelTests(unittest.TestCase):
         self.assertFalse(check.allowed)
         self.assertTrue(any("Quelle blockiert" in error for error in check.errors))
 
+    def test_move_must_be_reversible(self) -> None:
+        invalid = self.item(action=ACTION_MOVE, reversible=False)
+        check = validate_preview(make_plan(self.root, (invalid,)))
+        self.assertFalse(check.allowed)
+        self.assertIn("Move muss als reversibel markiert sein: op-001", check.errors)
+
     def test_trash_is_reversible_and_has_no_free_target(self) -> None:
         valid = self.item(
             action=ACTION_TRASH,
