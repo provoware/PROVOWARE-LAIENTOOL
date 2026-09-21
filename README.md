@@ -23,6 +23,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I15 Read-only Inventar | rekursiver B01-gebundener Nur-Lese-Inventarkern mit Symlink-Sperre, Unicode/Leerzeichen, Größenfakten und strukturierten Befunden implementiert | 🟢 Repository grün |
 | I16 Preview-Application | Inventar → reversible Trash-Preview über gemeinsamen Application-Core; GUI/CLI sammeln nur die Ordnerwahl ein | 🟢 Repository grün |
 | I17 Real-Accessibility | Zielsystem-Helfer, manuelle 100/150/200-%-Matrix und Screenshot-Vertrag vorbereitet; echter Desktop-/Laienlauf OPEN | 🟨 reale Evidence OPEN |
+| I18 Inventar-Komfort | read-only Suche, Sortierung und Top-10/50/100-Größenansichten im Domain-/Application-Core; sichtbare GUI-Anbindung wartet auf realen I17-Lauf | 🟨 CI ausstehend |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -46,7 +47,7 @@ Die geplante GUI basiert auf **PySide6/Qt**. **Tkinter ist im Produktionscode au
 
 GUI und Linux-Konsole sind zwei Adapter desselben Fachkerns. Jede fachliche GUI-Funktion benötigt einen gleichwertigen laienfreundlichen Konsolenweg über ein Zahlen-Auswahlmenü; rein visuelle Ausnahmen müssen ausdrücklich begründet sein. Seit I10 beschreibt eine gemeinsame immutable Capability-/Use-Case-Registry Verfügbarkeit und Sicherheitsmetadaten für beide Adapter.
 
-Siehe [ADR-0001](docs/adr/ADR-0001-ui-cli-foundation.md), das [UI-Designsystem](docs/UI_DESIGN_SYSTEM.md), die [Theme-Tokens](docs/theme-tokens.md), den [messbaren Laien-Qualitätsstandard](docs/LAIEN_QUALITY_STANDARD.md), die [Info-Text-Governance](docs/INFO_TEXT_GOVERNANCE.md) und den [GUI-/Konsolen-Paritätsvertrag](docs/GUI_CLI_PARITY.md).
+Siehe [ADR-0001](docs/adr/ADR-0001-ui-cli-foundation.md), das [UI-Designsystem](docs/UI_DESIGN_SYSTEM.md), die [Theme-Tokens](docs/theme-tokens.md), den [messbaren Laien-Qualitätsstandard](docs/LAIEN_QUALITY_STANDARD.md), die [Info-Text-Governance](docs/INFO_TEXT_GOVERNANCE.md), den [GUI-/Konsolen-Paritätsvertrag](docs/GUI_CLI_PARITY.md), die [Regressionsmatrix](docs/REGRESSION_MATRIX.md) und den [Debugging-Standard](docs/DEBUGGING_STANDARD.md).
 
 ## Repository-Struktur
 
@@ -102,7 +103,7 @@ Die vollständigen Trigger und Stop-Bedingungen stehen in [AGENTS.md](AGENTS.md)
 - dokumentationsrelevante Änderungen führen über einen diff-basierten Info-Text-Impact-Guard;
 - `todo.txt` bleibt schema- und prioritätsgeprüft, ohne eine künstlich feste Eintragszahl.
 
-Sobald Produktcode entsteht, wird dieser Gate gezielt um echte Unit-/Integrations-/GUI-Tests erweitert.
+Der Gate umfasst inzwischen die vollständige Unit-/Integrationssuite, den read-only Preflight und einen temporären End-to-End-Core-Diagnoselauf. Reale GUI-Wahrnehmung bleibt bewusst ein separates Evidence-Gate.
 
 ## Aktuelle Reihenfolge
 
@@ -126,7 +127,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I17-Evidence-Infrastruktur über CI einfrieren und danach den Ein-Befehl-Zielsystemlauf real ausführen. UI-Ausbau darf anschließend auf dem bestehenden read-only Core fortgesetzt werden; Schreibpfade bleiben gesperrt.**
+**I18 read-only Komfortkern und Core-Diagnostik über CI einfrieren. Der reale I17-Zielsystemlauf bleibt OPEN; sichtbarer UI-Ausbau folgt erst danach. Schreibpfade bleiben gesperrt.**
 
 
 ## Screenshots

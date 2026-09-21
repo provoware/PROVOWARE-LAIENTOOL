@@ -7,6 +7,7 @@ from pathlib import Path
 
 from .capability_registry import get_use_case, list_use_cases
 from .inventory import InventoryResult, scan_inventory
+from .inventory_view import InventoryView, InventoryViewSpec, build_inventory_view
 from .preflight import format_text, run_preflight
 from .preview_model import (
     ACTION_TRASH,
@@ -32,6 +33,30 @@ class PreviewPreparation:
     plan: PreviewPlan | None
     check: PreviewCheck | None
     status: str
+
+
+@dataclass(frozen=True, slots=True)
+class InventoryViewPreparation:
+    inventory: InventoryResult
+    view: InventoryView | None
+    status: str
+
+
+def prepare_inventory_view(
+    root: Path,
+    spec: InventoryViewSpec = InventoryViewSpec(),
+) -> InventoryViewPreparation:
+    """Build a read-only filtered/sorted view through the shared core."""
+    inventory = scan_inventory(root)
+    if not inventory.root_allowed:
+        return InventoryViewPreparation(inventory, None, "BLOCKED")
+    if not inventory.complete:
+        return InventoryViewPreparation(inventory, None, "OPEN")
+    return InventoryViewPreparation(
+        inventory=inventory,
+        view=build_inventory_view(inventory, spec),
+        status="PASS",
+    )
 
 
 def available_actions() -> tuple[str, ...]:
