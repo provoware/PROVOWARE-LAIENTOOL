@@ -1,100 +1,82 @@
 # PROVOWARE – Current Iteration
 
-## I21 – Same-Root Copy/Move Preview Application
+## I22 – Diagnose-Export Decision Gate
 
-**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
-**Fortschritt:** `█████████░ 90 %`
+**Status:** 🟨 ENTSCHEIDUNG DOKUMENTIERT / CI-ABNAHME AUSSTEHEND
+**Fortschritt:** `████████░░ 80 %`
 
 ## A – FESTER PLAN
 
-**Ziel:** den in I19 eingefrorenen Same-Root-Zielvertrag als gemeinsamen read-only Application-Core für Copy-/Move-Preview umsetzen.
+**Ziel:** entscheiden, ob und unter welchen harten Grenzen ein späterer redigierter Diagnosebericht lokal als Datei exportiert werden darf.
 
-**Checkpoints:**
+**Entscheidung:**
 
-- 🟢 `prepare_copy_preview()`
-- 🟢 `prepare_move_preview()`
-- 🟢 gemeinsamer interner Same-Root-Builder
-- 🟢 aktuelles vollständiges Inventar als Auswahlquelle
-- 🟢 expliziter existierender Zielordner
-- 🟢 Zielordner B01-validiert
-- 🟢 externe Ziele BLOCKED
-- 🟢 Symlink-Ziele BLOCKED
-- 🟢 fehlender Zielordner BLOCKED
-- 🟢 Ziel-Datei statt Ordner BLOCKED
-- 🟢 unbekannte Auswahl BLOCKED
-- 🟢 doppelte Auswahl BLOCKED
-- 🟢 leere Auswahl OPEN
-- 🟢 Quelle=Ziel BLOCKED
-- 🟢 bestehendes Ziel / Overwrite BLOCKED
-- 🟢 kein Auto-Rename
-- 🟢 I12 `make_plan()` wiederverwendet
-- 🟢 I12 `validate_preview()` erneut ausgeführt
-- 🟢 `writes_enabled=False`
-- 🟢 kein Registry-/GUI-/CLI-Ausbau
-- 🟢 Unit-/Negativtests
-- 🟢 Core-Diagnostic um Copy/Move/Overwrite erweitert
-- 🟢 Repository-/PR-CI PASS
-- 🟢 finaler Diff ohne Scope-Drift
-- 🔵 Merge / Post-Merge
+- 🟢 späterer expliziter lokaler Export grundsätzlich zulässig
+- 🟢 nur nach ausdrücklicher Nutzeraktion
+- 🟢 Redaction zwingend vor jedem Write
+- 🟢 nur bestehender `DiagnosticReport`
+- 🟢 zunächst JSON/Klartext
+- 🟢 explizit gewählter vorhandener Zielordner
+- 🟢 no-overwrite
+- 🟢 keine automatische Konfliktumbenennung
+- 🟢 keine automatische Rechteausweitung
+- 🟢 eigener Writer-/REOPEN-Gate erforderlich
+- 🟢 Read-only-Guard darf nicht global abgeschaltet werden
+- 🟢 Partial-Write-/Crash-Strategie vor Implementierung Pflicht
+- 🔒 heute keine Implementierung
+- 🔒 kein Upload/Netzwerk
+- 🔒 keine Telemetrie
+- 🔒 keine Crash-Dumps
+- 🔒 keine Log-Bundles
+- 🔒 kein allgemeiner Writer
 
 ## B – VARIABLE FOLGEAUFGABE
 
-**Quelle letzter Lauf:** I20 war bereits gemergt und Post-Merge-CI vollständig grün, während `CURRENT_ITERATION.md` Merge/Post-Merge noch als offen auswies.
+**Quelle letzter Lauf:** I21 wurde gemergt und Post-Merge-CI vollständig grün, während `CURRENT_ITERATION.md` Merge/Post-Merge noch als offen auswies.
 
-**Maßnahme:** Statusdrift beim Wechsel auf I21 synchronisiert.
+**Maßnahme:** Statusdrift beim Wechsel auf I22 synchronisiert.
 
 **Status:** 🟢 erledigt.
 
-## Debugging-Schwerpunkt
+## Warum der Read-only-Lock unverändert bleibt
 
-I21 wird nicht nur über Positivtests abgesichert.
+I22 ist ausschließlich ein Decision Gate.
 
-Die Negativmatrix enthält bewusst:
-
-- Overwrite;
-- externe Zielwurzel;
-- Symlink-Ziel;
-- fehlenden Zielordner;
-- Ziel ist Datei;
-- identische Quelle/Ziel;
-- unbekannte Auswahl;
-- doppelte Auswahl;
-- leere Auswahl.
-
-Der End-to-End-Core-Diagnostic reproduziert Copy/Move ausschließlich in `tempfile` und bestätigt unveränderte Quellen.
+Ein späterer Export-Writer benötigt einen **gezielten REOPEN**, der nur diesen kleinen Writer-Bereich erlaubt. Der allgemeine Produktkern bleibt weiter read-only und der Guard darf nicht global abgeschaltet werden.
 
 ## Nicht-Ziele
 
-- kein Executor;
-- keine Copy-/Move-Ausführung;
-- keine Persistenz;
-- keine UI-/CLI-Anbindung;
-- kein zweiter Root;
-- kein Cross-Device Move;
-- kein Overwrite;
-- kein Auto-Rename;
-- kein TOCTOU-Executor-Vertrag;
-- keine Rechteausweitung.
+- keine Exportfunktion;
+- keine Datei schreiben;
+- keine Registry-Änderung;
+- keine GUI-/CLI-Erweiterung;
+- keine Guard-Allowlist;
+- keine atomare Writer-Implementierung;
+- kein Netzwerk;
+- kein Upload;
+- keine Telemetrie;
+- kein Executor.
 
 ## Exit-Gates
 
-1. I21 Unit-/Negativtests PASS.
-2. erweiterter Core-Diagnostic PASS.
-3. Read-only-Lock PASS.
-4. vollständige Test-Suite PASS.
+1. Exportgrenzen eindeutig dokumentiert.
+2. Datenschutz-/Redaction-Reihenfolge eindeutig.
+3. no-overwrite eingefroren.
+4. Writer-/Guard-REOPEN ausdrücklich als späteres Pflichtgate dokumentiert.
 5. Repository-Contract PASS.
 6. Info-Text-Impact PASS.
-7. bestehende B01–I20-Verträge regressionsfrei.
-8. finaler Diff ohne Scope-Drift.
-9. Post-Merge-CI PASS.
+7. vollständige Regression-Suite PASS.
+8. Read-only-Lock unverändert PASS.
+9. finaler Diff ohne Scope-Drift.
+10. Post-Merge-CI PASS.
 
 ## Nächste drei vorgeplante Schritte
 
-### 1. 🔵 I22 – Diagnose-Export Decision Gate
-Entscheiden, ob ein explizit angeforderter redigierter Diagnosebericht später als Datei geschrieben werden darf. Noch keine Implementierung.
+### 1. 🔵 I23 – Same-Root Zielauswahl Adapter-Decision
+Entscheiden, wie vorhandene I18-Auswahl und I21-Zielpreview später laiengerecht in GUI/Zahlenmenü angebunden werden. Reale I17-Evidence bleibt Voraussetzung für sichtbaren GUI-Ausbau.
 
-### 2. 🔵 I23 – Same-Root Zielauswahl Adapter-Decision
-Erst nach realem I17-Befund entscheiden, wie Dateiauswahl + Zielordner in GUI und Zahlenmenü laiengerecht angebunden werden.
+### 2. 🔵 I24 – Diagnose-Export Writer Design
+Nur wenn ausdrücklich freigegeben: atomare/create-only Writer-Strategie und Guard-REOPEN als reine technische Planung; noch keine Implementierung.
 
-### 3. 🔵 I17-B / UI-Evidence
-Echten 100/150/200-%-/Tastaturlauf weiterhin abschließen, sobald Zielsystemzugriff möglich ist.
+### 3. 🔵 I17-B – realer GUI-Zielsystemlauf
+100/150/200 %, Tastatur, Fokus und Screenshots weiterhin auf echter PySide6-/Desktop-Umgebung abschließen.
