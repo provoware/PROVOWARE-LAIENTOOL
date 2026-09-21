@@ -12,6 +12,7 @@ from provoware_laientool.recovery_contract import (
     STATE_RECOVERED,
     STATE_RECOVERING,
     STATE_UNDO_REQUESTED,
+    UNDO_COPY,
     UNDO_MOVE,
     JournalSnapshot,
     RecoveryContract,
@@ -45,6 +46,18 @@ class RecoveryContractTests(unittest.TestCase):
         self.assertIn(
             "Schreibende Zukunftsaktion darf Journal-Pflicht nicht deaktivieren.",
             validate_recovery_contract(contract),
+        )
+
+    def test_mismatched_undo_strategy_is_rejected(self) -> None:
+        contract = RecoveryContract(
+            preview_item_id="op-001",
+            operation="move",
+            reversible=True,
+            undo_strategy=UNDO_COPY,
+        )
+        errors = validate_recovery_contract(contract)
+        self.assertTrue(
+            any("Undo-Strategie passt nicht zu move" in error for error in errors)
         )
 
     def test_non_reversible_contract_is_rejected(self) -> None:
