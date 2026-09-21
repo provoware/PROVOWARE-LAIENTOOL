@@ -24,6 +24,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I16 Preview-Application | Inventar → reversible Trash-Preview über gemeinsamen Application-Core; GUI/CLI sammeln nur die Ordnerwahl ein | 🟢 Repository grün |
 | I17 Real-Accessibility | Zielsystem-Helfer, manuelle 100/150/200-%-Matrix und Screenshot-Vertrag vorbereitet; echter Desktop-/Laienlauf OPEN | 🟨 reale Evidence OPEN |
 | I18 Inventar-Komfort | read-only Suche, Sortierung und Top-10/50/100-Größenansichten im Domain-/Application-Core; sichtbare GUI-Anbindung wartet auf realen I17-Lauf | 🟨 CI ausstehend |
+| I19 Zielwahl-Decision | Same-Root-Zielwahl ohne Overwrite beschlossen; externe Ziele bleiben gesperrt; statischer Read-only-Lock blockiert Schreib-APIs im Produktcode | 🟨 CI ausstehend |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -127,7 +128,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I18 read-only Komfortkern und Core-Diagnostik über CI einfrieren. Der reale I17-Zielsystemlauf bleibt OPEN; sichtbarer UI-Ausbau folgt erst danach. Schreibpfade bleiben gesperrt.**
+**I19 Zielwahl-Decision und Read-only-Lock über CI einfrieren. Danach kann I20 datensparsame Diagnose-/Recovery-Observability vorbereiten; Schreibpfade bleiben gesperrt.**
 
 
 ## Screenshots
@@ -149,3 +150,8 @@ Die Entwicklung verwendet ab I17 die Matrix `docs/REGRESSION_MATRIX.md`:
 **gezielte betroffene Tests zuerst → vollständige Testsuite vor Merge → Post-Merge-CI → reale Evidence nur dort, wo CI sie nicht ersetzen kann.**
 
 Damit werden frühe Iterationsläufe kürzer, ohne die finale Abnahme zu schwächen.
+
+
+## Read-only-Lock
+
+Solange Executor und Persistenz nicht ausdrücklich freigegeben sind, prüft `scripts/read_only_guard.py` den Produktionscode statisch auf typische Schreib-APIs. Der Guard läuft vor der Full-Suite in CI und blockiert auch Import-Aliase sowie nicht statisch als read-only belegbare `open()`-Modi.
