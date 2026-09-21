@@ -42,6 +42,7 @@ CORE_REQUIRED = (
     "scripts/validate_portable_package.py",
     "scripts/wheelhouse_integrity.py",
     "scripts/verify_wheelhouse_integrity.py",
+    "scripts/plugin_boundary_guard.py",
     "scripts/core_diagnostics.py",
     "scripts/read_only_guard.py",
     "scripts/diagnostic_writer_guard.py",

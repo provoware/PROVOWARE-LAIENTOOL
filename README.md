@@ -39,6 +39,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I31 Diagnose-Export Adapter-Evidence | GUI-/CLI-Prüfmodus auf demselben I26/I30/I28-Pfad; 100/150/200 %, Tastatur, Doppelbestätigung, Cancel, BLOCKED und exakt-eine-Datei-PASS automatisch belegt | 🟢 AUTO PASS · Human-Gate offen · Registry OPEN |
 | I32 Portable Offline-Paket | deterministisches Linux-x86_64-ZIP, lokales PySide6-Wheelhouse, Manifest/Hashes, KDE-Klickstarter und Offline-Fremdpfad-Validierung | 🟢 AUTO PASS · B01-Zweitgerät bleibt OPEN |
 | I33 Wheelhouse-Integrität | exaktes Qt-Wheel-Set/Version/Plattform, Build-/Archiv-/Runtime-Hashgate vor Offline-pip | 🟢 AUTO PASS · keine Signaturbehauptung |
+| I34 Plugin-Grenze | data-only Manifest-/Capability-Vertrag; nur READY/read-only; Auto-Install/Enable/Netzwerk/dynamisches Laden statisch gesperrt | 🟨 RC · keine Plugin-Runtime |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -174,7 +175,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I25 und I31 bleiben mit je einer finalen Human-Wahrnehmungsfrage geparkt. I33 härtet den bereits grünen I32-Offlinepfad automatisch gegen Wheelhouse-Drift, zusätzliche Pakete und Hashabweichungen; B01-Zweitgerät bleibt unabhängig OPEN.**
+**I25 und I31 bleiben mit je einer finalen Human-Wahrnehmungsfrage geparkt. I34 schließt parallel B09 als rein automatischen Sicherheitsvertrag: data-only Plugin-Metadaten, nur READY/read-only Capabilities und kein Loader/Installer/Netzwerk.**
 
 
 ## Screenshots

@@ -24,6 +24,8 @@ jobs:
           fetch-depth: 0
       - name: Validate repository contracts
         run: timeout 2m python3 scripts/repo_quality.py
+      - name: Enforce plugin boundary
+        run: timeout 2m python3 scripts/plugin_boundary_guard.py
       - name: Enforce read-only product lock
         run: timeout 2m python3 scripts/read_only_guard.py
       - name: Run full unit and integration suite
