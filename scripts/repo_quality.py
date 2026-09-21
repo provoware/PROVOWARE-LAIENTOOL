@@ -35,6 +35,7 @@ CORE_REQUIRED = (
     "scripts/info_text_guard.py",
     "scripts/accessibility_evidence.py",
     "scripts/i17_target_evidence.py",
+    "scripts/i17_auto_evidence.py",
     "scripts/core_diagnostics.py",
     "scripts/read_only_guard.py",
     "scripts/diagnostic_snapshot.py",
@@ -75,11 +76,20 @@ if starter_sh.is_file():
     starter_text = starter_sh.read_text(encoding="utf-8")
     for marker in (
         "set -euo pipefail",
-        '.venv',
+        ".venv",
         'EXPECTED_PYSIDE6="6.11.2"',
         "-m venv",
         "validate_venv",
         "validate_gui_runtime",
+        "--gui",
+        "--menu",
+        "--preflight",
+        "--json",
+        "--i17",
+        "--i17-auto",
+        "--i17-guided",
+        "--i17-offscreen",
+        "scripts/i17_auto_evidence.py",
     ):
         if marker not in starter_text:
             fail(f"start.sh Venv-Vertrag fehlt: {marker}")
@@ -223,7 +233,7 @@ if errors:
 
 print("🟢 Repository-Gate PASS")
 print(" - stabile Pflichtstruktur und dynamischer Iterationsindex konsistent")
-print(" - Venv-first Starter und PySide6-Pin konsistent")
+print(" - start.sh als kanonischer Venv-first Starter und PySide6-Pin konsistent")
 print(" - Baseline-Marker vorhanden")
 print(" - TODO-Schema, Sortierung und Duplikate konsistent")
 print(" - Python-Syntax in Produktcode, Skripten, Tests und Starter geprüft")
