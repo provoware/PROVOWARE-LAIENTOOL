@@ -2,8 +2,8 @@
 
 ## Status
 
-**I17-AUTO:** 🔵 maschinell reproduzierbare Qt-Evidence  
-**I17-HUMAN:** 🟨 genau eine finale Laienabnahme in Chromium  
+**I17-AUTO:** 🔵 maschinell reproduzierbare Qt-Evidence
+**I17-HUMAN:** 🟨 genau eine finale Laienabnahme in Chromium
 **Gesamt:** PASS nur bei AUTO PASS + HUMAN PASS
 
 ## Verbindlicher Start
