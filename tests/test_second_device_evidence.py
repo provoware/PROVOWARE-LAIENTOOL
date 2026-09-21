@@ -1,11 +1,9 @@
 from __future__ import annotations
 
 import importlib.util
-import json
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch
 
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "second_device_evidence.py"
 SPEC = importlib.util.spec_from_file_location("second_device_evidence", SCRIPT)
@@ -15,17 +13,41 @@ SPEC.loader.exec_module(MODULE)
 
 
 class SecondDeviceEvidenceTests(unittest.TestCase):
-    def test_redact_payload_keeps_only_safe_keys(self) -> None:
+    def test_redact_payload_keeps_safe_nested_contract(self) -> None:
         payload = {
-            "profile": "preflight-cli",
-            "downloads_path": "/home/alice/Downloads",
-            "python_version": "3.12.3",
-            "nested": {"secret": "x"},
+            "status": "PASS",
+            "platform": {
+                "python": "3.12.3",
+                "machine": "x86_64",
+                "secret_path": "/home/alice",
+            },
+            "capabilities": {
+                "linux": True,
+                "project_readable": True,
+                "downloads_path": "/home/alice/Downloads",
+            },
+            "start_plan": {
+                "profile": "preflight-cli",
+                "reason": "lokal",
+                "private": "x",
+            },
+            "notes": ["/home/alice/Downloads"],
         }
+        redacted = MODULE.redact_payload(payload)
+        self.assertEqual(redacted["status"], "PASS")
         self.assertEqual(
-            MODULE.redact_payload(payload),
-            {"profile": "preflight-cli", "python_version": "3.12.3"},
+            redacted["platform"],
+            {"python": "3.12.3", "machine": "x86_64"},
         )
+        self.assertEqual(
+            redacted["capabilities"],
+            {"linux": True, "project_readable": True},
+        )
+        self.assertEqual(
+            redacted["start_plan"],
+            {"profile": "preflight-cli", "reason": "lokal"},
+        )
+        self.assertNotIn("notes", redacted)
 
     def test_sha256_is_deterministic(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -33,9 +55,14 @@ class SecondDeviceEvidenceTests(unittest.TestCase):
             path.write_text("provoware", encoding="utf-8")
             self.assertEqual(MODULE.sha256(path), MODULE.sha256(path))
 
-    def test_safe_keys_do_not_include_paths(self) -> None:
-        for key in MODULE.SAFE_KEYS:
-            self.assertNotIn("path", key.lower())
+    def test_redaction_key_sets_contain_no_paths(self) -> None:
+        for keys in (
+            MODULE.PLATFORM_KEYS,
+            MODULE.CAPABILITY_KEYS,
+            MODULE.START_PLAN_KEYS,
+        ):
+            for key in keys:
+                self.assertNotIn("path", key.lower())
 
 
 if __name__ == "__main__":
