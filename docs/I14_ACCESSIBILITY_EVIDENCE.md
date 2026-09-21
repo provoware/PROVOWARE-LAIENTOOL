@@ -2,7 +2,7 @@
 
 ## Status
 
-**Automatisierbarer Teil:** 🔴 FAIL  
+**Automatisierbarer Teil:** 🔴 FAIL
 **Realer Desktop-/Laiennachweis:** 🟨 OPEN
 
 I14 ist eine Prüfiteration. Sie repariert die geprüfte I11-GUI nicht im selben Prüfauftrag.
