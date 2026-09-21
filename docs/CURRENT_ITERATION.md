@@ -2,8 +2,8 @@
 
 ## I32 – Portable Offline-Paketierung
 
-**Status:** 🟨 RC · AUTOMATISCHE GATES LAUFEN
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🟢 AUTO PASS · CI-LINUX-X86_64
+**Fortschritt:** `██████████ 100 %`
 
 ## A – PLAN
 
@@ -50,8 +50,12 @@ Aus I31 entstand kein blockierender Produktfehler. B = **NONE**. Die I31-Human-A
 - Desktop-Dateimanager-Vertrauensdialog;
 - I25/I31 Human-Gates.
 
+## AUTO-Ergebnis
+
+Der Portable-Package-Gate ist auf dem exakten Source-Head `bfee18f528e6a06feb9b3b43d1da9575578f2e89` vollständig grün.
+
 ## Nächste drei Schritte
 
-1. 🟨 I32 RC vollständig automatisch prüfen.
-2. 🔵 bei Grün Evidence binden und mergen.
-3. 🔒 danach nächsten rein automatisierbaren Block wählen; Human-Gates weiter bündeln.
+1. 🟢 I32 Evidence an `bfee18f528e6a06feb9b3b43d1da9575578f2e89` binden und mergen.
+2. 🔵 danach den nächsten rein automatisierbaren Release-/Sicherheitsblock wählen.
+3. 🔒 B01-Zweitgerät sowie I25/I31 Human-Gates weiter gesammelt offen halten; keine Einzeltestserie starten.

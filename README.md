@@ -37,7 +37,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I29 Diagnose-Export Authorization Decision | Doppelbestätigung, Plan-Fingerprint, Cancel-Semantik, GUI/CLI-Parität und neue Registry-Sicherheitsklasse festgelegt | 🟢 Decision eingefroren |
 | I30 Diagnose-Export Autorisierung | nichtvisuelle zweistufige sessiongebundene Autorisierung mit Fingerprint-, Stale-, Manipulations- und Replay-Schutz; Writer one-shot; Registry bleibt OPEN | 🟢 AUTO PASS · keine Standardadapter |
 | I31 Diagnose-Export Adapter-Evidence | GUI-/CLI-Prüfmodus auf demselben I26/I30/I28-Pfad; 100/150/200 %, Tastatur, Doppelbestätigung, Cancel, BLOCKED und exakt-eine-Datei-PASS automatisch belegt | 🟢 AUTO PASS · Human-Gate offen · Registry OPEN |
-| I32 Portable Offline-Paket | deterministisches ZIP, lokales PySide6-Wheelhouse, Manifest/Hashes, KDE-Klickstarter und Offline-Fremdpfad-Validierung | 🟨 RC · B01-Zweitgerät bleibt OPEN |
+| I32 Portable Offline-Paket | deterministisches Linux-x86_64-ZIP, lokales PySide6-Wheelhouse, Manifest/Hashes, KDE-Klickstarter und Offline-Fremdpfad-Validierung | 🟢 AUTO PASS · B01-Zweitgerät bleibt OPEN |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -173,7 +173,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I25 und I31 bleiben mit je einer finalen Human-Wahrnehmungsfrage geparkt. I32 bearbeitet zuerst vollständig automatisierbar B07: reproduzierbares Portable-ZIP, Offline-Wheelhouse und Fremdpfad-Validierung; B01-Zweitgeräte-Evidence bleibt davon unabhängig OPEN.**
+**I25 und I31 bleiben mit je einer finalen Human-Wahrnehmungsfrage geparkt. I32/B07 ist für CI-Linux-x86_64 technisch AUTO PASS: reproduzierbares Portable-ZIP, Offline-Wheelhouse und Fremdpfad-Validierung sind belegt; die physische B01-Zweitgeräte-Evidence bleibt unabhängig OPEN.**
 
 
 ## Screenshots
