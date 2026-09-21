@@ -1,0 +1,62 @@
+name: i31-export-evidence
+
+on:
+  pull_request:
+    paths:
+      - "src/provoware_laientool/diagnostic_export*.py"
+      - "scripts/i31_auto_evidence.py"
+      - "tests/test_i31_diagnostic_export_adapters.py"
+      - "requirements-gui.txt"
+      - "start.sh"
+      - ".github/workflows/i31-export-evidence.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "src/provoware_laientool/diagnostic_export*.py"
+      - "scripts/i31_auto_evidence.py"
+      - "tests/test_i31_diagnostic_export_adapters.py"
+      - "requirements-gui.txt"
+      - "start.sh"
+      - ".github/workflows/i31-export-evidence.yml"
+
+concurrency:
+  group: i31-export-evidence-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  i31-offscreen-evidence:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Restore pip wheel cache
+        uses: actions/cache@3edfce9056124e459a23f683a21433670d47daca
+        with:
+          path: ~/.cache/pip
+          key: i31-pip-${{ runner.os }}-${{ hashFiles('requirements-gui.txt') }}
+          restore-keys: |
+            i31-pip-${{ runner.os }}-
+      - name: Create isolated GUI environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends libegl1
+          python3 -m venv .venv
+          .venv/bin/python -m pip install --disable-pip-version-check --requirement requirements-gui.txt
+      - name: Run I31 automated GUI and CLI evidence
+        env:
+          HOME: ${{ runner.temp }}/provoware-home
+        run: timeout 5m env PYTHONPATH=src .venv/bin/python scripts/i31_auto_evidence.py --offscreen --auto-only
+      - name: Preserve I31 evidence bundle
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: i31-evidence-${{ github.sha }}
+          path: ${{ runner.temp }}/provoware-home/.local/share/provoware-laientool/evidence/i31-*
+          if-no-files-found: warn
+          retention-days: 14
+          include-hidden-files: true
