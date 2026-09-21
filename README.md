@@ -13,7 +13,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | Anforderungsbaseline | 9/9 Originalanforderungen erfasst | 🟢 `██████████` 100 % |
 | Qualitätsanforderungen | 20 definiert | 🟢 dokumentiert |
 | Entwicklungsblöcke | B00–B11 definiert | 🟢 12 Blöcke |
-| B00 Visuelle Orientierung | offen | 🟨 `░░░░░░░░░░` 0 % |
+| B00 Visuelle Orientierung | Designsystem definiert | 🟢 `██████████` 100 % |
 | B01 Projektkern/Sicherheitsgrenzen | offen | 🟨 `░░░░░░░░░░` 0 % |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
@@ -38,7 +38,7 @@ Die geplante GUI basiert auf **PySide6/Qt**. **Tkinter ist im Produktionscode au
 
 GUI und Linux-Konsole sind zwei Adapter desselben Fachkerns. Nicht rein visuelle Funktionen erhalten grundsätzlich denselben fachlichen Ablauf, damit Sicherheitsregeln nicht doppelt implementiert werden.
 
-Siehe [ADR-0001](docs/adr/ADR-0001-ui-cli-foundation.md).
+Siehe [ADR-0001](docs/adr/ADR-0001-ui-cli-foundation.md) sowie das [UI-Designsystem](docs/UI_DESIGN_SYSTEM.md) und die [Theme-Tokens](docs/theme-tokens.md).
 
 ## Repository-Struktur
 
@@ -95,7 +95,7 @@ Sobald Produktcode entsteht, wird dieser Gate gezielt um echte Unit-/Integration
 
 ## Aktuelle Reihenfolge
 
-1. **B00:** sechs grafische UI-Entwürfe auf einem Vergleichsbild erstellen und Designkorridor dokumentieren.
+1. **B00:** Designrichtung, vier Themes, Neon-/Workflow-Semantik und Accessibility-Grundregeln sind dokumentiert.
 2. **B01:** unterstützte Ubuntu/Kubuntu-Versionen und Laufzeitkomponenten inventarisieren; danach minimalen read-only Projektkern/Preflight aufbauen.
 3. Erst anschließend UX-Shell und weitere Fachblöcke schrittweise freigeben.
 4. **B06 bleibt P0-Gate:** keine produktiven Schreiboperationen vor belegtem Preview-, Journal-, Undo- und Recovery-Vertrag.
@@ -112,4 +112,4 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**B00 als reinen Design-/Entscheidungsblock durchführen.** Noch keine produktive GUI, kein Dateischreiben und keine Abhängigkeitsinstallation.
+**B01 als read-only Inventar-/Preflight-Block eröffnen.** Unterstützte Zielsysteme und Laufzeitkomponenten zuerst belegen; noch keine schreibenden Dateioperationen.

@@ -1,4 +1,4 @@
-[P0] B00 Designkorridor – sechs vergleichbare UI-Entwürfe fehlen – produktive UI hätte sonst keine freigegebene visuelle Richtung – sechs Varianten auf einem Vergleichsbild erzeugen und Auswahlkriterien dokumentieren
+[P0] B00 Designkorridor – Designsystem und vier Theme-Richtungen sind definiert – visuelle Grundlage ist freigegeben, produktive UI bleibt noch getrennt – bei Implementierung gegen UI_DESIGN_SYSTEM.md und Theme-Tokens validieren
 [P0] B01 Zielplattforminventar – konkrete Ubuntu/Kubuntu-Versionen und Laufzeitkomponenten sind nicht im Repo belegt – Portabilität und Dependency-Entscheidungen wären spekulativ – read-only Inventar für beide Zielsysteme definieren und Evidence speichern
 [P0] B01 Pfad- und Symlink-Grenzen – Sicherheitsvertrag für erlaubte Wurzeln und Symlink-Verhalten fehlt – spätere Dateioperationen könnten Zielgrenzen verletzen – Pfadmodell und Negativtests vor Dateifachlogik spezifizieren
 [P0] B05 Preview-Vertrag – kanonisches Modell für geplante Dateiaktionen fehlt – Nutzerwirkung wäre vor Echtlauf nicht reproduzierbar – immutable Preview-Modelle mit Wirkung und Zielgrenzen entwerfen und testen
