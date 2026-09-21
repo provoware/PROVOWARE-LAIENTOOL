@@ -2,7 +2,7 @@
 
 ## Status
 
-Technischer Shell-/Paritätsvertrag implementiert. Die reale Accessibility-Gesamtabnahme wird inzwischen durch I17-D automatisiert vorbereitet und bleibt bis zum echten `./start.sh --i17`-Lauf **OPEN**.
+Technischer Shell-/Paritätsvertrag implementiert. Die reale Accessibility-Gesamtabnahme wurde im späteren I17-D-Zielsystemlauf erfolgreich als **PASS** bestätigt.
 
 ## Ziel
 
@@ -106,9 +106,9 @@ I11 darf nicht:
 - Berechtigungen erhöhen;
 - zukünftige Datei-Use-Cases als READY vortäuschen.
 
-## Noch OPEN
+## Reale Folge-Evidence
 
-Die technische Struktur ersetzt kein reales Laien-/Accessibility-PASS.
+Die technische Struktur allein ersetzte kein reales Laien-/Accessibility-PASS. Dieser Nachweis wurde später durch I17-D erbracht.
 
 Vor vollständigem B04-/Shell-PASS sind auf echter GUI-Umgebung noch zu belegen:
 

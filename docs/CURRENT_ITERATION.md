@@ -1,70 +1,61 @@
 # PROVOWARE – Current Iteration
 
-## I17-D – Automated Qt Evidence Pipeline
+## I25 – Adapter-Implementierung nach grünem I17-Freeze
 
-**Status:** 🟨 IMPLEMENTIERT – PR-/REAL-EVIDENCE-GATES OFFEN
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🔵 FREIGEGEBEN FÜR PLANUNG  
+**Fortschritt:** `░░░░░░░░░░ 0 %`
+
+## Abgeschlossener Vorgänger
+
+### I17-D – Automated Qt Evidence
+
+**Status:** 🟢 FROZEN PASS
+
+- I17-AUTO: PASS;
+- I17-HUMAN: PASS;
+- realer Chromium-Zielsystemlauf: PASS;
+- bestätigter Lauf auf Commit `1678f050083f9e172fd9122f2808b0a7c45dea05`;
+- Legacy-I17-B-Helfer nach erfolgreichem Ersatz entfernt;
+- kosmetischer Wunsch „größere Schrift / mehr Farbe“ als `UX-POLISH-01` ausgelagert, ohne I17 wieder zu öffnen.
 
 ## A – FESTER PLAN
 
-**Ziel:** Die manuelle I17-B-Evidence weitgehend automatisieren und alle sichtbaren Prüf-/Abnahmeinformationen über Chromium führen.
+**Ziel:** Den eingefrorenen I23-Adaptervertrag als kleinsten sichtbaren Funktionsblock umsetzen.
 
-### I17-AUTO
+Erlaubter Scope:
 
-- echte Produktions-`MainWindow` statt Testduplikat;
-- 100/150/200-%-Layoutprüfung;
-- Widget-Geometrie und Sichtbarkeit;
-- explizite Tab-Reihenfolge;
-- Tab/Shift+Tab über QtTest;
-- Fokus-Screenshot;
-- synthetische leere/Unicode-/Leerzeichen-Fixtures;
-- read-only Dateivorschau über denselben Application-Core;
-- fünf automatische Screenshots;
-- HTML/JSON/TXT-Evidence;
-- optionaler Offscreen-Modus.
-
-### I17-HUMAN
-
-Nur nach technischem PASS genau eine Frage zur gesamten Laienverständlichkeit.
-
-Die sichtbare Abnahme läuft ausschließlich in Chromium über einen lokalen Loopback-Server auf `127.0.0.1`.
+- I18-Auswahl fachlich über gemeinsamen Application-Core;
+- I21 Copy-/Move-Preview anbinden;
+- GUI und Zahlenmenü verwenden denselben Core;
+- Same-Root bleibt Pflicht;
+- kein Executor;
+- kein Overwrite;
+- keine externe Zielwurzel;
+- kein produktiver Datei-Write.
 
 ## B – VARIABLE FOLGEAUFGABE
 
-**Quelle:** realer I17-B-Lauf.
+**Quelle:** Repository-Hygiene nach I17-D.
 
-**Befund:** Manuelle Screenshot-, Skalierungs- und Tab-Prüfungen waren objektivierbar und erzeugten unnötige Bedienlast.
+- `start.sh` bleibt einziger offizieller Nutzer-Einstiegspunkt;
+- Zweitgeräte-Evidence wird ebenfalls über `start.sh` geführt;
+- I17-Legacy-Code ist kein aktiver Rückfallpfad mehr;
+- alte Remote-Branches bleiben eine separate Repository-Verwaltungsaufgabe.
 
-**Maßnahme:** AUTO und HUMAN werden formal getrennt. Nur die nicht objektivierbare Gesamtwahrnehmung bleibt menschlich.
+## Exit-Gates für I25
 
-## Dauerhafter Startvertrag
-
-`start.sh` ist der einzige offizielle Nutzer-Einstiegspunkt.
-
-- neue Nutzerfunktionen müssen über `start.sh` erreichbar sein;
-- Runtime-/Venv-/Startänderungen aktualisieren `start.sh` im selben Change-Batch;
-- direkte Python-Aufrufe bleiben interne Entwicklungswege;
-- der Repository-Gate prüft die Pflichtoptionen des Starters.
-
-## Sicherheitsgrenze
-
-Kein Produkt-Writer, kein Nutzerdatei-Write, keine Rechteausweitung, kein externer Webserver und kein automatisches Human-PASS.
-
-## Exit-Gates
-
-1. neue Contract-Tests PASS;
-2. bestehende GUI-/Application-Tests PASS;
-3. Repository-Contract PASS;
-4. Read-only-Lock PASS;
-5. vollständige Suite PASS;
-6. PR-Pflichtcheck `repository-contract` PASS;
-7. Post-Merge-CI PASS;
-8. realer `./start.sh --i17`-Lauf;
-9. AUTO PASS + HUMAN PASS;
-10. anschließende Repository-Aktualitäts-/Hygieneanalyse.
+1. Scope/Non-Goals vor Implementierung festschreiben.
+2. Gemeinsamer Application-Pfad.
+3. GUI-/CLI-Parität.
+4. targeted Tests zuerst.
+5. Read-only-Lock PASS.
+6. vollständige Suite PASS.
+7. Pflichtcheck `repository-contract` PASS.
+8. Post-Merge-CI PASS.
+9. kein Executor-/Writer-REOPEN.
 
 ## Nächste drei Schritte
 
-1. 🔵 I17-D PR/CI abschließen und realen Chromium-Lauf ausführen.
-2. 🔵 Repository-Hygiene/Aktualität/Datenmüll analysieren und nur sichere Bereinigungen ableiten.
-3. 🔒 I25 erst nach vollständigem I17-PASS öffnen.
+1. 🔵 I25-Scope aus I23/I18/I21 exakt auflösen.
+2. 🔵 kleinsten GUI-/CLI-Adapterblock implementieren, weiterhin nur Preview.
+3. 🔵 `UX-POLISH-01` später separat: Chromium-Evidence-Schrift etwa 10–15 % größer und etwas mehr Akzentfarbe, ohne funktionales Gate.

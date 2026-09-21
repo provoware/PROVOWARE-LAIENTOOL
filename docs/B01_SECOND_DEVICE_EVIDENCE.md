@@ -9,13 +9,13 @@ Die noch offene physische Portabilitätsprüfung wird auf einem zweiten Ubuntu-/
 Im Projektordner:
 
 ```bash
-python3 scripts/second_device_evidence.py
+./start.sh --second-device-evidence
 ```
 
 Für maschinenlesbare Ausgabe:
 
 ```bash
-python3 scripts/second_device_evidence.py --json
+./start.sh --second-device-evidence-json
 ```
 
 Der Standardlauf schreibt **keine Datei**. Er zeigt nur einen kompakten, bereits redigierten Bericht im Terminal.

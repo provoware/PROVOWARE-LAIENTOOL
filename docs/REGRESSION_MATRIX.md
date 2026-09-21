@@ -21,7 +21,7 @@ Die Matrix reduziert unnötige lokale/agentische Testläufe. Der zentrale PR-Gat
 | Registry/Application-Core | `tests/test_i11_shell.py` + betroffener Use-Case-Test |
 | I16 Preview-Application | `tests/test_i16_preview_application.py` |
 | Theme/Fokus/Skalierung | `tests/test_accessibility_evidence.py` |
-| I17 Evidence-Helfer | `tests/test_i17_target_evidence.py` |
+| I17-D Auto-Evidence | `tests/test_i17_auto_evidence.py` |
 | Diagnostic Export Preflight | `tests/test_diagnostic_export_plan.py` + Read-only-Lock |
 | I18 Inventar-Komfort | `tests/test_inventory_view.py` |
 | Core-Diagnostik | `tests/test_core_diagnostics.py` + `python3 scripts/core_diagnostics.py` |
@@ -41,8 +41,8 @@ python3 scripts/read_only_guard.py
 PYTHONPATH=src python3 -m unittest discover -s tests -v
 python3 scripts/core_diagnostics.py
 python3 scripts/diagnostic_snapshot.py --json
-python3 start.py
-python3 start.py --json
+./start.sh --preflight
+./start.sh --json
 ```
 
 Im PR übernimmt GitHub Actions diesen Vollgate.

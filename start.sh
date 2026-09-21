@@ -51,7 +51,6 @@ Aufruf:
   ./start.sh --check       nur prüfen, nichts verändern
   ./start.sh --i17         I17-D automatisch + Chromium-Abnahme starten
   ./start.sh --i17-auto    Alias für --i17
-  ./start.sh --i17-guided  alten geführten I17-B-Lauf starten
   ./start.sh --i17-offscreen  technische Pipeline ohne Human-Abnahme
   ./start.sh --gui         GUI starten
   ./start.sh --menu        Konsolenmenü starten
@@ -59,6 +58,8 @@ Aufruf:
   ./start.sh --json        read-only Preflight als JSON
   ./start.sh --diagnostics redigierten Diagnose-Snapshot anzeigen
   ./start.sh --diagnostics-json  Diagnose-Snapshot als JSON anzeigen
+  ./start.sh --second-device-evidence  Zweitgeräte-Evidence anzeigen
+  ./start.sh --second-device-evidence-json  Zweitgeräte-Evidence als JSON anzeigen
   ./start.sh --yes --i17   explizit ohne Rückfrage einrichten und I17 starten
 
 Ohne Option wird --gui verwendet.
@@ -76,7 +77,7 @@ case "$ACTION" in
     show_help
     exit 0
     ;;
-  --setup|--check|--i17|--i17-auto|--i17-guided|--i17-offscreen|--gui|--menu|--preflight|--json|--diagnostics|--diagnostics-json)
+  --setup|--check|--i17|--i17-auto|--i17-offscreen|--gui|--menu|--preflight|--json|--diagnostics|--diagnostics-json|--second-device-evidence|--second-device-evidence-json)
     ;;
   *)
     show_help
@@ -192,9 +193,6 @@ case "$ACTION" in
   --i17|--i17-auto)
     exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i17_auto_evidence.py"
     ;;
-  --i17-guided)
-    exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i17_target_evidence.py" --guided
-    ;;
   --i17-offscreen)
     exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i17_auto_evidence.py" --offscreen --auto-only
     ;;
@@ -215,5 +213,11 @@ case "$ACTION" in
     ;;
   --diagnostics-json)
     exec "$VENV_PYTHON" "$ROOT_DIR/scripts/diagnostic_snapshot.py" --json
+    ;;
+  --second-device-evidence)
+    exec "$VENV_PYTHON" "$ROOT_DIR/scripts/second_device_evidence.py"
+    ;;
+  --second-device-evidence-json)
+    exec "$VENV_PYTHON" "$ROOT_DIR/scripts/second_device_evidence.py" --json
     ;;
 esac

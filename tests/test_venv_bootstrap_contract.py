@@ -34,10 +34,6 @@ class VenvBootstrapContractTests(unittest.TestCase):
             'exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i17_auto_evidence.py"',
             text,
         )
-        self.assertIn(
-            'exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i17_target_evidence.py" --guided',
-            text,
-        )
 
     def test_start_sh_remains_canonical_user_entrypoint(self) -> None:
         text = (ROOT / "start.sh").read_text(encoding="utf-8")
@@ -48,10 +44,11 @@ class VenvBootstrapContractTests(unittest.TestCase):
             "--json",
             "--i17",
             "--i17-auto",
-            "--i17-guided",
             "--i17-offscreen",
             "--diagnostics",
             "--diagnostics-json",
+            "--second-device-evidence",
+            "--second-device-evidence-json",
         ):
             self.assertIn(option, text)
 
@@ -63,6 +60,17 @@ class VenvBootstrapContractTests(unittest.TestCase):
         )
         self.assertIn(
             'exec "$VENV_PYTHON" "$ROOT_DIR/scripts/diagnostic_snapshot.py" --json',
+            text,
+        )
+
+    def test_second_device_evidence_routes_through_start_sh(self) -> None:
+        text = (ROOT / "start.sh").read_text(encoding="utf-8")
+        self.assertIn(
+            'exec "$VENV_PYTHON" "$ROOT_DIR/scripts/second_device_evidence.py"',
+            text,
+        )
+        self.assertIn(
+            'exec "$VENV_PYTHON" "$ROOT_DIR/scripts/second_device_evidence.py" --json',
             text,
         )
 

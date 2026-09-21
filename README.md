@@ -16,13 +16,13 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | B00 Visuelle Orientierung | Designsystem definiert | 🟢 `██████████` 100 % |
 | B01 Projektkern/Sicherheitsgrenzen | B01-A Preflight + B01-B Pfadgrenzen implementiert; standardisierter Zweitgeräte-Evidence-Runner vorbereitet, physischer Lauf offen | 🟨 `████████░░` 80 % |
 | I10 GUI-/CLI-Registry | gemeinsame immutable Registry implementiert und geprüft | 🟢 `██████████` 100 % |
-| I11 read-only Shell | gemeinsamer Core + Zahlenmenü + optionale PySide6-Shell implementiert; reale visuelle Accessibility-Evidence offen | 🟨 `████████░░` 80 % |
+| I11 read-only Shell | gemeinsamer Core + Zahlenmenü + PySide6-Shell implementiert; reale Accessibility-Gesamtevidence über I17-D bestätigt | 🟢 `██████████` 100 % |
 | I12 B05 Preview-Modell | immutable Preview-Vertrag mit B01-Pfadgrenzen implementiert; kein Executor | 🟢 `██████████` 100 % Modellstand |
 | I13 B06 Recovery-Vertrag | Zustandsautomat, Journal-/Undo-Vertrag und Crash-Matrix implementiert; keine Persistenz/kein Executor | 🟢 Repository grün |
-| I14 Accessibility-Evidence | Fokusvertrag für Button/ComboBox/TextEdit automatisiert grün; reale Desktop-/Laienprüfung bleibt OPEN | 🟨 reale Evidence OPEN |
+| I14 Accessibility-Evidence | historischer Fokus-/Kontrastvertrag; reale aktuelle Gesamtprüfung wurde in I17-D erfolgreich abgeschlossen | 🟢 durch I17-D real bestätigt |
 | I15 Read-only Inventar | rekursiver B01-gebundener Nur-Lese-Inventarkern mit Symlink-Sperre, Unicode/Leerzeichen, Größenfakten und strukturierten Befunden implementiert | 🟢 Repository grün |
 | I16 Preview-Application | Inventar → reversible Trash-Preview über gemeinsamen Application-Core; GUI/CLI sammeln nur die Ordnerwahl ein | 🟢 Repository grün |
-| I17 Real-Accessibility | automatisierte Qt-Pipeline für 100/150/200 %, Tab/Shift+Tab, Fokus, synthetische Preview und fünf Screenshots; Chromium bündelt Bericht und eine finale Human-Abnahme | 🟨 I17-AUTO/HUMAN Evidence OPEN |
+| I17 Real-Accessibility | automatisierte Qt-Pipeline für 100/150/200 %, Tab/Shift+Tab, Fokus, synthetische Preview und fünf Screenshots; reale Chromium-Human-Abnahme bestätigt | 🟢 FROZEN PASS |
 | I18 Inventar-Komfort | read-only Suche, Sortierung und Top-10/50/100-Größenansichten im Domain-/Application-Core; sichtbare GUI-Anbindung wartet auf realen I17-Lauf | 🟢 Repository grün; UI weiter gegated |
 | I19 Zielwahl-Decision | Same-Root-Zielwahl ohne Overwrite beschlossen; externe Ziele bleiben gesperrt; statischer Read-only-Lock blockiert Schreib-APIs im Produktcode | 🟢 Decision + Guard grün |
 | I20 Diagnose-Observability | redigierter read-only Diagnosebericht als Klartext/JSON, CLI-only Use Case und stdout-Helfer; kein Datei-Export | 🟢 Repository grün |
@@ -138,7 +138,7 @@ Der Gate umfasst inzwischen die vollständige Unit-/Integrationssuite, den read-
 
 1. **B00/B01:** Designsystem, Preflight sowie Pfad-/Symlink-Grenzen sind dokumentiert bzw. implementiert; reale Zweitgeräte-Evidence bleibt offen.
 2. **I10–I16:** Registry, read-only Shell, Preview-/Recovery-Verträge, Inventar und gemeinsamer Inventory→Preview-Pfad sind implementiert.
-3. **I17:** I17-AUTO übernimmt Qt-, Layout-, Fokus-, Preview- und Screenshot-Evidence; Chromium zeigt Bericht und genau eine finale I17-HUMAN-Laienabnahme.
+3. **I17:** I17-AUTO und I17-HUMAN sind im realen Chromium-Zielsystemlauf grün; I17 ist eingefroren.
 4. **I18–I21:** Inventar-Komfort, Read-only-Lock, Diagnose-Observability und Same-Root Copy/Move-Preview sind im Repository grün.
 5. **I22–I24/I26:** Diagnose-Export ist entschieden und bis zum vollständig read-only ExportPlan-/Payload-Preflight vorgezogen; echter Writer und Guard-REOPEN bleiben gesperrt.
 6. **Schreibpfade:** weiterhin `0` produktiv freigegeben.
@@ -155,7 +155,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I17-D wird über `./start.sh --i17` real auf dem Zielsystem ausgeführt. Danach folgt die Repository-Hygiene-/Aktualitätsanalyse; I25 bleibt bis zum vollständigen I17-PASS gesperrt.**
+**I17-D ist real grün eingefroren. Nächster Produktblock ist I25: I18-Auswahl + I21 Copy/Move-Preview über denselben Application-Core in GUI und Zahlenmenü anbinden; weiterhin ohne Executor.**
 
 
 ## Screenshots

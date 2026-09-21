@@ -2,9 +2,13 @@
 
 ## Status
 
-**I17-AUTO:** 🔵 maschinell reproduzierbare Qt-Evidence
-**I17-HUMAN:** 🟨 genau eine finale Laienabnahme in Chromium
-**Gesamt:** PASS nur bei AUTO PASS + HUMAN PASS
+**I17-AUTO:** 🟢 PASS  
+**I17-HUMAN:** 🟢 PASS  
+**I17 GESAMT:** 🟢 FROZEN PASS
+
+Realer Zielsystemlauf bestätigt auf Commit `1678f050083f9e172fd9122f2808b0a7c45dea05`.
+
+Der automatische Bericht zeigte für 100 %, 150 %, 200 %, Tab/Shift+Tab/Fokus und synthetische Dateivorschau jeweils PASS. Die finale menschliche Laienabnahme wurde anschließend in Chromium mit **Ja · PASS** bestätigt.
 
 ## Verbindlicher Start
 
@@ -14,7 +18,7 @@ Der offizielle Nutzerstart erfolgt ausschließlich über:
 ./start.sh --i17
 ```
 
-Direkte Aufrufe von Python-Skripten sind nur interne Entwickler-/Diagnosewege. Wenn sich Runtime, Venv oder I17 ändern, muss `start.sh` im selben Change-Batch angepasst und getestet werden.
+Direkte Python-Aufrufe sind interne Entwickler-/Diagnosewege. Runtime-, Venv- oder Startänderungen müssen `start.sh` im selben Change-Batch aktualisieren und testen.
 
 ## I17-AUTO
 
@@ -51,41 +55,25 @@ I17_EVIDENCE.json
 
 Nach erfolgreicher automatischer Prüfung startet die Pipeline einen ausschließlich lokalen HTTP-Server auf `127.0.0.1` und öffnet Chromium.
 
-Chromium zeigt:
-
-- alle automatischen Gates;
-- konkrete Fehlerdetails;
-- die fünf Screenshots;
-- Commit und Plattform;
-- I17-AUTO / I17-HUMAN / Gesamtstatus;
-- genau eine finale Human-Abnahme.
-
-Es gibt keinen externen Netzwerkdienst und keine Cloud-Übertragung. Der lokale Server wartet maximal zehn Minuten und beendet sich anschließend.
+Chromium zeigt alle automatischen Gates, Befunde, die fünf Screenshots, Commit/Plattform und genau eine finale Human-Abnahme. Der Server bindet nur an `127.0.0.1`, wartet maximal zehn Minuten und beendet sich anschließend.
 
 ## I17-HUMAN
 
-Nur bei technischem AUTO-PASS erscheint in Chromium genau eine Frage:
+Nur bei technischem AUTO-PASS erscheint genau eine Frage:
 
 > Ist die Oberfläche insgesamt verständlich, ruhig und ohne zusätzliche Erklärung für einen Laien bedienbar?
 
-- **Ja · PASS** → HUMAN PASS
-- **Nein · FAIL** → HUMAN FAIL
-- **Unsicher · OPEN** → HUMAN OPEN
+Der reale Zielsystemlauf wurde mit **Ja · PASS** abgeschlossen.
 
-Die Browserantwort aktualisiert lokal HTML, TXT und JSON.
-
-## Weitere start.sh-Modi
+## Verfügbare start.sh-Modi
 
 ```bash
 ./start.sh --i17
 ./start.sh --i17-auto
 ./start.sh --i17-offscreen
-./start.sh --i17-guided
 ```
 
-- `--i17` und `--i17-auto`: echter Desktop + Chromium-Abnahme.
-- `--i17-offscreen`: technische Qt-Pipeline ohne Human-PASS; bleibt für Gesamt-I17 nicht ausreichend.
-- `--i17-guided`: alter geführter I17-B-Vergleichspfad, nicht mehr Standard.
+Der frühere manuell geführte I17-B-Helfer wurde nach dem erfolgreichen I17-D-Lauf aus dem aktiven Repository entfernt.
 
 ## Sicherheitsgrenze
 
@@ -97,17 +85,9 @@ Die Browserantwort aktualisiert lokal HTML, TXT und JSON.
 - kein externer Webserver;
 - lokaler Server nur auf `127.0.0.1`;
 - maximale Wartezeit zehn Minuten;
-- jeder Evidence-Lauf erhält einen neuen Ordner;
-- ältere Evidence wird nicht überschrieben.
+- jeder Evidence-Lauf erhält einen neuen lokalen Ordner;
+- ältere lokale Evidence wird nicht überschrieben.
 
-## PASS-Regel
+## Freeze-Regel
 
-```text
-I17-AUTO PASS
-    +
-I17-HUMAN PASS
-    =
-I17 GESAMT PASS
-```
-
-Ein AUTO-FAIL kann niemals durch die Human-Abnahme überstimmt werden.
+I17 wird nicht wegen rein kosmetischer Wünsche wieder geöffnet. Visuelle Komfortverbesserungen laufen separat als `UX-POLISH-01`, sofern sie keine Accessibility-Regression oder Funktionsänderung darstellen.

@@ -67,8 +67,8 @@ Verboten sind:
 ## Start
 
 ```bash
-python3 start.py
-python3 start.py --json
+./start.sh --preflight
+./start.sh --json
 ```
 
 Exitcodes:
@@ -86,8 +86,8 @@ Ein transportiertes Paket darf auf einer anderen Maschine zunächst nur **invent
 Für die reale zweite Zielmaschine steht nun ein dependency-freier, read-only Prüfweg bereit:
 
 ```bash
-python3 scripts/second_device_evidence.py
-python3 scripts/second_device_evidence.py --json
+./start.sh --second-device-evidence
+./start.sh --second-device-evidence-json
 ```
 
 Der Runner übernimmt nur eine feste Menge unkritischer Capability-Felder und verwirft Pfade/Notizen. Details siehe `docs/B01_SECOND_DEVICE_EVIDENCE.md`.
