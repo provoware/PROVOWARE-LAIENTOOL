@@ -28,8 +28,10 @@ jobs:
             BASE_SHA="$(git rev-parse HEAD^)"
           fi
           python3 scripts/info_text_guard.py --base "$BASE_SHA"
-      - name: Run B01 unit tests
+      - name: Run full unit and integration suite
         run: PYTHONPATH=src python3 -m unittest discover -s tests -v
+      - name: Run temporary-filesystem core diagnostic
+        run: python3 scripts/core_diagnostics.py
       - name: Run read-only preflight
         run: python3 start.py
       - name: Run read-only preflight JSON
