@@ -30,3 +30,5 @@ Dateiname: `EV-YYYYMMDD-NNN-kurzname.md`
 - nach RC-Freeze Evidence ergänzen, aber RC nicht reparieren.
 
 - `EV-20260921-005-i17-real-accessibility.md` – realer I17-D-Zielsystemlauf: AUTO PASS + HUMAN PASS, Freeze-Nachweis.
+
+- `EV-20260921-006-branch-hygiene-i27.md` – Altbranch-Klassifikation, gerettete MOVE-Reversibilitätsinvariante und gehärteter I27-Transplant.

@@ -90,6 +90,7 @@ Diese Punkte sind bewusst zu beobachten, aber nicht automatisch zu refactoren:
 - `scripts/repo_quality.py`: nur stabile Repository-Verträge prüfen; neue Iterationsdateien werden dynamisch erkannt statt einzeln hart codiert.
 - GUI/CLI: keine Fachlogik in Adapter zurückwandern lassen.
 - Diagnose-Writer: Guard-REOPEN eng halten; keinen allgemeinen Schreibpfad daraus ableiten.
+- Altbranches werden vor Löschung gegen `main` auf einzigartige Fach-/Sicherheitsinvarianten geprüft; alte Implementierungen werden nicht blind gemergt. Die Klassifikation vom 2026-09-21 liegt in `docs/evidence/EV-20260921-006-branch-hygiene-i27.md`.
 
 ## 8. Testbudget und Schleifenschutz
 

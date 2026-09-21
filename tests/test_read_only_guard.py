@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import unittest
 
-from scripts.read_only_guard import analyze_source, scan_product_tree
+from scripts.read_only_guard import (
+    WRITER_RELATIVE,
+    analyze_product_source,
+    analyze_source,
+    scan_product_tree,
+)
 
 
 class ReadOnlyGuardTests(unittest.TestCase):
@@ -32,6 +37,33 @@ class ReadOnlyGuardTests(unittest.TestCase):
             "import os as operating\noperating.rename('a', 'b')"
         )
         self.assertTrue(any("os.rename" in item for item in violations))
+
+    def test_low_level_write_primitives_are_blocked_outside_writer(self) -> None:
+        samples = (
+            "import os\nos.open('x', os.O_CREAT | os.O_EXCL | os.O_WRONLY)",
+            "import os\nos.write(3, b'x')",
+            "import os\nos.link('a', 'b')",
+        )
+        for source in samples:
+            with self.subTest(source=source):
+                self.assertTrue(analyze_source(source))
+
+    def test_exact_writer_path_uses_specialized_guard(self) -> None:
+        safe = (
+            "import os\n"
+            "partial_path = 'partial'\n"
+            "final_path = 'final'\n"
+            "partial_fd = os.open(partial_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)\n"
+            "os.write(partial_fd, b'data')\n"
+            "os.fsync(partial_fd)\n"
+            "os.close(partial_fd)\n"
+            "os.link(partial_path, final_path, follow_symlinks=False)\n"
+            "os.unlink(partial_path)\n"
+        )
+        self.assertEqual(analyze_product_source(WRITER_RELATIVE, safe), ())
+        self.assertTrue(
+            analyze_product_source("src/provoware_laientool/other.py", safe)
+        )
 
     def test_open_write_mode_is_blocked(self) -> None:
         violations = analyze_source("open('x', 'wb')")

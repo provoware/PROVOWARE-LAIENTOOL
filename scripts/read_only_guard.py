@@ -14,6 +14,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src" / "provoware_laientool"
+WRITER_RELATIVE = "src/provoware_laientool/diagnostic_export.py"
+
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+from scripts.diagnostic_writer_guard import analyze_writer_source  # noqa: E402
 
 FORBIDDEN_ATTRS = {
     "write_text",
@@ -25,6 +30,7 @@ FORBIDDEN_ATTRS = {
     "chmod",
     "symlink_to",
     "hardlink_to",
+    "link_to",
 }
 
 FORBIDDEN_QUALIFIED = {
@@ -37,6 +43,22 @@ FORBIDDEN_QUALIFIED = {
     "os.rmdir",
     "os.removedirs",
     "os.chmod",
+    "os.chown",
+    "os.lchown",
+    "os.open",
+    "os.write",
+    "os.pwrite",
+    "os.writev",
+    "os.link",
+    "os.symlink",
+    "os.creat",
+    "os.truncate",
+    "os.ftruncate",
+    "os.mknod",
+    "os.mkfifo",
+    "os.sendfile",
+    "os.copy_file_range",
+    "os.splice",
     "shutil.copy",
     "shutil.copy2",
     "shutil.copyfile",
@@ -193,13 +215,20 @@ def analyze_source(source: str, *, filename: str = "<memory>") -> tuple[str, ...
     return tuple(violations)
 
 
+def analyze_product_source(relative: str, source: str) -> tuple[str, ...]:
+    """Delegate only the exact I24 writer path to the stricter I27 guard."""
+    if relative == WRITER_RELATIVE:
+        return analyze_writer_source(source, filename=relative)
+    return analyze_source(source, filename=relative)
+
+
 def scan_product_tree(root: Path = SRC) -> tuple[str, ...]:
     violations: list[str] = []
     for path in sorted(root.rglob("*.py")):
         try:
             source = path.read_text(encoding="utf-8")
             relative = str(path.relative_to(ROOT))
-            violations.extend(analyze_source(source, filename=relative))
+            violations.extend(analyze_product_source(relative, source))
         except (OSError, UnicodeError, SyntaxError) as exc:
             violations.append(f"{path}: Guard konnte Datei nicht sicher prüfen: {exc}")
     return tuple(violations)
@@ -216,7 +245,8 @@ def main() -> int:
     print("🟢 Read-only-Lock PASS")
     print(" - keine offensichtliche Dateisystem-Schreib-API im Produktionscode")
     print(" - Import-Aliase und dynamische open()-Modi werden fail-closed geprüft")
-    print(" - Executor-/Persistenzpfade bleiben statisch gesperrt")
+    print(" - Low-Level-os.open/write/link bleiben außerhalb des exakten Diagnose-Writers gesperrt")
+    print(" - nur diagnostic_export.py darf künftig über den strengeren I27-Spezialguard laufen")
     return 0
 
 
