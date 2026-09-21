@@ -1,103 +1,97 @@
 # PROVOWARE – Current Iteration
 
-## I14 – reale Shell-/Accessibility-Evidence
+## I15 – read-only Dateiinventar + I14-Fokus-DELTA
 
-**Status:** 🔴 AUTOMATISCHER BEFUND / 🟨 REALER DESKTOP-LAUF OPEN
-**Fortschritt:** `██████░░░░ 60 %`
+**Status:** 🟨 B-DELTA IMPLEMENTIERT / VERIFY AUSSTEHEND
+**Fortschritt:** `███░░░░░░░ 30 %`
 
-Der Prozentwert bildet ausschließlich definierte I14-Evidence-Checkpoints ab.
+Der Prozentwert bildet ausschließlich definierte I15-Checkpoints ab.
 
-## A – FESTER PLAN
+## Reihenfolge
 
-**Quelle:** I13-Drei-Schritte-Vorausplanung + B04 + LAIEN_QUALITY_STANDARD.
+Der bestätigte Accessibility-Befund aus I14 blockiert den Start des neuen Inventar-Write-Batches.
 
-**Ziel:** die I11-Shell reproduzierbar gegen Skalierung, Tastatur, Fokus, Kontrast, Reduced Motion und Laienverständlichkeit prüfen, ohne ungeprüfte Eigenschaften als PASS zu behaupten.
+Deshalb:
 
-**Checkpoints:**
+1. **B – DELTA zuerst:** Fokusvertrag reparieren und separat verifizieren.
+2. **A – PLAN danach:** ausschließlich read-only Inventarkern implementieren.
 
-- 🟢 dependency-freier read-only Evidence-Runner
-- 🟢 vier Theme-Familien automatisch auf Kontrast geprüft
-- 🟢 100/150/200-%-Stylesheetvertrag automatisch geprüft
-- 🔴 expliziter Fokusvertrag unvollständig: ComboBox/TextEdit ohne eigene `:focus`-Regel
-- 🟢 Laufzeitumgebung PySide6/Display wird nur als Fakt erfasst
-- 🟨 reale 100-%-Bildschirmprüfung OPEN
-- 🟨 reale 150-%-Bildschirmprüfung OPEN
-- 🟨 reale 200-%-Bildschirmprüfung OPEN
-- 🟨 echter Tastaturpfad OPEN
-- 🟨 sichtbarer Fokus im realen Rendering OPEN
-- 🟨 Reduced-Motion-/Bewegungsprüfung OPEN
-- 🟨 Laienverständlichkeit OPEN
-- 🟢 Repository-/PR-CI-Gates PASS
-- 🟢 finaler Diff ohne Scope-Drift
-- 🔵 Merge / Post-Merge
+Kein paralleler Schreibzugriff auf beide Blöcke.
 
-## B – VARIABLE FOLGEAUFGABE
+## B – DELTA: I14-Fokusvertrag
 
-**Quelle letzter Lauf:** I13 war bereits gemergt und Post-Merge-CI grün, während `CURRENT_ITERATION.md` noch „Merge / Post-Merge“ als offen auswies.
+**Quelle:** bestätigter I14-Befund.
 
-**Priorität:** Dokumentationsdrift.
+**Ziel:** explizite Fokusdarstellung für alle fokussierbaren I11-Kernwidgets im eigenen Stylesheet sicherstellen.
 
-**Maßnahme:** I14 startet vom bestätigten grünen I13-`main`; der alte offene Merge-/Post-Merge-Status wird ersetzt.
+**Umgesetzt:**
 
-**Status:** 🟢 erledigt.
+- 🟢 `QPushButton:focus` bleibt erhalten
+- 🟢 `QComboBox:focus` ergänzt
+- 🟢 `QTextEdit:focus` ergänzt
+- 🟢 automatisierte Erwartung auf drei PASS-Fokusregeln aktualisiert
+- 🟢 automatische Gesamtwertung erwartet danach `PASS`, reale manuelle Gates bleiben `OPEN`
+- 🔵 unabhängiges CI-/Regression-Gate ausstehend
 
-## Neuer Befund für die nächste Iteration
+**Nicht behauptet:**
 
-Der I14-Prüfer hat einen neuen Accessibility-Befund erzeugt:
+- kein reales Bildschirm-PASS;
+- kein 200-%-Clipping-PASS;
+- kein vollständiger Tastaturpfad-PASS;
+- kein Laien-PASS.
 
-- `QPushButton:focus` vorhanden;
-- `QComboBox:focus` fehlt;
-- `QTextEdit:focus` fehlt.
+## A – FESTER PLAN: read-only Dateiinventar
 
-Dieser Befund wird **nicht** im selben VERIFY-Auftrag repariert. Er wird als nächster DELTA-Anteil vorgemerkt.
+**Status:** 🔒 NOCH NICHT GESTARTET
 
-## Datei-Besitz dieser Iteration
+**Ziel:** eine explizit gewählte und B01-validierte Wurzel ausschließlich lesend rekursiv inventarisieren.
+
+Geplanter Minimalvertrag:
+
+- immutable Inventarobjekte;
+- reguläre Dateien mit relativem Pfad und Byte-Größe;
+- deterministische Sortierung;
+- Unicode und Leerzeichen;
+- Symlinks nicht verfolgen;
+- Zugriffs-/Race-Fehler als immutable Befund statt Absturz;
+- keinerlei Hashing, Klassifizierung, Preview-Plan oder GUI/CLI-Use-Case.
+
+## Datei-Besitz – B-DELTA
 
 | Datei | Schreibender Besitzer | Prüfer |
 | --- | --- | --- |
-| `scripts/accessibility_evidence.py` | EVIDENCE-IMPLEMENT | VERIFY read-only |
+| `src/provoware_laientool/ui_themes.py` | IMPLEMENT | VERIFY read-only |
 | `tests/test_accessibility_evidence.py` | TEST-SCOPE | VERIFY read-only |
-| `docs/I14_ACCESSIBILITY_EVIDENCE.md` | DOC | VERIFY read-only |
-| `docs/evidence/EV-20260921-004-i14-accessibility.md` | DOC/EVIDENCE | VERIFY read-only |
 | `docs/CURRENT_ITERATION.md` | ORGANIZE/DOC | VERIFY read-only |
-| `README.md` | DOC | VERIFY read-only |
-| `todo.txt` | DOC | VERIFY read-only |
-| `scripts/repo_quality.py` | PROCESS-IMPLEMENT | VERIFY read-only |
 
-## Nicht-Ziele
+## Nicht-Ziele des DELTA
 
-- keine Reparatur des geprüften GUI-Stylesheets;
-- keine GUI-Funktionserweiterung;
-- kein Dateiinventar;
-- keine Dateioperation;
-- keine Installation von PySide6;
-- kein virtueller Display-Lauf als Ersatz für reale Nutzer-Evidence;
-- kein behauptetes Laien-PASS ohne reale Prüfung.
+- keine Layout-Änderung;
+- keine neuen Farben;
+- keine GUI-Funktion;
+- keine Änderung am Evidence-Runner;
+- keine künstliche Hochstufung der realen I14-Gates.
 
-## Exit-Gates
+## Gate vor I15-A
 
-1. Evidence-Runner-Unit-Tests PASS.
-2. vollständige Test-Suite PASS.
-3. Repository-Contract PASS.
-4. Info-Text-Impact PASS.
-5. automatisierte Befunde reproduzierbar.
-6. reale manuelle Gates korrekt als OPEN dokumentiert.
-7. finaler Diff ohne Scope-Drift.
-8. Post-Merge-CI PASS.
+1. Repository-Contract PASS.
+2. vollständige Tests PASS.
+3. Accessibility-Evidence automatisiert `PASS`.
+4. Gesamtstatus des Evidence-Runners bleibt wegen manueller Gates `OPEN`.
+5. finaler DELTA-Diff ohne Scope-Drift.
+
+Erst danach beginnt der Inventar-Write-Batch.
 
 ## Nächste drei vorgeplante Schritte
 
-### 1. 🔵 I15 – read-only Dateiinventar + I14-Fokus-DELTA
-**Ziel A:** Downloads ausschließlich lesend inventarisieren und valide Preview-Eingaben erzeugen.
-**DELTA B:** explizite Fokusregeln für ComboBox/TextEdit separat implementieren und erneut read-only prüfen.
-**Gate:** keine Schreiboperation; Fokusvertrag danach automatisiert grün; reale Desktop-Evidence bleibt separat erforderlich.
+### 1. 🔵 I15-A – read-only Inventarkern
+**Abhängigkeit:** Fokus-DELTA vollständig grün.
+**Gate:** nur lesen; B01-Pfadgrenzen; Symlink-Sperre; Unicode/Leerzeichen; Fehlerfälle.
 
 ### 2. 🔵 I16 – Preview-Application-Use-Case
-**Ziel:** Inventar → Preview fachlich verbinden und identisch in GUI/CLI verfügbar machen.
-**Abhängigkeit:** I15 Inventar.
-**Gate:** keine Persistenz, kein Executor, GUI-/CLI-Parität.
+**Abhängigkeit:** I15-Inventar grün.
+**Gate:** Inventarfakten → Preview; GUI-/CLI-Parität; weiterhin kein Executor.
 
-### 3. 🔵 I17 – I14 realer Zielsystem-Lauf abschließen
-**Ziel:** nach Fokuskorrektur die echte PySide6-Shell auf Zielhardware mit 100/150/200 %, Tastatur und Laienprofil prüfen.
-**Abhängigkeit:** Fokus-DELTA grün und reale Zielmaschine verfügbar.
-**Gate:** dokumentiertes PASS/FAIL/OPEN ohne künstliche Hochstufung.
+### 3. 🔵 I17 – realer I14-Zielsystemlauf
+**Abhängigkeit:** automatisierter Fokusvertrag grün.
+**Gate:** echte 100/150/200-%-, Tastatur-, Fokus- und Laien-Evidence.
