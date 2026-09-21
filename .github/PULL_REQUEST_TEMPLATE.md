@@ -27,10 +27,20 @@ Ein Satz:
 
 ## Prüfung / Evidence
 
-- [ ] relevante lokale Tests
+- [ ] relevante targeted Tests
 - [ ] `python3 scripts/repo_quality.py`
+- [ ] `python3 scripts/core_diagnostics.py` falls Core/Safety betroffen
+- [ ] vollständige Suite vor Merge
 - [ ] Diff geprüft
 - [ ] Evidence-ID oder Begründung, warum nicht erforderlich
+
+## Debugging / Triage
+
+- Fehlerklasse bei Befund: `PRODUCT | TEST | INFRASTRUCTURE | EVIDENCE | NONE`
+- erster ursächlicher Fehler:
+- kleinster reproduzierbarer Fall:
+- [ ] kein Folgefehler als Primärursache behandelt
+- [ ] keine Testabschwächung ohne belegte Testursache
 
 ## Sicherheitsgate
 
