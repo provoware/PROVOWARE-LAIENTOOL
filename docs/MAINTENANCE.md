@@ -118,6 +118,8 @@ Regeln:
 - `repo-quality` prüft PRs und `main`;
 - `i25-gui-evidence` prüft nur I25-relevante Pfade, dafür sowohl im PR als auch nach Merge auf `main`;
 - Post-Merge-Gates sind unabhängige Bestätigung des tatsächlich gemergten Heads, keine Aufforderung zu einem erneuten manuellen Nutzertest;
+- I25-AUTO bewahrt ausschließlich synthetische Evidence (Screenshots, JSON, TXT, HTML) für 14 Tage als CI-Artefakt auf; keine realen Nutzdateien werden dafür verwendet;
+- technische GUI-Evidence kann dadurch nachträglich aus GitHub geprüft werden, ohne den Nutzer denselben Ablauf erneut ausführen zu lassen;
 - ein grüner unveränderter Stand wird nicht manuell erneut gestartet.
 
 ## 9. Ein-Befehl-Abnahme

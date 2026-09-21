@@ -135,7 +135,8 @@ Die GUI-Abhängigkeit ist in `requirements-gui.txt` reproduzierbar auf **PySide6
 - kein Trailing-Whitespace in zentralen Text-/Codeformaten;
 - diff-basierten Info-Text-Impact bei dokumentationsrelevanten Änderungen;
 - Concurrency-Schutz: veraltete Runs desselben PR/Refs werden automatisch abgebrochen;
-- I25-GUI-Auto-Evidence läuft bei relevanten PR-Änderungen und nochmals nach Merge auf `main`.
+- I25-GUI-Auto-Evidence läuft bei relevanten PR-Änderungen und nochmals nach Merge auf `main`;
+- synthetische I25-Screenshots sowie JSON/TXT/HTML-Evidence werden als kurzlebiges CI-Artefakt aufbewahrt, damit technische GUI-Befunde ohne erneuten Nutzertest geprüft werden können.
 
 Der Gate umfasst inzwischen die vollständige Unit-/Integrationssuite, den read-only Preflight und einen temporären End-to-End-Core-Diagnoselauf. Reale GUI-Wahrnehmung bleibt bewusst ein separates Evidence-Gate.
 

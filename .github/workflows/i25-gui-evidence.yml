@@ -43,4 +43,15 @@ jobs:
           python3 -m venv .venv
           .venv/bin/python -m pip install --disable-pip-version-check --requirement requirements-gui.txt
       - name: Run I25 automated Qt evidence
+        env:
+          HOME: ${{ runner.temp }}/provoware-home
         run: timeout 5m env PYTHONPATH=src .venv/bin/python scripts/i25_auto_evidence.py --offscreen --auto-only
+      - name: Preserve I25 evidence bundle
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: i25-evidence-${{ github.sha }}
+          path: ${{ runner.temp }}/provoware-home/.local/share/provoware-laientool/evidence/i25-*
+          if-no-files-found: warn
+          retention-days: 14
+          include-hidden-files: true
