@@ -5,6 +5,7 @@ ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 VENV_DIR="$ROOT_DIR/.venv"
 VENV_PYTHON="$VENV_DIR/bin/python"
 REQUIREMENTS="$ROOT_DIR/requirements-gui.txt"
+WHEELHOUSE="$ROOT_DIR/wheelhouse"
 EXPECTED_PYSIDE6="6.11.2"
 ACTION="${1:---gui}"
 ASSUME_YES=0
@@ -178,9 +179,15 @@ if [[ "$CURRENT_PYSIDE6" != "$EXPECTED_PYSIDE6" ]]; then
     status "🟨 PySide6-Version ist $CURRENT_PYSIDE6; erwartet wird $EXPECTED_PYSIDE6."
   fi
 
-  confirm "PySide6 $EXPECTED_PYSIDE6 jetzt nur in .venv aus requirements-gui.txt installieren?" || die "Abgebrochen. Keine Paketinstallation durchgeführt." 7
-
-  "$VENV_PYTHON" -m pip install     --disable-pip-version-check     --requirement "$REQUIREMENTS"
+  if [[ -d "$WHEELHOUSE" ]] && compgen -G "$WHEELHOUSE/*.whl" >/dev/null; then
+    status "📦 Lokales Offline-Wheelhouse erkannt. Es wird kein Paketindex verwendet."
+    confirm "PySide6 $EXPECTED_PYSIDE6 jetzt ausschließlich aus dem lokalen wheelhouse/ in .venv installieren?" || die "Abgebrochen. Keine Paketinstallation durchgeführt." 7
+    "$VENV_PYTHON" -m pip install       --disable-pip-version-check       --no-index       --find-links "$WHEELHOUSE"       --requirement "$REQUIREMENTS"
+  else
+    status "🌐 Kein lokales Wheelhouse vorhanden. PyPI wäre für die bestätigte Installation erforderlich."
+    confirm "PySide6 $EXPECTED_PYSIDE6 jetzt nur in .venv aus requirements-gui.txt installieren?" || die "Abgebrochen. Keine Paketinstallation durchgeführt." 7
+    "$VENV_PYTHON" -m pip install       --disable-pip-version-check       --requirement "$REQUIREMENTS"
+  fi
 fi
 
 status "🔎 Validierung der virtuellen Umgebung ..."

@@ -22,6 +22,13 @@ class VenvBootstrapContractTests(unittest.TestCase):
         self.assertIn('validate_venv', text)
         self.assertIn('validate_gui_runtime', text)
 
+    def test_start_script_prefers_local_offline_wheelhouse(self) -> None:
+        text = (ROOT / "start.sh").read_text(encoding="utf-8")
+        self.assertIn('WHEELHOUSE="$ROOT_DIR/wheelhouse"', text)
+        self.assertIn("--no-index", text)
+        self.assertIn("--find-links", text)
+        self.assertIn("Lokales Offline-Wheelhouse erkannt", text)
+
     def test_start_script_never_escalates_privileges(self) -> None:
         text = (ROOT / "start.sh").read_text(encoding="utf-8")
         self.assertNotIn("sudo ", text)
