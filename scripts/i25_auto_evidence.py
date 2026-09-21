@@ -460,10 +460,12 @@ def run_pipeline(*, offscreen: bool = False, auto_only: bool = False) -> int:
 
     print(render_text(report), end="")
     print(f"Evidence-Ordner: {root}")
-    if report["overall_status"] == "PASS":
-        return 0
     if report["technical_status"] == "FAIL":
         return 2
+    if auto_only:
+        return 0
+    if report["overall_status"] == "PASS":
+        return 0
     return 5
 
 

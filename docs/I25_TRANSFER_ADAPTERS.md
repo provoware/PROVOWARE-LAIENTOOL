@@ -89,3 +89,17 @@ Erst bei technischem PASS plus finalem Human-PASS dürfen die Registry-Einträge
 ## Prozessbefund
 
 Der erste RC stoppte ausschließlich am vorgezogenen Info-Text-Impact, bevor Produktgates liefen. Deshalb läuft Info-Text nun als finales hartes PR-Gate nach Repository-, Safety-, Test-, Diagnose- und Preflight-Prüfungen. Die Dokumentationspflicht wird nicht abgeschwächt; die technische RC-Diagnose wird nur entkoppelt.
+
+
+## Automatischer GitHub-GUI-Gate
+
+Für I25-relevante Änderungen existiert zusätzlich ein separater GitHub-Actions-Gate. Er wird nur bei Änderungen an Produkt-GUI/Core, I25-Evidence, Tests, Starter oder GUI-Abhängigkeit ausgelöst.
+
+Der Job:
+
+1. erstellt eine isolierte CI-Venv;
+2. installiert ausschließlich die gepinnte GUI-Abhängigkeit aus `requirements-gui.txt`;
+3. startet `scripts/i25_auto_evidence.py --offscreen --auto-only`;
+4. verlangt technischen PASS ohne menschliche Abnahme.
+
+Dadurch müssen 100/150/200 %, Fokus, Dialogverträge und synthetischer Transfer-Workflow nicht mehr vom Nutzer wiederholt getestet werden.

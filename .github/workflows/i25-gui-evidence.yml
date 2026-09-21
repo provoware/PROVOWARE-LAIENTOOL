@@ -1,0 +1,29 @@
+name: i25-gui-evidence
+
+on:
+  pull_request:
+    paths:
+      - "src/provoware_laientool/**"
+      - "scripts/i25_auto_evidence.py"
+      - "tests/test_i25_auto_evidence.py"
+      - "tests/test_i25_transfer_adapters.py"
+      - "requirements-gui.txt"
+      - "start.sh"
+      - ".github/workflows/i25-gui-evidence.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  i25-offscreen-evidence:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Create isolated GUI environment
+        run: |
+          python3 -m venv .venv
+          .venv/bin/python -m pip install --disable-pip-version-check --requirement requirements-gui.txt
+      - name: Run I25 automated Qt evidence
+        run: timeout 5m env PYTHONPATH=src .venv/bin/python scripts/i25_auto_evidence.py --offscreen --auto-only

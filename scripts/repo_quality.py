@@ -43,6 +43,7 @@ CORE_REQUIRED = (
     ".github/PULL_REQUEST_TEMPLATE.md",
     ".github/CODEOWNERS",
     ".github/workflows/repo-quality.yml",
+    ".github/workflows/i25-gui-evidence.yml",
 )
 TEXT_SUFFIXES = {".md", ".txt", ".py", ".sh", ".yml", ".yaml"}
 PRIORITIES = {"P0", "P1", "P2", "P3"}
