@@ -1,48 +1,43 @@
 # PROVOWARE – Current Iteration
 
-## I33 – Offline-Wheelhouse Integrität
+## I34 – Plugin-Grenze
 
 **Status:** 🟢 AUTO PASS · FREEZE-BEREIT
 **Fortschritt:** `██████████ 100 %`
 
 ## A – PLAN
 
-I32/B07 wird gegen Wheelhouse-Drift und unerwartete Offline-Abhängigkeiten gehärtet.
+B09 erhält einen stabilen data-only Manifest-/Capability-Vertrag ohne Plugin-Runtime.
 
 ## B – DELTA
 
-Der redundante Parallel-PR #49 wurde als superseded geschlossen; keine Änderung daraus wird transplantiert.
+NONE. I25/I31 Human-Gates und B01-Zweitgerät bleiben bewusst geparkt.
 
 ## Implementiert
 
-- exakt vier erlaubte Qt-Wheels;
-- exakt Version 6.11.2;
-- manylinux-x86_64 Pflicht;
-- keine Extra-/Duplicate-Wheels;
-- Build-Gate;
-- ZIP-Validierung;
-- Runtime-Manifest-/Hashprüfung unmittelbar vor `pip --no-index`;
-- Tamper-/Wrong-Version-/Wrong-Platform-/Incomplete-Tests.
-
-## Sicherheitsgrenze
-
-Die Manifestprüfung ist Korruptions-/Konsistenzschutz, keine Signatur oder Herkunftsauthentisierung.
+- immutable `PluginManifest`;
+- Plugin-API-Version 1;
+- ausschließlich `DISABLED`;
+- Auto-Install/Auto-Enable/Netzwerk/Entry-Point gesperrt;
+- Capability-Allowlist aus bestehender Registry;
+- nur `READY` + `read-only` genehmigungsfähig;
+- statischer Plugin-Boundary-Guard in CI.
 
 ## Exit-Gates
 
-1. I33 targeted tests PASS.
-2. I32 Paketregression PASS.
-3. reales CI-Wheelhouse erfüllt Exact-Set-Vertrag.
-4. Offline-Bootstrap PASS.
-5. Full Repository Gate PASS.
-6. Paketartefakt/Validation PASS.
+1. Manifest-Validierung PASS.
+2. OPEN-/Write-/Unknown-Capabilities BLOCKED.
+3. Auto-Install/Enable/Network/Entrypoint BLOCKED.
+4. dynamische Loader-Marker durch Guard BLOCKED.
+5. Full Suite PASS.
+6. Repository-/Read-only-/Package-/GUI-Regressionsgates PASS.
 
 ## AUTO-Ergebnis
 
-Alle I33-Gates sind grün, einschließlich realem Linux-x86_64-Wheelhouse, Offline-Bootstrap und unabhängigen I25/I31-Regressionsgates.
+Der zunächst zu breite Guard wurde durch CI korrekt erkannt: bestehendes `importlib.util.find_spec()` im read-only Preflight ist Capability-Erkennung, kein Plugin-Laden. Der reparierte Guard erlaubt diesen Fall, blockiert aber weiterhin echte dynamische Ladepfade.
 
 ## Nächste drei Schritte
 
-1. 🟢 I33 Evidence an RC `2ed2d09cf60d88617997edbaca1c2c6d97e33e77` binden und mergen.
-2. 🔵 danach den nächsten rein automatisierbaren Release-/Security-Block wählen.
+1. 🟢 I34 Evidence an reparierten RC `61c83eb21cfede0510eb4d78726726b5ccae128d` binden und mergen.
+2. 🔵 danach den nächsten rein automatisierbaren Security-/Release-Block wählen.
 3. 🔒 I25/I31 Human-Gates sowie B01-Zweitgerät weiter gesammelt offen halten.
