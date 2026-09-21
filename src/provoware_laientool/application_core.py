@@ -9,6 +9,7 @@ from .capability_registry import get_use_case, list_use_cases
 from .diagnostics import build_diagnostic_report, format_diagnostic_text
 from .inventory import InventoryResult, scan_inventory
 from .inventory_view import InventoryView, InventoryViewSpec, build_inventory_view
+from .path_policy import validate_path
 from .preflight import format_text, run_preflight
 from .preview_model import (
     ACTION_COPY,
