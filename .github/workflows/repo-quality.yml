@@ -34,6 +34,8 @@ jobs:
         run: PYTHONPATH=src python3 -m unittest discover -s tests -v
       - name: Run temporary-filesystem core diagnostic
         run: python3 scripts/core_diagnostics.py
+      - name: Run redacted diagnostic snapshot
+        run: python3 scripts/diagnostic_snapshot.py --json
       - name: Run read-only preflight
         run: python3 start.py
       - name: Run read-only preflight JSON

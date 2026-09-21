@@ -102,6 +102,21 @@ Er darf nicht:
 - Produktfehler automatisch reparieren;
 - reale GUI-Evidence ersetzen.
 
+## Diagnose-Snapshot
+
+`scripts/diagnostic_snapshot.py` liefert einen read-only Bericht auf stdout.
+
+Verbindlich:
+
+- Redaction vor Ausgabe;
+- keine Recovery-IDs;
+- keine Datei-Persistenz;
+- kein Upload/Netzwerk;
+- Collection-Status und Health-Status getrennt;
+- Ausgabe als Klartext oder JSON.
+
+Der Snapshot ist Diagnosehilfe, kein automatischer Reparaturmechanismus.
+
 ## Datenschutz
 
 Logs und Evidence vermeiden:

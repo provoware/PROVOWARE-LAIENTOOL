@@ -117,3 +117,17 @@ Für `files.preview_trash` gilt:
 - Adapter dürfen weder `scan_inventory()` noch Preview-Modelle direkt aufrufen.
 
 Damit bleibt auch die Eingabeanforderung zentral definiert, während die Oberflächen nur die jeweils passende Eingabemethode bereitstellen.
+
+
+## 8. Diagnostische CLI-only-Ausnahme
+
+Seit I20 ist `diagnostics.snapshot` ausdrücklich als `diagnostic_cli_only=True` registriert.
+
+Begründung:
+
+- der Use Case erzeugt nur einen read-only Support-/Diagnosebericht;
+- es entsteht keine neue fachliche Dateiaktion;
+- eine GUI-Fläche würde vor Abschluss der realen I17-Evidence unnötige visuelle Regression riskieren;
+- der Application-Core bleibt trotzdem gemeinsam und unabhängig von der Darstellung.
+
+Die Ausnahme darf nicht für normale Produktfunktionen verwendet werden.
