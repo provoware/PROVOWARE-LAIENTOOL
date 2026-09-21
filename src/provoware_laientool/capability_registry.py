@@ -16,10 +16,12 @@ VALID_STATUSES = {STATUS_READY, STATUS_OPEN, STATUS_BLOCKED}
 SAFETY_READ_ONLY = "read-only"
 SAFETY_PREVIEW_REQUIRED = "preview-required"
 SAFETY_RECOVERY_REQUIRED = "recovery-required"
+SAFETY_EXPLICIT_WRITE_CONFIRMATION = "explicit-write-confirmation"
 VALID_SAFETY_CLASSES = {
     SAFETY_READ_ONLY,
     SAFETY_PREVIEW_REQUIRED,
     SAFETY_RECOVERY_REQUIRED,
+    SAFETY_EXPLICIT_WRITE_CONFIRMATION,
 }
 
 
@@ -99,6 +101,18 @@ REGISTRY: tuple[UseCaseCapability, ...] = (
         status=STATUS_OPEN,
     ),
     UseCaseCapability(
+        id="diagnostics.export_local",
+        label="Diagnose lokal speichern",
+        gui_available=False,
+        cli_available=False,
+        diagnostic_cli_only=False,
+        safety_class=SAFETY_EXPLICIT_WRITE_CONFIRMATION,
+        preview_required=True,
+        recovery_required=False,
+        required_capability=None,
+        status=STATUS_OPEN,
+    ),
+    UseCaseCapability(
         id="diagnostics.snapshot",
         label="Diagnose anzeigen",
         gui_available=False,
@@ -162,6 +176,13 @@ def validate_registry(
         if entry.recovery_required and not entry.preview_required:
             errors.append(
                 f"Recovery-Pflicht ohne Preview-Pflicht: {entry.id}"
+            )
+        if (
+            entry.safety_class == SAFETY_EXPLICIT_WRITE_CONFIRMATION
+            and not entry.preview_required
+        ):
+            errors.append(
+                f"Expliziter Write ohne Preview-Pflicht: {entry.id}"
             )
         if entry.status == STATUS_READY and not (
             entry.cli_available or entry.gui_available

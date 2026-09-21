@@ -1,62 +1,48 @@
 # PROVOWARE – Current Iteration
 
-## I29 – Diagnose-Export Autorisierungs-/Adapter-Decision
+## I30 – Diagnose-Export Application-Autorisierung
 
-**Status:** 🟢 DECISION FROZEN · KEINE IMPLEMENTIERUNG
+**Status:** 🟢 AUTOMATISCH PASS · FREEZE-BEREIT
 **Fortschritt:** `██████████ 100 %`
 
-## Entscheidung
+## Implementiert
 
-Ein späterer lokaler Diagnoseexport benötigt einen gemeinsamen Application-Use-Case mit:
+- neue Registry-Sicherheitsklasse `explicit-write-confirmation`;
+- `diagnostics.export_local` ausschließlich `OPEN`, ohne GUI/CLI-Verfügbarkeit;
+- deterministischer Preparation-Fingerprint;
+- zweistufige Bestätigung;
+- Stale-/Manipulationssperre;
+- Cancel-Semantik;
+- sessiongebundener immutable `AuthorizedExportRequest`;
+- One-shot Writer-Aufruf.
 
-- I26 ExportPreparation;
-- unveränderlichem Plan-/Payload-Fingerprint;
-- Bestätigung 1 für die Exportabsicht;
-- unveränderter finaler Zusammenfassung;
-- Bestätigung 2 für den tatsächlichen Commit;
-- erst danach intern autorisiertem I28-Writer-Aufruf.
+## Sicherheitsgrenze
 
-Adapter dürfen niemals selbst `write_enabled=True` setzen oder den Writer direkt aufrufen.
+Adapter können weiterhin keinen Diagnoseexport auslösen. Nur der nichtvisuelle Autorisierungs-Core darf intern aus dem unveränderten Plan ein `write_enabled=True` für exakt einen I28-Aufruf erzeugen.
 
-## Registry
+## Automatische Exit-Gates
 
-Spätere ID:
-
-`diagnostics.export_local`
-
-Vor Implementierung wird eine neue Sicherheitsklasse benötigt:
-
-`explicit-write-confirmation`
-
-I29 ändert die Registry selbst noch nicht.
-
-## Parität
-
-GUI und CLI müssen identisch abbilden:
-
-- Format/Ziel/Dateiname;
-- ExportPlan/Fingerprint;
-- beide Bestätigungen;
-- Cancel;
-- Fehlerklasse;
-- Erfolg/Abschluss.
-
-## Abbruch
-
-Jeder Abbruch vor Writer-Aufruf bleibt seiteneffektfrei. Änderungen nach Bestätigung 1 verwerfen die Autorisierung und erzwingen beide Bestätigungen erneut.
+1. I30 targeted tests.
+2. Registry-Vertrag.
+3. I28 Writer-Regression.
+4. I27 Writer-Guard.
+5. globaler Read-only-Lock.
+6. Full Suite.
+7. Core Diagnostic/Preflight.
+8. finaler Diff ohne GUI/CLI-Code.
 
 ## Weiter gesperrt
 
-- Registry-Erweiterung;
-- Application-Autorisierungscode;
-- sichtbarer GUI-/CLI-Export;
-- produktiv erreichbarer Diagnosewrite;
+- GUI-/CLI-Export;
+- Registry READY;
+- Startmodus;
+- automatischer Export;
 - allgemeiner Executor;
 - Upload/Netzwerk;
 - andere Schreibpfade.
 
 ## Nächste drei Schritte
 
-1. 🟢 I29 als reines Decision Gate automatisch gegen Repository-/Doku-Verträge prüfen und mergen.
-2. 🔵 I30: ausschließlich Application-Autorisierungsmodell + Registry-Sicherheitsklasse/OPEN-Eintrag implementieren und vollständig automatisch testen; noch keine sichtbaren Adapter.
-3. 🔒 erst danach GUI/CLI-Adapter als eigenen Block entwickeln und vor READY technische Auto-Evidence + genau eine Human-Gesamtabnahme verlangen.
+1. 🟢 I30 Evidence an RC `29d4b3e8effbe6f43fb6c64aa7043dca2fa04c64` binden und mergen.
+2. 🔵 danach I31 ausschließlich als gegateten GUI-/CLI-Adapter-Prüfmodus implementieren; Registry bleibt OPEN.
+3. 🔒 READY erst nach vollständiger Auto-Evidence des sichtbaren Schreibworkflows und genau einer finalen Human-Gesamtabnahme.
