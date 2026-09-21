@@ -31,6 +31,7 @@ REQUIRED = (
     "docs/I12_PREVIEW_MODEL.md",
     "docs/I13_RECOVERY_CONTRACT.md",
     "docs/I14_ACCESSIBILITY_EVIDENCE.md",
+    "docs/I15_READONLY_INVENTORY.md",
     "docs/evidence/EV-20260921-004-i14-accessibility.md",
     "docs/CURRENT_ITERATION.md",
     "scripts/info_text_guard.py",

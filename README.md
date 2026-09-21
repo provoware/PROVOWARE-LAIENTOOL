@@ -19,8 +19,8 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I11 read-only Shell | gemeinsamer Core + Zahlenmenü + optionale PySide6-Shell implementiert; reale visuelle Accessibility-Evidence offen | 🟨 `████████░░` 80 % |
 | I12 B05 Preview-Modell | immutable Preview-Vertrag mit B01-Pfadgrenzen implementiert; kein Executor | 🟢 `██████████` 100 % Modellstand |
 | I13 B06 Recovery-Vertrag | Zustandsautomat, Journal-/Undo-Vertrag und Crash-Matrix implementiert; keine Persistenz/kein Executor | 🟢 Repository grün |
-| I14 Accessibility-Evidence | historischer I14-Befund: Fokus für ComboBox/TextEdit fehlte; I15-DELTA ergänzt die Regeln, automatischer Re-Check läuft; reale Desktop-/Laienprüfung bleibt OPEN | 🟨 Re-Check läuft |
-| Schreibpfade | 0 freigegeben | 🔒 gesperrt |
+| I14 Accessibility-Evidence | Fokusvertrag für Button/ComboBox/TextEdit automatisiert grün; reale Desktop-/Laienprüfung bleibt OPEN | 🟨 reale Evidence OPEN |
+| I15 Read-only Inventar | rekursiver B01-gebundener Nur-Lese-Inventarkern mit Symlink-Sperre, Unicode/Leerzeichen, Größenfakten und strukturierten Befunden implementiert | 🟨 CI ausstehend |\n| Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
 
@@ -121,4 +121,4 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**Den I14-Fokusbefund als separaten DELTA beheben und parallel den nächsten festen Planpunkt I15 ausschließlich read-only halten. Reale Accessibility bleibt bis zum Zielsystemlauf OPEN.**
+**I15 read-only Inventarkern vollständig über CI einfrieren; danach I16 Inventarfakten ausschließlich über den gemeinsamen Application-Core in Preview-Modelle überführen. Schreibpfade bleiben gesperrt.**
