@@ -34,3 +34,5 @@ Dateiname: `EV-YYYYMMDD-NNN-kurzname.md`
 - `EV-20260921-006-branch-hygiene-i27.md` – Altbranch-Klassifikation, gerettete MOVE-Reversibilitätsinvariante und gehärteter I27-Transplant.
 
 - `EV-20260922-007-i28-diagnostic-writer-testlab.md` – automatischer I28 No-clobber-/Race-/Crash-/Failure-Nachweis auf dem Writer-RC.
+
+- `EV-20260922-008-i30-diagnostic-export-authorization.md` – I30 Fingerprint-/Doppelbestätigungs-/Replay-/One-shot-Autorisierungsnachweis.

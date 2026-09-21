@@ -35,7 +35,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I27 Diagnostic Writer Guard | exakter Writer-REOPEN-Vertrag, statische Partial-FD-Provenienz und No-clobber Partial→Final-Publish-Regeln | 🟢 Sicherheitsgate grün |
 | I28 Diagnose-Writer Testlab | isolierter create-only/no-clobber Writer mit Hash/Größe, Directory-fsync und automatischer Race/Crash/ENOSPC/PermissionError-Matrix; ohne Adapter/Registry | 🟢 AUTO PASS · produktiv nicht erreichbar |
 | I29 Diagnose-Export Authorization Decision | Doppelbestätigung, Plan-Fingerprint, Cancel-Semantik, GUI/CLI-Parität und neue Registry-Sicherheitsklasse festgelegt | 🟢 Decision eingefroren |
-| I30 Diagnose-Export Autorisierung | nichtvisuelle zweistufige sessiongebundene Autorisierung mit Fingerprint-, Stale-, Manipulations- und Replay-Schutz; Registry bleibt OPEN | 🟨 RC · keine Adapter |
+| I30 Diagnose-Export Autorisierung | nichtvisuelle zweistufige sessiongebundene Autorisierung mit Fingerprint-, Stale-, Manipulations- und Replay-Schutz; Writer one-shot; Registry bleibt OPEN | 🟢 AUTO PASS · keine Adapter |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -167,7 +167,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I25 bleibt an seiner einzigen Human-Wahrnehmungsfrage gegated. I30 implementiert ausschließlich den nichtvisuellen Diagnoseexport-Autorisierungsvertrag; sichtbare Exportadapter bleiben bis zum separaten I31-Prüfmodus gesperrt.**
+**I25 bleibt an seiner einzigen Human-Wahrnehmungsfrage gegated. I30 ist automatisch grün. Als nächstes darf I31 den sichtbaren Diagnoseexport ausschließlich als gegateten GUI-/CLI-Prüfmodus anbinden; Registry bleibt bis Auto-Evidence + finaler Human-Abnahme OPEN.**
 
 
 ## Screenshots

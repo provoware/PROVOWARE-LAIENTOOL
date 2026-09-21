@@ -2,8 +2,8 @@
 
 ## I30 – Diagnose-Export Application-Autorisierung
 
-**Status:** 🟨 RC · AUTOMATISCHE GATES LAUFEN
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🟢 AUTOMATISCH PASS · FREEZE-BEREIT
+**Fortschritt:** `██████████ 100 %`
 
 ## Implementiert
 
@@ -43,6 +43,6 @@ Adapter können weiterhin keinen Diagnoseexport auslösen. Nur der nichtvisuelle
 
 ## Nächste drei Schritte
 
-1. 🟨 I30 RC vollständig automatisch prüfen und Evidence binden.
-2. 🔵 bei Grün mergen.
-3. 🔒 danach I31 als gegateten GUI-/CLI-Adapter-Prüfmodus planen; READY weiterhin erst nach Auto-Evidence + einer finalen Human-Abnahme.
+1. 🟢 I30 Evidence an RC `29d4b3e8effbe6f43fb6c64aa7043dca2fa04c64` binden und mergen.
+2. 🔵 danach I31 ausschließlich als gegateten GUI-/CLI-Adapter-Prüfmodus implementieren; Registry bleibt OPEN.
+3. 🔒 READY erst nach vollständiger Auto-Evidence des sichtbaren Schreibworkflows und genau einer finalen Human-Gesamtabnahme.
