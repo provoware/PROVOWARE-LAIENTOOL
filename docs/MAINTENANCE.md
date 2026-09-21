@@ -98,7 +98,7 @@ Jeder Testlauf braucht einen Zweck, ein Budget und ein Stop-Kriterium.
 | --- | ---: | --- |
 | einzelner targeted Test / Repository-Gate | 2 Minuten | max. 1 identischer Repro-Lauf |
 | vollständige Unit-/Integration-Suite | 5 Minuten | erst nach Ursachenänderung erneut |
-| GitHub-Job `repository-contract` | 15 Minuten gesamt | kein automatischer Retry |
+| GitHub-Job `repository-contract` | 15 Minuten gesamt | kein automatischer Retry; veraltete Runs werden abgebrochen |
 | manueller GUI-/Evidence-Lauf | menschlich geführt | jederzeit klar abbrechbar |
 
 Regeln:
@@ -110,6 +110,15 @@ Regeln:
 - bei drittem Reparaturbedarf: STOP und Re-Plan;
 - kein wachsender Scope, nur um einen Test doch noch grün zu bekommen;
 - Tests mit Schleifen brauchen endliche Iterationszahl oder Deadline.
+
+### CI-Ökonomie und Post-Merge-Nachweis
+
+- jeder Workflow besitzt einen `concurrency`-Schlüssel mit `cancel-in-progress: true`;
+- neue Commits auf demselben PR/Ref ersetzen veraltete laufende Prüfungen statt sie parallel fertiglaufen zu lassen;
+- `repo-quality` prüft PRs und `main`;
+- `i25-gui-evidence` prüft nur I25-relevante Pfade, dafür sowohl im PR als auch nach Merge auf `main`;
+- Post-Merge-Gates sind unabhängige Bestätigung des tatsächlich gemergten Heads, keine Aufforderung zu einem erneuten manuellen Nutzertest;
+- ein grüner unveränderter Stand wird nicht manuell erneut gestartet.
 
 ## 9. Ein-Befehl-Abnahme
 
