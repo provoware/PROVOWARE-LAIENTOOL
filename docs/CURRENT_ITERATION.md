@@ -2,7 +2,7 @@
 
 ## I08 – Kollisionsschutz und GUI-/CLI-Parität
 
-**Status:** 🟨 IN ARBEIT  
+**Status:** 🟨 IN ARBEIT
 **Fortschritt:** `████████░░ 80 %`
 
 Der Prozentwert bildet ausschließlich die definierten Checkpoints dieser Iteration ab.
@@ -72,16 +72,16 @@ Keine Datei besitzt zwei parallele schreibende Besitzer.
 ## Nächste drei vorgeplante Schritte
 
 ### 1. 🔵 I09 – B01 Zweitgeräte-Evidence schließen
-**Ziel:** realen Preflight auf dem zweiten Zielgerät ausführen und Portabilitätsnachweis abschließen.  
-**Abhängigkeit:** I08 muss grün eingefroren sein.  
+**Ziel:** realen Preflight auf dem zweiten Zielgerät ausführen und Portabilitätsnachweis abschließen.
+**Abhängigkeit:** I08 muss grün eingefroren sein.
 **Gate:** reproduzierbare Evidence; keine Produktänderung nötig.
 
 ### 2. 🔵 I10 – gemeinsame Capability-/Use-Case-Registry
-**Ziel:** zentralen Fachfunktionskatalog schaffen, aus dem GUI und Konsolenmenü dieselben Funktionen beziehen.  
-**Abhängigkeit:** GUI-/CLI-Paritätsvertrag aus I08.  
+**Ziel:** zentralen Fachfunktionskatalog schaffen, aus dem GUI und Konsolenmenü dieselben Funktionen beziehen.
+**Abhängigkeit:** GUI-/CLI-Paritätsvertrag aus I08.
 **Gate:** keine doppelte Fachlogik; Registry-Tests; weiterhin read-only.
 
 ### 3. 🔵 I11 – minimaler read-only UX-/CLI-Shell-Prototyp
-**Ziel:** erste navigierbare PySide6-Shell und äquivalentes Konsolen-Zahlenmenü auf demselben Core-Vertrag.  
-**Abhängigkeit:** I10 Registry.  
+**Ziel:** erste navigierbare PySide6-Shell und äquivalentes Konsolen-Zahlenmenü auf demselben Core-Vertrag.
+**Abhängigkeit:** I10 Registry.
 **Gate:** Laienstandard, Tastatur, 100/150/200 %, Paritätstest und keine Nutzdaten-Schreiboperation.
