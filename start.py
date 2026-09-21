@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Minimal read-only project entry point for B01-A."""
+"""PROVOWARE read-only starter.
+
+Default keeps the original B01 preflight behavior.
+Optional I11 adapters:
+- --menu: novice numeric CLI shell
+- --gui: optional PySide6 shell
+"""
 
 from __future__ import annotations
 
@@ -11,7 +17,27 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from provoware_laientool.preflight import main
+
+def main(argv: list[str] | None = None) -> int:
+    args = list(sys.argv[1:] if argv is None else argv)
+
+    if args == ["--menu"]:
+        from provoware_laientool.cli_shell import main as cli_main
+        return cli_main()
+
+    if args == ["--gui"]:
+        from provoware_laientool.gui_shell import main as gui_main
+        return gui_main()
+
+    if args in ([], ["--json"]):
+        from provoware_laientool.preflight import main as preflight_main
+        return preflight_main(args)
+
+    print(
+        "Unbekannte Option. Erlaubt: --json, --menu, --gui",
+        file=sys.stderr,
+    )
+    return 2
 
 
 if __name__ == "__main__":
