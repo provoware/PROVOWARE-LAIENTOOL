@@ -110,6 +110,7 @@ Empfohlene Befehle:
 ./start.sh --setup
 ./start.sh --gui
 ./start.sh --i17
+./start.sh --diagnostics
 ```
 
 `start.sh` installiert niemals per `sudo`/`apt` und schreibt keine Python-Pakete in das System. Fehlt die lokale Umgebung oder die festgelegte GUI-Abhängigkeit, wird vor dem Erzeugen bzw. vor dem PyPI-Download ausdrücklich gefragt. Für bewusst nicht-interaktive Einrichtung existiert `--yes`.
@@ -188,8 +189,8 @@ Solange Executor und Persistenz nicht ausdrücklich freigegeben sind, prüft `sc
 Für Support/Debugging steht ein read-only, redigierter Snapshot bereit:
 
 ```bash
-./start.sh --preflight
-./start.sh --json
+./start.sh --diagnostics
+./start.sh --diagnostics-json
 ```
 
 Er schreibt keine Datei, nutzt kein Netzwerk und zeigt keine Recovery-IDs. Home-Pfade, E-Mails und typische Token-Muster werden vor der Ausgabe redigiert.
