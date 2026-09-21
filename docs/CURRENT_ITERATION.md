@@ -1,89 +1,86 @@
 # PROVOWARE – Current Iteration
 
-## I08 – Kollisionsschutz und GUI-/CLI-Parität
+## I09 – Zweitgeräte-Portabilitäts-Evidence
 
-**Status:** 🟢 ABGESCHLOSSEN
-**Fortschritt:** `██████████ 100 %`
+**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN / PHYSISCH OPEN
+**Fortschritt:** `█████████░ 90 %`
 
 Der Prozentwert bildet ausschließlich die definierten Checkpoints dieser Iteration ab.
 
 ## A – FESTER PLAN
 
-**Quelle:** bestehende Update-Orchestrierung + GUI-/CLI-Architekturvertrag.
+**Quelle:** I08-Drei-Schritte-Vorausplanung + offenes B01-Exit-Gate.
 
-**Ziel:** Rollen- und Schreibkollisionen verbindlich verhindern, Zwei-Stufen-TODO präzisieren, Drei-Schritte-Vorausplanung einführen und vollständige fachliche GUI-/CLI-Parität als Architekturvertrag festschreiben.
+**Ziel:** die physische Zweitgeräte-Prüfung reproduzierbar, datensparsam und laiengerecht vorbereiten, ohne Schein-PASS für ein Gerät zu erzeugen, auf das diese Iteration keinen physischen Zugriff besitzt.
 
 **Checkpoints:**
 
-- 🟢 Rollen und Kollisionsschutz präzisiert
-- 🟢 Datei-Besitzregel definiert
-- 🟢 Zwei-Stufen-TODO präzisiert
-- 🟢 Drei-Schritte-Vorausplanung definiert
-- 🟢 Iterationsstatus mit Farb-/Fortschrittsanzeige definiert
-- 🟢 GUI-/CLI-Paritätsvertrag erstellt
-- 🟢 laienfreundliches Zahlenmenü als CLI-Standard festgelegt
-- 🟢 PR-CI-Abnahme vollständig PASS
-- 🟢 finaler Diff ohne Scope-Drift geprüft
-- 🔵 Post-Merge-Prüfung folgt unmittelbar nach Merge
+- 🟢 Evidence-Runner dependency-frei angelegt
+- 🟢 realen Preflight-JSON-Vertrag gegengeprüft
+- 🟢 Datenschutz-Redaktion auf reale verschachtelte Struktur angepasst
+- 🟢 Unit-Tests für Redaktionsvertrag ergänzt
+- 🟢 Laien-Anleitung für Zweitgerät erstellt
+- 🟢 Repository-/PR-CI-Gates PASS
+- 🟢 finaler Diff ohne Scope-Drift
+- 🔵 Merge/Post-Merge-Prüfung
+- 🟨 reale physische Ausführung auf Zweitgerät bleibt anschließend separat OPEN
 
 ## B – VARIABLE FOLGEAUFGABE
 
-**Quelle letzter Lauf:** Analyse des aktuellen Repository-Gates.
+**Quelle letzter Lauf:** I08-Abschlussdatei enthielt trotz grünem Post-Merge-CI noch den alten Hinweis „Post-Merge-Prüfung folgt“.
 
-**Befund:** In `scripts/repo_quality.py` waren drei Pflichtdateien doppelt in `REQUIRED` eingetragen.
+**Priorität:** Dokumentationsdrift.
 
-**Priorität:** Wartbarkeit / Entwicklungsdisziplin.
+**Maßnahme:** I09 übernimmt den bestätigten I08-Post-Merge-Stand als abgeschlossen; kein Produktpatch erforderlich.
 
-**Maßnahme:** Duplikate entfernen und einen Selbsttest ergänzen, der doppelte Pflichtdatei-Einträge künftig als Gate-Fehler meldet.
-
-**Status:** 🟢 umgesetzt und durch CI-Abnahme bestätigt.
+**Status:** 🟢 erledigt.
 
 ## Datei-Besitz dieser Iteration
 
 | Datei | Schreibender Besitzer | Prüfer |
 | --- | --- | --- |
-| `AGENTS.md` | IMPLEMENT/DOC dieser Iteration | VERIFY read-only |
-| `docs/UPDATE_ORCHESTRATION.md` | IMPLEMENT/DOC dieser Iteration | VERIFY read-only |
-| `docs/GUI_CLI_PARITY.md` | IMPLEMENT/DOC dieser Iteration | VERIFY read-only |
-| `docs/adr/ADR-0001-ui-cli-foundation.md` | IMPLEMENT/DOC dieser Iteration | VERIFY read-only |
-| `README.md` | DOC dieser Iteration | VERIFY read-only |
-| `todo.txt` | DOC dieser Iteration | VERIFY read-only |
-| `.github/PULL_REQUEST_TEMPLATE.md` | PROCESS-IMPLEMENT dieser Iteration | VERIFY read-only |
-| `scripts/repo_quality.py` | PROCESS-IMPLEMENT dieser Iteration | VERIFY read-only |
-| `docs/CURRENT_ITERATION.md` | ORGANIZE/DOC dieser Iteration | VERIFY read-only |
-
-Keine Datei besitzt zwei parallele schreibende Besitzer.
+| `scripts/second_device_evidence.py` | IMPLEMENT | VERIFY read-only |
+| `tests/test_second_device_evidence.py` | IMPLEMENT | VERIFY read-only |
+| `docs/B01_SECOND_DEVICE_EVIDENCE.md` | DOC | VERIFY read-only |
+| `docs/B01_PLATFORM_PREFLIGHT.md` | DOC | VERIFY read-only |
+| `docs/evidence/EV-20260921-002-b01a-preflight.md` | DOC | VERIFY read-only |
+| `docs/CURRENT_ITERATION.md` | ORGANIZE/DOC | VERIFY read-only |
+| `README.md` | DOC | VERIFY read-only |
+| `todo.txt` | DOC | VERIFY read-only |
+| `scripts/repo_quality.py` | PROCESS-IMPLEMENT | VERIFY read-only |
 
 ## Nicht-Ziele
 
-- keine neue Produktfunktion;
+- keine Behauptung, dass die zweite physische Maschine bereits geprüft wurde;
+- keine Installation;
+- kein Netzwerkzugriff;
 - keine GUI-Implementierung;
-- keine CLI-Implementierung;
-- keine Schreiboperation auf Nutzerdaten;
-- keine Änderung der eingefrorenen Anforderungsbaseline.
+- keine Nutzdaten-Schreiboperation;
+- keine Änderung der eingefrorenen Baseline.
 
 ## Exit-Gates
 
-1. Repository-Contract PASS.
-2. Info-Text-Impact PASS.
-3. bestehende B01-Unit-Tests PASS.
-4. read-only Preflight Text/JSON PASS.
-5. finaler Diff ohne Scope-Drift.
-6. Post-Merge-CI PASS.
+1. neuer Evidence-Runner Unit-Test PASS.
+2. bestehende B01-Tests PASS.
+3. Repository-Contract PASS.
+4. Info-Text-Impact PASS.
+5. Preflight Text/JSON PASS.
+6. finaler Diff ohne Scope-Drift.
+7. Post-Merge-CI PASS.
 
 ## Nächste drei vorgeplante Schritte
 
-### 1. 🔵 I09 – B01 Zweitgeräte-Evidence schließen
-**Ziel:** realen Preflight auf dem zweiten Zielgerät ausführen und Portabilitätsnachweis abschließen.
-**Abhängigkeit:** I08 muss grün eingefroren sein.
-**Gate:** reproduzierbare Evidence; keine Produktänderung nötig.
-
-### 2. 🔵 I10 – gemeinsame Capability-/Use-Case-Registry
+### 1. 🔵 I10 – gemeinsame Capability-/Use-Case-Registry
 **Ziel:** zentralen Fachfunktionskatalog schaffen, aus dem GUI und Konsolenmenü dieselben Funktionen beziehen.
-**Abhängigkeit:** GUI-/CLI-Paritätsvertrag aus I08.
+**Abhängigkeit:** I09 Repository-Teil muss grün eingefroren sein.
 **Gate:** keine doppelte Fachlogik; Registry-Tests; weiterhin read-only.
 
-### 3. 🔵 I11 – minimaler read-only UX-/CLI-Shell-Prototyp
+### 2. 🔵 I11 – minimaler read-only UX-/CLI-Shell-Prototyp
 **Ziel:** erste navigierbare PySide6-Shell und äquivalentes Konsolen-Zahlenmenü auf demselben Core-Vertrag.
 **Abhängigkeit:** I10 Registry.
 **Gate:** Laienstandard, Tastatur, 100/150/200 %, Paritätstest und keine Nutzdaten-Schreiboperation.
+
+### 3. 🔵 I12 – Preview-Modell vorbereiten
+**Ziel:** B05 als rein fachliches immutable Preview-Modell für spätere Dateiaktionen entwerfen, noch ohne Executor.
+**Abhängigkeit:** gemeinsame Use-Case-Grenzen aus I10.
+**Gate:** Wirkung, Quelle, Zielgrenzen und Rückweg modelliert; keinerlei produktiver Schreibpfad.

@@ -81,6 +81,17 @@ Exitcodes:
 
 Ein transportiertes Paket darf auf einer anderen Maschine zunächst nur **inventarisieren und entscheiden**. Erst wenn die dort vorhandenen Voraussetzungen verifiziert sind, wird ein verfügbarer Startpfad gewählt. Fehlende Komponenten werden erklärt, nicht heimlich installiert.
 
+## Zweitgeräte-Evidence
+
+Für die reale zweite Zielmaschine steht nun ein dependency-freier, read-only Prüfweg bereit:
+
+```bash
+python3 scripts/second_device_evidence.py
+python3 scripts/second_device_evidence.py --json
+```
+
+Der Runner übernimmt nur eine feste Menge unkritischer Capability-Felder und verwirft Pfade/Notizen. Details siehe `docs/B01_SECOND_DEVICE_EVIDENCE.md`.
+
 ## Noch offen
 
-Die reale zweite Zielmaschine ist nicht durch Repository-Evidence belegt. Außerdem folgt das eigentliche Pfad-/Symlink-Sicherheitsmodell separat als **B01-B**, bevor Dateiinventar oder Dateioperationen implementiert werden.
+Die reale zweite Zielmaschine ist weiterhin nicht physisch durch Repository-Evidence belegt. Die Vorbereitung des Prüfwegs ist implementiert; der tatsächliche Lauf auf dem zweiten Gerät bleibt `OPEN`.
