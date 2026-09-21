@@ -17,6 +17,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | B01 Projektkern/Sicherheitsgrenzen | B01-A Preflight + B01-B Pfadgrenzen implementiert; standardisierter Zweitgeräte-Evidence-Runner vorbereitet, physischer Lauf offen | 🟨 `████████░░` 80 % |
 | I10 GUI-/CLI-Registry | gemeinsame immutable Registry implementiert und geprüft | 🟢 `██████████` 100 % |
 | I11 read-only Shell | gemeinsamer Core + Zahlenmenü + optionale PySide6-Shell implementiert; reale visuelle Accessibility-Evidence offen | 🟨 `████████░░` 80 % |
+| I12 B05 Preview-Modell | immutable Preview-Vertrag mit B01-Pfadgrenzen implementiert; kein Executor | 🟢 `██████████` 100 % Modellstand |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -103,7 +104,8 @@ Sobald Produktcode entsteht, wird dieser Gate gezielt um echte Unit-/Integration
 1. **B00:** Designrichtung, vier Themes, Neon-/Workflow-Semantik und Accessibility-Grundregeln sind dokumentiert.
 2. **B01:** B01-A Preflight und B01-B Pfad-/Symlink-Grenzen sind implementiert; der read-only Zweitgeräte-Evidence-Runner ist vorbereitet, die reale physische Ausführung bleibt offen.
 3. **I10/I11:** gemeinsame Registry sowie read-only Application-/CLI-/GUI-Shell sind implementiert; reale visuelle Accessibility-Evidence bleibt OPEN.
-4. **B06 bleibt P0-Gate:** keine produktiven Schreiboperationen vor belegtem Preview-, Journal-, Undo- und Recovery-Vertrag.
+4. **I12/B05:** immutable Preview-Vertrag ist implementiert; kein Executor und keine Schreibfreigabe.
+5. **B06 bleibt P0-Gate:** keine produktiven Schreiboperationen vor belegtem Journal-, Undo- und Recovery-Vertrag.
 
 ## Quellen der Wahrheit
 
@@ -117,4 +119,4 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I11 technisch vollständig über CI abnehmen und danach B05/I12 als reines immutable Preview-Modell beginnen; keine schreibenden Dateioperationen öffnen.**
+**I12 technisch über CI einfrieren und danach I13/B06 ausschließlich als Recovery-/Journal-Zustandsvertrag beginnen; produktive Schreibpfade bleiben gesperrt.**
