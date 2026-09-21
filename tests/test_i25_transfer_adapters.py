@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from provoware_laientool.application_core import execute
+from provoware_laientool.application_core import execute, prepare_target_directories
 from provoware_laientool.capability_registry import (
     STATUS_OPEN,
     get_use_case,
@@ -22,6 +22,8 @@ class I25ApplicationAdapterTests(unittest.TestCase):
         self.source_dir.mkdir()
         self.target = self.root / "Ziel"
         self.target.mkdir()
+        self.nested_target = self.target / "Unter Ziel"
+        self.nested_target.mkdir()
         (self.source_dir / "eins.txt").write_text("eins", encoding="utf-8")
         (self.source_dir / "zwei ä.txt").write_text("zwei", encoding="utf-8")
 
@@ -89,7 +91,7 @@ class I25ApplicationAdapterTests(unittest.TestCase):
             [
                 str(self.root),
                 "1",
-                str(self.target),
+                "3",
             ]
         )
         output: list[str] = []
@@ -103,6 +105,20 @@ class I25ApplicationAdapterTests(unittest.TestCase):
         self.assertIn("Kopieren – Vorschau – PASS", joined)
         self.assertIn("Es wurden keine Dateien verändert", joined)
         self.assertFalse((self.target / "eins.txt").exists())
+
+    def test_target_directory_choices_are_same_root_only(self) -> None:
+        outside = Path(self.temp.name) / "Extern"
+        outside.mkdir()
+        link = self.root / "Extern-Link"
+        link.symlink_to(outside, target_is_directory=True)
+
+        result = prepare_target_directories(self.root)
+        self.assertEqual(result.status, "PASS")
+        self.assertEqual(
+            result.directories,
+            (".", "Eingang", "Ziel", "Ziel/Unter Ziel"),
+        )
+        self.assertNotIn("Extern-Link", result.directories)
 
     def test_standard_cli_is_wired_for_future_ready_transfer_entries(self) -> None:
         source = (
@@ -124,6 +140,12 @@ class I25ApplicationAdapterTests(unittest.TestCase):
         self.assertIn("evidence_mode: bool = False", source)
         self.assertIn("entry.id in TRANSFER_PREVIEW_IDS", source)
         self.assertIn("QAbstractItemView.ExtendedSelection", source)
+        self.assertIn("QAbstractItemView.SingleSelection", source)
+        self.assertIn("prepare_target_directories", source)
+        self.assertNotIn(
+            '"3/3 Zielordner innerhalb derselben Wurzel auswählen",\n                root,',
+            source,
+        )
 
 
 if __name__ == "__main__":

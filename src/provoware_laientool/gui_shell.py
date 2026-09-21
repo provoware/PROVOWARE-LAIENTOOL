@@ -9,6 +9,7 @@ from .application_core import (
     action_requires_root,
     execute,
     prepare_inventory_view,
+    prepare_target_directories,
 )
 from .inventory_view import InventoryViewSpec, SORT_NAME_ASC
 from .capability_registry import list_use_cases
@@ -36,7 +37,7 @@ def create_main_window(*, evidence_mode: bool = False):
             QWidget,
         )
     except ImportError as exc:
-        raise RuntimeError("PySide6 ist lokal nicht installiert.") from exc
+        raise RuntimeError(f"PySide6/QtWidgets konnte nicht geladen werden: {exc}") from exc
 
     class MainWindow(QMainWindow):
         def __init__(self) -> None:
@@ -184,6 +185,91 @@ def create_main_window(*, evidence_mode: bool = False):
         def show_action_for_root(self, use_case_id: str, root: str | None) -> None:
             self._render_result(use_case_id, root)
 
+        def build_file_selection_dialog(self, preparation):
+            dialog = QDialog(self)
+            dialog.setWindowTitle("2/3 Dateien auswählen")
+            dialog_layout = QVBoxLayout(dialog)
+            hint = QLabel(
+                "Wähle eine oder mehrere Dateien. Strg/Shift erlaubt Mehrfachauswahl."
+            )
+            hint.setWordWrap(True)
+            dialog_layout.addWidget(hint)
+
+            file_list = QListWidget()
+            file_list.setObjectName("i25FileSelection")
+            file_list.setAccessibleName("Dateien für Transfer-Vorschau")
+            file_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
+            for item in preparation.view.items:
+                file_list.addItem(f"{item.relative_path}  ·  {item.size_bytes} Byte")
+            dialog_layout.addWidget(file_list)
+
+            buttons = QDialogButtonBox(
+                QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+            )
+            ok_button = buttons.button(QDialogButtonBox.Ok)
+            ok_button.setEnabled(False)
+            file_list.itemSelectionChanged.connect(
+                lambda: ok_button.setEnabled(bool(file_list.selectedItems()))
+            )
+            buttons.accepted.connect(dialog.accept)
+            buttons.rejected.connect(dialog.reject)
+            dialog_layout.addWidget(buttons)
+            return dialog, file_list
+
+        def build_target_selection_dialog(self, root: Path):
+            preparation = prepare_target_directories(root)
+            if preparation.status != "PASS":
+                return None, None, preparation
+
+            dialog = QDialog(self)
+            dialog.setWindowTitle("3/3 Zielordner innerhalb der Wurzel auswählen")
+            dialog_layout = QVBoxLayout(dialog)
+            hint = QLabel(
+                "Es werden nur vorhandene Ordner innerhalb der gewählten Wurzel angeboten."
+            )
+            hint.setWordWrap(True)
+            dialog_layout.addWidget(hint)
+
+            target_list = QListWidget()
+            target_list.setObjectName("i25TargetSelection")
+            target_list.setAccessibleName("Gültiger Zielordner innerhalb der Wurzel")
+            target_list.setSelectionMode(QAbstractItemView.SingleSelection)
+            for relative in preparation.directories:
+                target_list.addItem(
+                    "/ (gewählte Wurzel)" if relative == "." else relative
+                )
+            dialog_layout.addWidget(target_list)
+
+            buttons = QDialogButtonBox(
+                QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+            )
+            ok_button = buttons.button(QDialogButtonBox.Ok)
+            ok_button.setEnabled(False)
+            target_list.itemSelectionChanged.connect(
+                lambda: ok_button.setEnabled(bool(target_list.selectedItems()))
+            )
+            buttons.accepted.connect(dialog.accept)
+            buttons.rejected.connect(dialog.reject)
+            dialog_layout.addWidget(buttons)
+            return dialog, target_list, preparation
+
+        def show_transfer_preview_for_paths(
+            self,
+            use_case_id: str,
+            root: str,
+            selected: tuple[str, ...],
+            target: str,
+        ) -> str:
+            result = execute(
+                use_case_id,
+                root=root,
+                selected_relative_paths=selected,
+                target_dir=target,
+            )
+            self.section_title.setText(f"{result.title} · {result.status}")
+            self.output.setPlainText(result.body)
+            return result.status
+
         def show_transfer_action(self, use_case_id: str) -> None:
             root = QFileDialog.getExistingDirectory(
                 self,
@@ -205,28 +291,7 @@ def create_main_window(*, evidence_mode: bool = False):
                 )
                 return
 
-            dialog = QDialog(self)
-            dialog.setWindowTitle("2/3 Dateien auswählen")
-            dialog_layout = QVBoxLayout(dialog)
-            hint = QLabel(
-                "Wähle eine oder mehrere Dateien. Strg/Shift erlaubt Mehrfachauswahl."
-            )
-            hint.setWordWrap(True)
-            dialog_layout.addWidget(hint)
-
-            file_list = QListWidget()
-            file_list.setAccessibleName("Dateien für Transfer-Vorschau")
-            file_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
-            for item in preparation.view.items:
-                file_list.addItem(f"{item.relative_path}  ·  {item.size_bytes} Byte")
-            dialog_layout.addWidget(file_list)
-
-            buttons = QDialogButtonBox(
-                QDialogButtonBox.Ok | QDialogButtonBox.Cancel
-            )
-            buttons.accepted.connect(dialog.accept)
-            buttons.rejected.connect(dialog.reject)
-            dialog_layout.addWidget(buttons)
+            dialog, file_list = self.build_file_selection_dialog(preparation)
 
             if dialog.exec() != QDialog.Accepted:
                 self.section_title.setText("Transfer-Vorschau · OPEN")
@@ -240,19 +305,42 @@ def create_main_window(*, evidence_mode: bool = False):
                 preparation.view.items[row].relative_path for row in selected_rows
             )
 
-            target = QFileDialog.getExistingDirectory(
-                self,
-                "3/3 Zielordner innerhalb derselben Wurzel auswählen",
-                root,
+            target_dialog, target_list, targets = self.build_target_selection_dialog(
+                Path(root)
             )
-            result = execute(
+            if target_dialog is None or target_list is None:
+                self.section_title.setText(f"Transfer-Vorschau · {targets.status}")
+                self.output.setPlainText(
+                    "Die Zielordner konnten nicht vollständig und sicher vorbereitet werden.\n\n"
+                    "🔒 Es wurden keine Dateien verändert."
+                )
+                return
+            if target_dialog.exec() != QDialog.Accepted:
+                self.section_title.setText("Transfer-Vorschau · OPEN")
+                self.output.setPlainText(
+                    "Zielauswahl abgebrochen.\n\n🔒 Es wurden keine Dateien verändert."
+                )
+                return
+
+            row = target_list.currentRow()
+            if row < 0:
+                self.section_title.setText("Transfer-Vorschau · OPEN")
+                self.output.setPlainText(
+                    "Es wurde kein Zielordner gewählt.\n\n🔒 Es wurden keine Dateien verändert."
+                )
+                return
+            relative_target = targets.directories[row]
+            target = (
+                Path(targets.root)
+                if relative_target == "."
+                else Path(targets.root) / relative_target
+            )
+            self.show_transfer_preview_for_paths(
                 use_case_id,
-                root=root,
-                selected_relative_paths=selected,
-                target_dir=target,
+                root,
+                selected,
+                str(target),
             )
-            self.section_title.setText(f"{result.title} · {result.status}")
-            self.output.setPlainText(result.body)
 
         def show_action(self, use_case_id: str) -> None:
             if use_case_id in TRANSFER_PREVIEW_IDS:

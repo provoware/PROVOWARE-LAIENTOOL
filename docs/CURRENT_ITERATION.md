@@ -2,8 +2,8 @@
 
 ## I25 – Transfer-Preview Adapter
 
-**Status:** 🟨 IMPLEMENTIERT · REAL-EVIDENCE OPEN
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🟨 AUTONOME HÄRTUNG / AUTO-EVIDENCE
+**Fortschritt:** `█████████░ 90 %`
 
 ## A – FESTER PLAN
 
@@ -14,7 +14,8 @@ I23/I18/I21 sind als gemeinsamer read-only Workflow umgesetzt:
 - I21 erzeugt ausschließlich Same-Root Copy-/Move-Preview;
 - CLI besitzt nummerierte Mehrfachauswahl;
 - GUI besitzt Mehrfachauswahl im expliziten I25-Prüfmodus;
-- Start des Prüfmodus ausschließlich über `./start.sh --i25-evidence`;
+- GUI und CLI bieten nur vom Core bestätigte Same-Root-Zielordner an;
+- `./start.sh --i25-evidence` automatisiert die technische I25-Evidence und reduziert die menschliche Abnahme auf eine finale Chromium-Frage;
 - kein Executor, kein produktiver Datei-Write.
 
 Die beiden Registry-Einträge bleiben absichtlich `OPEN`. I23 erlaubt `READY` erst nach realer Accessibility-/Laien-Evidence des neuen sichtbaren Workflows.
@@ -53,11 +54,12 @@ Zusätzlich wurde der spätere READY-Pfad des Zahlenmenüs explizit auf `run_tra
 5. Diagnose/Preflight PASS.
 6. Info-Text-Impact PASS.
 7. finaler Diff ohne Scope-Drift.
-8. reale I25-Evidence: 100/150/200 %, Tastatur/Fokus, Mehrfachauswahl, Zielwahl, Preview und Laienverständlichkeit.
-9. erst danach Registry `READY`.
+8. I25-AUTO: 100/150/200 %, Tastatur/Fokus, Mehrfachauswahl, Same-Root-Zielwahl, Preview und Screenshots.
+9. I25-HUMAN: genau eine finale Frage zur Gesamtverständlichkeit.
+10. erst danach Registry `READY`.
 
 ## Nächste drei Schritte
 
-1. 🟨 finalen automatischen PR-Gate des I25-Branches abschließen.
-2. 🔵 realen I25-Prüfmodus über `./start.sh --i25-evidence` ausführen und Ergebnis dokumentieren.
-3. 🔒 nur bei realem PASS die beiden Transfer-Preview-Registry-Einträge in einem kleinen Freeze-Batch auf `READY` setzen; Executor bleibt gesperrt.
+1. 🟨 autonome I25-Härtung inklusive Auto-Evidence und CI vollständig abschließen.
+2. 🔵 danach genau einen realen `./start.sh --i25-evidence`-Lauf verwenden; technische Gates laufen automatisch.
+3. 🔒 nur bei AUTO PASS + einer finalen Human-PASS-Frage die Registry in einem kleinen Freeze-Batch auf `READY` setzen; Executor bleibt gesperrt.

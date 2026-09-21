@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import os
 from pathlib import Path
 
 from .capability_registry import get_use_case, list_use_cases
@@ -53,6 +54,82 @@ class TargetPreviewPreparation:
     check: PreviewCheck | None
     errors: tuple[str, ...]
     status: str
+
+
+@dataclass(frozen=True, slots=True)
+class TargetDirectoryPreparation:
+    root: str
+    directories: tuple[str, ...]
+    errors: tuple[str, ...]
+    status: str
+
+
+def prepare_target_directories(root: Path) -> TargetDirectoryPreparation:
+    """List only existing, non-symlink directories inside one validated root."""
+    root_decision = validate_path(
+        root,
+        root,
+        allow_symlink=False,
+        must_exist=True,
+    )
+    if not root_decision.allowed or root_decision.resolved is None:
+        return TargetDirectoryPreparation(
+            str(root),
+            (),
+            (root_decision.reason,),
+            "BLOCKED",
+        )
+
+    resolved_root = Path(root_decision.resolved)
+    pending: list[Path] = [resolved_root]
+    directories: list[str] = ["."]
+    errors: list[str] = []
+
+    while pending:
+        directory = pending.pop()
+        try:
+            with os.scandir(directory) as iterator:
+                entries = list(iterator)
+        except OSError as exc:
+            relative = (
+                "."
+                if directory == resolved_root
+                else directory.relative_to(resolved_root).as_posix()
+            )
+            errors.append(f"Ordner nicht lesbar: {relative}: {exc}")
+            continue
+
+        entries.sort(key=lambda entry: (entry.name.casefold(), entry.name))
+        for entry in entries:
+            try:
+                if entry.is_symlink() or not entry.is_dir(follow_symlinks=False):
+                    continue
+                path = Path(entry.path)
+                decision = validate_path(
+                    resolved_root,
+                    path,
+                    allow_symlink=False,
+                    must_exist=True,
+                )
+                if not decision.allowed or decision.resolved is None:
+                    continue
+                resolved = Path(decision.resolved)
+                relative = resolved.relative_to(resolved_root).as_posix()
+                directories.append(relative)
+                pending.append(resolved)
+            except (OSError, ValueError) as exc:
+                errors.append(f"Zielordner konnte nicht sicher geprüft werden: {entry.name}: {exc}")
+
+    directories = sorted(
+        set(directories),
+        key=lambda value: (value != ".", value.casefold(), value),
+    )
+    return TargetDirectoryPreparation(
+        root=str(resolved_root),
+        directories=tuple(directories),
+        errors=tuple(errors),
+        status="PASS" if not errors else "OPEN",
+    )
 
 
 def prepare_inventory_view(
