@@ -2,8 +2,8 @@
 
 ## I11 – Read-only GUI-/CLI-Shell
 
-**Status:** 🟨 IN ARBEIT
-**Fortschritt:** `███████░░░ 70 %`
+**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN / VISUELLE EVIDENCE OPEN
+**Fortschritt:** `█████████░ 90 %`
 
 Der Prozentwert bildet ausschließlich definierte I11-Checkpoints ab.
 
@@ -24,8 +24,9 @@ Der Prozentwert bildet ausschließlich definierte I11-Checkpoints ab.
 - 🟢 Starter-Routing für `--menu` und `--gui`
 - 🟢 bestehende B01-Default-Startsemantik erhalten
 - 🟢 technische Paritätstests angelegt
-- 🔵 Repository-/PR-CI-Gates
-- 🔵 finaler Diff / Merge / Post-Merge
+- 🟢 Repository-/PR-CI-Gates PASS
+- 🟢 finaler Diff ohne Scope-Drift
+- 🔵 Merge / Post-Merge
 - 🟨 reale visuelle Accessibility-Evidence bleibt separat OPEN
 
 ## B – VARIABLE FOLGEAUFGABE
