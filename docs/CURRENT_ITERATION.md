@@ -2,8 +2,8 @@
 
 ## I26 – Diagnose-Export Preflight Core
 
-**Status:** 🟨 IMPLEMENTIERT / CI AUSSTEHEND
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
+**Fortschritt:** `█████████░ 90 %`
 
 ## A – FESTER PLAN
 
@@ -84,3 +84,11 @@ Erst nach grünem I17.
 
 ### 3. 🔵 I27 – Writer-spezifischer Guard Decision/Prototype
 Nur nach I26: zuerst exakte Guard-Architektur und No-clobber-Plattformbeweis; noch kein produktiver Export-Adapter.
+
+
+**Repository-/PR-CI:** 🟢 PASS
+**Read-only-Lock:** 🟢 PASS
+**Full Suite:** 🟢 PASS
+**Core Diagnostic:** 🟢 PASS
+**Diagnostic Snapshot:** 🟢 PASS
+**Merge/Post-Merge:** 🔵 ausstehend
