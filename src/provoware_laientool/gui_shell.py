@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from .application_core import execute
+from .application_core import action_requires_root, execute
 from .capability_registry import list_use_cases
 from .ui_themes import THEMES, get_theme, stylesheet
 
@@ -13,6 +13,7 @@ def run_gui() -> int:
             QApplication,
             QComboBox,
             QFrame,
+            QFileDialog,
             QHBoxLayout,
             QLabel,
             QMainWindow,
@@ -116,7 +117,13 @@ def run_gui() -> int:
             )
 
         def show_action(self, use_case_id: str) -> None:
-            result = execute(use_case_id)
+            root = None
+            if action_requires_root(use_case_id):
+                root = QFileDialog.getExistingDirectory(
+                    self,
+                    "Ordner für reine Vorschau auswählen",
+                )
+            result = execute(use_case_id, root=root)
             self.section_title.setText(f"{result.title} · {result.status}")
             self.output.setPlainText(result.body)
 
