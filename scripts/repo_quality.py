@@ -145,7 +145,8 @@ for path in ROOT.rglob("*.md"):
         continue
     if re.search(r"\|\\n\|", text):
         fail(f"Wörtliches \\n zwischen Markdown-Tabellenzeilen: {path.relative_to(ROOT)}")
-    for target in markdown_link.findall(text):
+    link_text = re.sub(r"(?ms)^\x60\x60\x60.*?^\x60\x60\x60\s*$", "", text)
+    for target in markdown_link.findall(link_text):
         target = target.strip()
         if not target or target.startswith("#") or re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*:", target):
             continue
