@@ -50,8 +50,21 @@ class VenvBootstrapContractTests(unittest.TestCase):
             "--i17-auto",
             "--i17-guided",
             "--i17-offscreen",
+            "--diagnostics",
+            "--diagnostics-json",
         ):
             self.assertIn(option, text)
+
+    def test_diagnostics_route_through_start_sh(self) -> None:
+        text = (ROOT / "start.sh").read_text(encoding="utf-8")
+        self.assertIn(
+            'exec "$VENV_PYTHON" "$ROOT_DIR/scripts/diagnostic_snapshot.py"',
+            text,
+        )
+        self.assertIn(
+            'exec "$VENV_PYTHON" "$ROOT_DIR/scripts/diagnostic_snapshot.py" --json',
+            text,
+        )
 
     def test_check_mode_does_not_create_or_install(self) -> None:
         text = (ROOT / "start.sh").read_text(encoding="utf-8")

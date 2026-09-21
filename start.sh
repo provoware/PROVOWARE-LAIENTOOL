@@ -57,6 +57,8 @@ Aufruf:
   ./start.sh --menu        Konsolenmenü starten
   ./start.sh --preflight   read-only Preflight starten
   ./start.sh --json        read-only Preflight als JSON
+  ./start.sh --diagnostics redigierten Diagnose-Snapshot anzeigen
+  ./start.sh --diagnostics-json  Diagnose-Snapshot als JSON anzeigen
   ./start.sh --yes --i17   explizit ohne Rückfrage einrichten und I17 starten
 
 Ohne Option wird --gui verwendet.
@@ -74,7 +76,7 @@ case "$ACTION" in
     show_help
     exit 0
     ;;
-  --setup|--check|--i17|--i17-auto|--i17-guided|--i17-offscreen|--gui|--menu|--preflight|--json)
+  --setup|--check|--i17|--i17-auto|--i17-guided|--i17-offscreen|--gui|--menu|--preflight|--json|--diagnostics|--diagnostics-json)
     ;;
   *)
     show_help
@@ -207,5 +209,11 @@ case "$ACTION" in
     ;;
   --json)
     exec "$VENV_PYTHON" "$ROOT_DIR/start.py" --json
+    ;;
+  --diagnostics)
+    exec "$VENV_PYTHON" "$ROOT_DIR/scripts/diagnostic_snapshot.py"
+    ;;
+  --diagnostics-json)
+    exec "$VENV_PYTHON" "$ROOT_DIR/scripts/diagnostic_snapshot.py" --json
     ;;
 esac
