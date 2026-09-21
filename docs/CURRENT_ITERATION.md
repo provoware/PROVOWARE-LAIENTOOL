@@ -2,8 +2,8 @@
 
 ## I16 – Preview-Application-Use-Case
 
-**Status:** 🟨 IMPLEMENTIERT / CI-ABNAHME AUSSTEHEND
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
+**Fortschritt:** `█████████░ 90 %`
 
 Der Prozentwert bildet ausschließlich definierte I16-Checkpoints ab.
 
@@ -29,8 +29,9 @@ Der Prozentwert bildet ausschließlich definierte I16-Checkpoints ab.
 - 🟢 CLI sammelt nur Ordnerpfad ein
 - 🟢 keine duplizierte Inventar-/Preview-Fachlogik in Adaptern
 - 🟢 Unit-/Paritätstests angelegt
-- 🔵 Repository-/PR-CI
-- 🔵 finaler Diff / Merge / Post-Merge
+- 🟢 Repository-/PR-CI PASS
+- 🟢 finaler Diff ohne Scope-Drift
+- 🔵 Merge / Post-Merge
 
 ## B – VARIABLE FOLGEAUFGABE
 
