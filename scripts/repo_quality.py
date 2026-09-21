@@ -9,43 +9,27 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-REQUIRED = (
+CORE_REQUIRED = (
     "README.md",
     "AGENTS.md",
     "PROVOWARE_TODO_INPUT_POOL0.md",
     "todo.txt",
-    "docs/adr/ADR-0001-ui-cli-foundation.md",
-    "docs/evidence/README.md",
+    "docs/README.md",
+    "docs/MAINTENANCE.md",
+    "docs/CURRENT_ITERATION.md",
+    "docs/INFO_TEXT_GOVERNANCE.md",
+    "docs/UPDATE_ORCHESTRATION.md",
+    "docs/REGRESSION_MATRIX.md",
+    "docs/DEBUGGING_STANDARD.md",
+    "docs/LAIEN_QUALITY_STANDARD.md",
+    "docs/GUI_CLI_PARITY.md",
     "docs/UI_DESIGN_SYSTEM.md",
     "docs/theme-tokens.md",
     "docs/B01_PLATFORM_PREFLIGHT.md",
     "docs/B01_PATH_BOUNDARIES.md",
     "docs/B01_SECOND_DEVICE_EVIDENCE.md",
-    "docs/evidence/EV-20260921-003-b01b-path-boundaries.md",
-    "docs/UPDATE_ORCHESTRATION.md",
-    "docs/LAIEN_QUALITY_STANDARD.md",
-    "docs/INFO_TEXT_GOVERNANCE.md",
-    "docs/GUI_CLI_PARITY.md",
-    "docs/I10_CAPABILITY_REGISTRY.md",
-    "docs/I11_READONLY_SHELL.md",
-    "docs/I12_PREVIEW_MODEL.md",
-    "docs/I13_RECOVERY_CONTRACT.md",
-    "docs/I14_ACCESSIBILITY_EVIDENCE.md",
-    "docs/I15_READONLY_INVENTORY.md",
-    "docs/I16_PREVIEW_APPLICATION.md",
-    "docs/I17_TARGET_ACCESSIBILITY_RUN.md",
-    "docs/I18_READONLY_INVENTORY_COMFORT.md",
-    "docs/I19_TARGET_SELECTION_DECISION.md",
-    "docs/I20_DIAGNOSTIC_OBSERVABILITY.md",
-    "docs/I21_SAME_ROOT_COPY_MOVE_PREVIEW.md",
-    "docs/I22_DIAGNOSTIC_EXPORT_DECISION.md",
-    "docs/I23_TARGET_ADAPTER_DECISION.md",
-    "docs/I24_DIAGNOSTIC_EXPORT_WRITER_DESIGN.md",
-    "docs/I26_DIAGNOSTIC_EXPORT_PREFLIGHT.md",
-    "docs/DEBUGGING_STANDARD.md",
-    "docs/REGRESSION_MATRIX.md",
-    "docs/evidence/EV-20260921-004-i14-accessibility.md",
-    "docs/CURRENT_ITERATION.md",
+    "docs/adr/ADR-0001-ui-cli-foundation.md",
+    "docs/evidence/README.md",
     "scripts/info_text_guard.py",
     "scripts/accessibility_evidence.py",
     "scripts/i17_target_evidence.py",
@@ -53,7 +37,6 @@ REQUIRED = (
     "scripts/read_only_guard.py",
     "scripts/diagnostic_snapshot.py",
     "scripts/second_device_evidence.py",
-    "docs/evidence/EV-20260921-002-b01a-preflight.md",
     ".github/PULL_REQUEST_TEMPLATE.md",
     ".github/CODEOWNERS",
     ".github/workflows/repo-quality.yml",
@@ -67,11 +50,11 @@ def fail(message: str) -> None:
     errors.append(message)
 
 
-if len(REQUIRED) != len(set(REQUIRED)):
-    duplicates = sorted({rel for rel in REQUIRED if REQUIRED.count(rel) > 1})
+if len(CORE_REQUIRED) != len(set(CORE_REQUIRED)):
+    duplicates = sorted({rel for rel in CORE_REQUIRED if CORE_REQUIRED.count(rel) > 1})
     fail(f"Doppelte Pflichtdatei-Einträge im Repository-Gate: {duplicates}")
 
-for rel in REQUIRED:
+for rel in CORE_REQUIRED:
     if not (ROOT / rel).is_file():
         fail(f"Pflichtdatei fehlt: {rel}")
 
@@ -108,23 +91,28 @@ if todo.is_file():
         if any(not part.strip() for part in parts):
             fail(f"todo.txt Zeile {number}: leeres Feld")
 
-src = ROOT / "src"
-if src.exists():
-    for path in src.rglob("*.py"):
-        try:
-            tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-        except SyntaxError as exc:
-            fail(f"Python-Syntaxfehler in {path.relative_to(ROOT)}: {exc}")
-            continue
-        for node in ast.walk(tree):
-            names: list[str] = []
-            if isinstance(node, ast.Import):
-                names = [alias.name for alias in node.names]
-            elif isinstance(node, ast.ImportFrom) and node.module:
-                names = [node.module]
-            if any(name == "tkinter" or name.startswith("tkinter.") for name in names):
-                fail(f"Tkinter-Import verboten: {path.relative_to(ROOT)}")
+python_files = [ROOT / "start.py"]
+for directory in ("src", "scripts", "tests"):
+    base = ROOT / directory
+    if base.exists():
+        python_files.extend(base.rglob("*.py"))
 
+for path in sorted(path for path in python_files if path.is_file()):
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    except SyntaxError as exc:
+        fail(f"Python-Syntaxfehler in {path.relative_to(ROOT)}: {exc}")
+        continue
+    if "src" not in path.parts:
+        continue
+    for node in ast.walk(tree):
+        names: list[str] = []
+        if isinstance(node, ast.Import):
+            names = [alias.name for alias in node.names]
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            names = [node.module]
+        if any(name == "tkinter" or name.startswith("tkinter.") for name in names):
+            fail(f"Tkinter-Import verboten: {path.relative_to(ROOT)}")
 for workflow in (ROOT / ".github" / "workflows").glob("*.y*ml"):
     text = workflow.read_text(encoding="utf-8")
     if re.search(r"(?m)^permissions:\s*$", text) is None:
@@ -136,6 +124,53 @@ for workflow in (ROOT / ".github" / "workflows").glob("*.y*ml"):
         if not re.fullmatch(r"[0-9a-fA-F]{40}", ref):
             fail(f"Action nicht auf Commit-SHA gepinnt: {action}")
 
+iteration_docs = sorted((ROOT / "docs").glob("I[0-9][0-9]_*.md"))
+if not iteration_docs:
+    fail("Keine Iterationsdokumente unter docs/I??_*.md gefunden")
+docs_index = ROOT / "docs" / "README.md"
+if docs_index.is_file():
+    index_text = docs_index.read_text(encoding="utf-8")
+    for path in iteration_docs:
+        if path.name not in index_text:
+            fail(f"Iterationsdokument fehlt im docs/README.md-Index: {path.name}")
+
+markdown_link = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
+for path in ROOT.rglob("*.md"):
+    if ".git" in path.parts:
+        continue
+    try:
+        text = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        fail(f"Markdown-Datei ist nicht UTF-8: {path.relative_to(ROOT)}: {exc}")
+        continue
+    if re.search(r"\|\\n\|", text):
+        fail(f"Wörtliches \\n zwischen Markdown-Tabellenzeilen: {path.relative_to(ROOT)}")
+    link_text = re.sub(r"(?ms)^\x60\x60\x60.*?^\x60\x60\x60\s*$", "", text)
+    for target in markdown_link.findall(link_text):
+        target = target.strip()
+        if not target or target.startswith("#") or re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*:", target):
+            continue
+        target = target.split("#", 1)[0].split("?", 1)[0].strip()
+        if target.startswith("<") and target.endswith(">"):
+            target = target[1:-1]
+        if not target:
+            continue
+        candidate = (path.parent / target).resolve()
+        try:
+            candidate.relative_to(ROOT.resolve())
+        except ValueError:
+            fail(f"Markdown-Link verlässt Repository: {path.relative_to(ROOT)} -> {target}")
+            continue
+        if not candidate.exists():
+            fail(f"Interner Markdown-Link fehlt: {path.relative_to(ROOT)} -> {target}")
+
+readme_text = (ROOT / "README.md").read_text(encoding="utf-8") if (ROOT / "README.md").is_file() else ""
+todo_text = (ROOT / "todo.txt").read_text(encoding="utf-8") if (ROOT / "todo.txt").is_file() else ""
+if "CI ausstehend" in readme_text:
+    fail("README.md enthält flüchtigen CI-Status statt dauerhaftem Capability-Stand")
+for phrase in ("CI ausstehend", "über CI einfrieren"):
+    if phrase in todo_text:
+        fail(f"todo.txt enthält flüchtigen CI-Status: {phrase!r}")
 for path in ROOT.rglob("*"):
     if not path.is_file() or ".git" in path.parts or path.suffix not in TEXT_SUFFIXES:
         continue
@@ -154,9 +189,11 @@ if errors:
     sys.exit(1)
 
 print("🟢 Repository-Gate PASS")
-print(" - Pflichtstruktur vorhanden und ohne doppelte Gate-Einträge")
+print(" - stabile Pflichtstruktur und dynamischer Iterationsindex konsistent")
 print(" - Baseline-Marker vorhanden")
 print(" - TODO-Schema, Sortierung und Duplikate konsistent")
+print(" - Python-Syntax in Produktcode, Skripten, Tests und Starter geprüft")
 print(" - kein Tkinter im Python-Produktionscode")
 print(" - Workflow-Permissions und Action-Pinning geprüft")
+print(" - interne Markdown-Links, Tabellenumbrüche und stabile Statusformulierungen geprüft")
 print(" - kein Trailing-Whitespace in zentralen Textformaten")

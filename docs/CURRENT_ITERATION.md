@@ -1,94 +1,86 @@
 # PROVOWARE – Current Iteration
 
-## I26 – Diagnose-Export Preflight Core
+## M01 – Info-Text-Konsistenz und Wartbarkeit
 
-**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
-**Fortschritt:** `█████████░ 90 %`
+**Status:** 🟢 REPOSITORY-BLOCK UMGESETZT
+**Fortschritt:** `██████████ 100 %`
+
+**Basis vor M01:** `fcbdd9048eb082cd86a73cff74bacc43dbf6d299`
+
+Der I26-Merge war auf `main` bereits abgeschlossen. Der anschließende `repo-quality`-Push-Lauf **#83** (ID `35633942745`) war vollständig grün. M01 verändert keine Produktlogik.
 
 ## A – FESTER PLAN
 
-**Ziel:** I24-Writer-Design in einen vollständig read-only ExportPlan-/Payload-Preflight überführen, ohne Writer oder Guard-REOPEN.
+**Ziel:** Informationsdateien und Repository-Wartbarkeit vollständig prüfen, nachgewiesene Drift beheben und künftige Inkonsistenzen früher automatisch stoppen.
 
-**Checkpoints:**
+### Analysebefunde
 
-- 🟢 immutable ExportPlan
-- 🟢 immutable ExportPreparation
-- 🟢 JSON/Text-Serialisierung
-- 🟢 Redaction-Flag Pflicht
-- 🟢 Schreibfreigabe im Report blockiert
-- 🟢 Zielordner existierend / kein Symlink
-- 🟢 Dateiname ohne Pfad
-- 🟢 Format/Suffix-Konsistenz
-- 🟢 bestehende Zieldatei blockiert
-- 🟢 Symlink-Zieldatei blockiert
-- 🟢 zweites Redaction-Gate auf serialisiertem Payload
-- 🟢 SHA-256 + Byte-Länge
-- 🟢 write_enabled=False
-- 🟢 overwrite_allowed=False
-- 🟢 Unit-/Safety-Tests
-- 🔵 Repository-/PR-CI
-- 🔵 Merge/Post-Merge
+- 🟢 14 Produktmodule unter `src/`, zusammen ca. 2.355 Python-Zeilen geprüft.
+- 🟢 17 Testdateien mit 143 Testmethoden; keine TODO/FIXME-Häufung festgestellt.
+- 🟢 8 Wartungs-/Evidence-Skripte vorhanden.
+- 🟡 `application_core.py` liegt bei rund 500 Zeilen: Beobachtungsschwelle, aber aktuell kein begründeter Zwangsrefactor.
+- 🔴 README und TODO enthielten mehrere bereits überholte „CI ausstehend/über CI einfrieren“-Angaben.
+- 🔴 diese Datei meldete I26 Merge/Post-Merge noch als ausstehend, obwohl `main` und Lauf #83 grün waren.
+- 🔴 `docs/REGRESSION_MATRIX.md` enthielt einen wörtlichen Backslash-n-Tabellenumbruch.
+- 🟡 `scripts/repo_quality.py` führte fast jede Iterationsdatei einzeln als Pflichtdatei; das erzeugte unnötige Pflegekopplung.
+- 🟡 ein zentraler navigierbarer Dokumentationsindex fehlte.
+
+### Umgesetzter Wartungsblock
+
+- 🟢 `docs/README.md` als Dokumentationsindex.
+- 🟢 `docs/MAINTENANCE.md` als dauerhafter Wartungsvertrag.
+- 🟢 README/TODO auf dauerhafte Capability-/OPEN-/LOCKED-Aussagen statt flüchtiger CI-Kopien umgestellt.
+- 🟢 Regressionsmatrix repariert.
+- 🟢 Repository-Gate modularisiert.
+- 🟢 alle Python-Dateien in `src/`, `scripts/`, `tests/` und `start.py` werden syntaktisch geprüft.
+- 🟢 relative Markdown-Links werden auf existierende Ziele geprüft.
+- 🟢 alle `docs/I??_*.md` müssen im Dokumentationsindex auffindbar sein.
+- 🟢 versehentliche wörtliche Backslash-n-Tabellenumbrüche werden blockiert.
+- 🟢 flüchtige CI-Statusformulierungen in README/TODO werden blockiert.
 
 ## B – VARIABLE FOLGEAUFGABE
 
-**Quelle letzter Lauf:** I24 wurde gemergt und Post-Merge vollständig grün, während I24-Doku Merge/Post-Merge noch offen auswies.
+**Quelle:** Vollanalyse der Informationsarchitektur.
 
-**Maßnahme:** Statusdrift beim Wechsel auf I26 synchronisiert.
+**Befund:** Der bisherige Prozess spiegelte PR-/Merge-/CI-Livezustände in dauerhaften Dateien. Dadurch entstand unmittelbar nach erfolgreichen Merges wieder Statusdrift.
 
-**Status:** 🟢 erledigt.
+**Maßnahme:** GitHub bleibt Quelle für aktuellen PR-/Workflow-/Merge-Zustand. Dauerhafte Repo-Texte speichern Capability-, OPEN-/LOCKED- und historische Evidence-Zustände.
+
+**Status:** 🟢 in Governance und Wartungsvertrag überführt.
 
 ## Sicherheitsgrenze
 
-I26 erzeugt ausschließlich Daten im Speicher.
+M01 verändert ausschließlich Dokumentation, Repository-Prüfcode und PR-Prozessmetadaten.
 
 Kein:
 
-- Datei-Write;
-- Temp-File;
-- Rename;
-- Delete;
-- fsync;
-- Guard-REOPEN.
-
-## Nicht-Ziele
-
-- kein Writer;
-- keine Guard-Allowlist;
-- keine Registry;
-- keine GUI-/CLI-Erweiterung;
-- keine Nutzerfreigabe;
-- kein Netzwerk;
-- kein Executor.
+- Produktverhalten;
+- Datei-Executor;
+- Persistenz;
+- Guard-REOPEN;
+- Netzwerkpfad im Produkt;
+- Dependency-Zuwachs.
 
 ## Exit-Gates
 
-1. ExportPlan-Tests PASS.
-2. zweites Redaction-Gate PASS.
-3. No-overwrite-Preflight PASS.
-4. Read-only-Lock PASS.
-5. Repository-Contract PASS.
-6. Info-Text-Impact PASS.
-7. vollständige Regression-Suite PASS.
-8. Core Diagnostic PASS.
-9. Diagnostic Snapshot PASS.
-10. finaler Diff ohne Schreibpfad.
-11. Post-Merge-CI PASS.
+1. Repository-Contract PASS.
+2. Info-Text-Impact PASS.
+3. Read-only-Lock PASS.
+4. vollständige Regression-Suite PASS.
+5. Core Diagnostic PASS.
+6. Diagnostic Snapshot PASS.
+7. Starter-Preflight Klartext/JSON PASS.
+8. finaler Diff ohne Produktlogik.
+9. PR-CI PASS.
+10. Post-Merge-Main-CI PASS.
 
-## Nächste drei vorgeplante Schritte
+## Nächste drei vorgeplante Produktschritte
 
 ### 1. 🔵 I17-B – realer GUI-Zielsystemlauf
-Weiterhin einziges sichtbares UI-Gate.
+Weiterhin einziges sichtbares UI-/Accessibility-Gate.
 
 ### 2. 🔵 I25 – Adapter-Implementierung
-Erst nach grünem I17.
+Erst nach grünem realem I17-Befund.
 
 ### 3. 🔵 I27 – Writer-spezifischer Guard Decision/Prototype
-Nur nach I26: zuerst exakte Guard-Architektur und No-clobber-Plattformbeweis; noch kein produktiver Export-Adapter.
-
-
-**Repository-/PR-CI:** 🟢 PASS
-**Read-only-Lock:** 🟢 PASS
-**Full Suite:** 🟢 PASS
-**Core Diagnostic:** 🟢 PASS
-**Diagnostic Snapshot:** 🟢 PASS
-**Merge/Post-Merge:** 🔵 ausstehend
+Zuerst exakte Guard-Architektur und No-clobber-Plattformbeweis; noch kein produktiver Export-Adapter.
