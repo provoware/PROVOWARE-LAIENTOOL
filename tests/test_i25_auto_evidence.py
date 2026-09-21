@@ -15,6 +15,7 @@ from scripts.i25_auto_evidence import (
     TARGET_DIALOG_SCREENSHOT,
     chromium_binary,
     create_fixtures,
+    dialog_geometry_failures,
     overall_status,
     technical_status,
 )
@@ -28,6 +29,35 @@ class I25AutoEvidenceContractTests(unittest.TestCase):
         self.assertEqual(FILE_DIALOG_SCREENSHOT, "i25-file-selection.png")
         self.assertEqual(TARGET_DIALOG_SCREENSHOT, "i25-target-selection.png")
         self.assertEqual(PREVIEW_SCREENSHOT, "i25-transfer-preview.png")
+
+    def test_dialog_geometry_contract_is_bounded(self) -> None:
+        class Size:
+            def __init__(self, width: int, height: int) -> None:
+                self._width = width
+                self._height = height
+
+            def width(self) -> int:
+                return self._width
+
+            def height(self) -> int:
+                return self._height
+
+        class Dialog:
+            def __init__(self, visible: bool, width: int, height: int) -> None:
+                self._visible = visible
+                self._size = Size(width, height)
+
+            def isVisible(self) -> bool:
+                return self._visible
+
+            def size(self):
+                return self._size
+
+        self.assertEqual(dialog_geometry_failures(Dialog(True, 800, 600)), [])
+        failures = dialog_geometry_failures(Dialog(False, 1400, 950))
+        self.assertTrue(any("nicht sichtbar" in item for item in failures))
+        self.assertTrue(any("Dialogbreite" in item for item in failures))
+        self.assertTrue(any("Dialoghöhe" in item for item in failures))
 
     def test_human_wait_is_bounded(self) -> None:
         self.assertGreater(HUMAN_TIMEOUT_SECONDS, 0)
