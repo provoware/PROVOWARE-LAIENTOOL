@@ -27,11 +27,11 @@ class ContrastMathTests(unittest.TestCase):
 
 
 class FocusContractTests(unittest.TestCase):
-    def test_focus_contract_reports_missing_widget_focus_styles(self) -> None:
+    def test_focus_contract_is_complete_for_core_widgets(self) -> None:
         checks = {item["selector"]: item["status"] for item in focus_contract_checks()}
         self.assertEqual(checks["QPushButton:focus"], "PASS")
-        self.assertEqual(checks["QComboBox:focus"], "FAIL")
-        self.assertEqual(checks["QTextEdit:focus"], "FAIL")
+        self.assertEqual(checks["QComboBox:focus"], "PASS")
+        self.assertEqual(checks["QTextEdit:focus"], "PASS")
 
 
 class ScaleContractTests(unittest.TestCase):
@@ -42,10 +42,10 @@ class ScaleContractTests(unittest.TestCase):
 
 
 class EvidenceStatusTests(unittest.TestCase):
-    def test_current_automated_evidence_is_fail_and_manual_is_open(self) -> None:
+    def test_automated_evidence_passes_while_manual_remains_open(self) -> None:
         report = build_report()
-        self.assertEqual(report["automated_status"], "FAIL")
-        self.assertEqual(report["overall_status"], "FAIL")
+        self.assertEqual(report["automated_status"], "PASS")
+        self.assertEqual(report["overall_status"], "OPEN")
         self.assertTrue(all(item["status"] == "OPEN" for item in report["manual_gates"]))
 
 
