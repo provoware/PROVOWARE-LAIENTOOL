@@ -76,6 +76,9 @@ Die technischen Punkte werden jetzt automatisch über `scripts/i25_auto_evidence
 - Tab / Shift+Tab und sichtbarer Fokus;
 - Mehrfachauswahlvertrag;
 - Same-Root-Zielwahlliste;
+- Auswahl- und Ziel-Dialoge bei 100 / 150 / 200 % innerhalb des Test-Viewports;
+- Tastaturfokus in Datei- und Zielauswahl inklusive Tab/Shift+Tab bzw. Pfeiltasten;
+- deterministisches Cancel/Rejected-Verhalten beider Dialoge;
 - externe/Symlink-Ziele nicht auswählbar;
 - Copy-/Move-Preview;
 - unveränderte Quelldateien;
