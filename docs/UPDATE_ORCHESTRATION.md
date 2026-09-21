@@ -98,7 +98,7 @@ MERGE-KRITERIUM:
 
 ## Beispiel für den aktuellen Stand
 
-**A – PLAN:** B01-B Pfad-/Symlink-Sicherheitsmodell.  
+**A – PLAN:** B01-B Pfad-/Symlink-Sicherheitsmodell.
 **B – DELTA:** aus B01-A bleibt die reale Zweitgeräte-Portabilitäts-Evidence offen.
 
 Bewertung:
