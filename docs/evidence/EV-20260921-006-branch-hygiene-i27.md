@@ -47,7 +47,7 @@ Diese Punkte werden im neuen I27-Vertrag geschlossen.
 
 ## Status
 
-**RC-IMPLEMENTATION PREPARED** – finaler PASS erst nach vollständigem Repository-/Guard-/Test-Gate.
+**PASS** – Repository-Contract, verschärfter Read-only-Lock, vollständige Unit-/Integrationssuite, Preview-Reversibilitätsregression, Core Diagnostic, Diagnose/Preflight und I25-GUI-Auto-Evidence waren auf dem I27-RC grün.
 
 ## Bekannte Grenze
 

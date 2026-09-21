@@ -2,8 +2,8 @@
 
 ## I27 – Diagnostic Writer Guard / Branch-Hygiene
 
-**Status:** 🟨 AUTOMATISCHER SICHERHEITS-RC
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🟢 AUTOMATISCH PASS · MERGE-READY
+**Fortschritt:** `██████████ 100 %`
 
 ## A – FESTER PLAN
 
