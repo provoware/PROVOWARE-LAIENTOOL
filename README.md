@@ -1,1 +1,115 @@
 # PROVOWARE-LAIENTOOL
+
+Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und später kontrollierten Bereinigung des Download-Ordners auf Ubuntu/Kubuntu.
+
+## Projektstatus
+
+**Gesamtstatus:** 🟨 PLANUNG / REPOSITORY-FOUNDATION
+**Schreibende Dateioperationen:** 🔒 GESPERRT
+**Produktcode:** 0 % – noch kein freigegebener Anwendungskern auf `main`
+
+| Bereich | Stand | Anzeige |
+|---|---:|---|
+| Anforderungsbaseline | 9/9 Originalanforderungen erfasst | 🟢 `██████████` 100 % |
+| Qualitätsanforderungen | 20 definiert | 🟢 dokumentiert |
+| Entwicklungsblöcke | B00–B11 definiert | 🟢 12 Blöcke |
+| B00 Visuelle Orientierung | offen | 🟨 `░░░░░░░░░░` 0 % |
+| B01 Projektkern/Sicherheitsgrenzen | offen | 🟨 `░░░░░░░░░░` 0 % |
+| Schreibpfade | 0 freigegeben | 🔒 gesperrt |
+
+> Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
+
+## Zielbild
+
+Der Standardweg soll ohne Terminal und ohne Fachwissen funktionieren: Wizard → Dashboard → geführter Workflow → Vorschau → ausdrückliche Freigabe → verständlicher Abschlusszustand. Fortgeschrittene Optionen werden progressiv geöffnet.
+
+Wichtige Leitplanken:
+
+- keine stille Installation, kein stiller Netzwerkzugriff, keine versteckte Rechteausweitung;
+- Pfade, Dateinamen, Unicode und Symlinks gelten als nicht vertrauenswürdige Eingaben;
+- keine schreibende Dateiaktion ohne Preview, definierte Zielgrenzen und Rückweg;
+- Diagnose nur bewusst aktiviert und datensparsam;
+- Status nie nur über Farbe: Symbol + Klartext + Zahl;
+- 100 %, 150 % und 200 % Skalierung sowie Tastaturbedienung werden als Qualitätsgates behandelt.
+
+## Architekturentscheidung
+
+Die geplante GUI basiert auf **PySide6/Qt**. **Tkinter ist im Produktionscode ausgeschlossen.** Datei- und Tabellenansichten sollen Qt-Modelle/Delegates verwenden; Thumbnails und Vorschauen werden bedarfsgesteuert und außerhalb des UI-Threads geladen.
+
+GUI und Linux-Konsole sind zwei Adapter desselben Fachkerns. Nicht rein visuelle Funktionen erhalten grundsätzlich denselben fachlichen Ablauf, damit Sicherheitsregeln nicht doppelt implementiert werden.
+
+Siehe [ADR-0001](docs/adr/ADR-0001-ui-cli-foundation.md).
+
+## Repository-Struktur
+
+```text
+.
+├── AGENTS.md                         # verbindliche Arbeits- und Agentenregeln
+├── PROVOWARE_TODO_INPUT_POOL0.md    # eingefrorene Baseline + Implementierungs-Input-Pool
+├── README.md                         # zentrale Projektübersicht
+├── todo.txt                          # operative priorisierte Arbeitsliste
+├── docs/
+│   ├── adr/                          # Architekturentscheidungen
+│   └── evidence/                     # Regeln für reproduzierbare Nachweise
+├── scripts/repo_quality.py           # dependency-freier Repository-Gate
+└── .github/
+    ├── CODEOWNERS
+    ├── PULL_REQUEST_TEMPLATE.md
+    └── workflows/repo-quality.yml
+```
+
+Produktverzeichnisse unter `src/` und `tests/` werden erst angelegt, wenn der zugehörige Block freigegeben und in derselben Iteration sinnvoll testbar ist. Leere Architektur wird nicht vorgetäuscht.
+
+## Entwicklungsdisziplin
+
+Verbindlicher Standard:
+
+`READ → DECIDE → ONE WRITE BATCH → LOCAL TEST → LOCAL EVIDENCE → ONE REMOTE HEAD → TARGETED CI → DIFF → MERGE → POST-MERGE QUALITY`
+
+Vor jeder Änderung:
+
+1. `AGENTS.md` und betroffene REQ/CR/ADR lesen.
+2. Scope in einem Satz und Nicht-Ziele festlegen.
+3. kleinsten zusammenhängenden Write-Batch planen.
+4. nur relevante Tests ausführen.
+5. Ergebnis, Risiken und offene Punkte als Evidence festhalten.
+
+## Subagenten
+
+Subagenten sind **triggerbasiert**, nicht standardmäßig aktiv. Explorer, Implementierer, Testprüfer, UX/Accessibility-Prüfer und Sicherheitsprüfer werden nur eingesetzt, wenn ihre Arbeit unabhängig, überschneidungsfrei und messbar günstiger ist. Schreibbesitz an einer Datei hat immer nur ein Agent.
+
+Die vollständigen Trigger und Stop-Bedingungen stehen in [AGENTS.md](AGENTS.md).
+
+## Automatische Qualitätsprüfung
+
+`.github/workflows/repo-quality.yml` läuft ohne Projektabhängigkeiten und prüft zunächst nur Repository-Verträge:
+
+- Pflichtdateien vorhanden;
+- operative TODO-Struktur konsistent;
+- Baseline enthält REQ-BASELINE-1 und B00–B11;
+- keine Tkinter-Imports in zukünftigem Python-Produktionscode;
+- GitHub Actions besitzen minimale `permissions:` und externe Actions sind auf Commit-SHAs gepinnt;
+- kein Trailing-Whitespace in zentralen Text-/Codeformaten.
+
+Sobald Produktcode entsteht, wird dieser Gate gezielt um echte Unit-/Integrations-/GUI-Tests erweitert.
+
+## Aktuelle Reihenfolge
+
+1. **B00:** sechs grafische UI-Entwürfe auf einem Vergleichsbild erstellen und Designkorridor dokumentieren.
+2. **B01:** unterstützte Ubuntu/Kubuntu-Versionen und Laufzeitkomponenten inventarisieren; danach minimalen read-only Projektkern/Preflight aufbauen.
+3. Erst anschließend UX-Shell und weitere Fachblöcke schrittweise freigeben.
+4. **B06 bleibt P0-Gate:** keine produktiven Schreiboperationen vor belegtem Preview-, Journal-, Undo- und Recovery-Vertrag.
+
+## Quellen der Wahrheit
+
+1. aktuelle, explizit freigegebene Aufgabe / Change Request;
+2. `AGENTS.md`;
+3. akzeptierte ADRs;
+4. `PROVOWARE_TODO_INPUT_POOL0.md` als Anforderungsbaseline;
+5. `todo.txt` für operative Reihenfolge.
+
+Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die sicherere, kleinere Änderung gewählt.
+
+## Nächster sicherer Schritt
+
+**B00 als reinen Design-/Entscheidungsblock durchführen.** Noch keine produktive GUI, kein Dateischreiben und keine Abhängigkeitsinstallation.
