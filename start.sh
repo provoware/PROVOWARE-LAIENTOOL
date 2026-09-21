@@ -180,7 +180,9 @@ if [[ "$CURRENT_PYSIDE6" != "$EXPECTED_PYSIDE6" ]]; then
   fi
 
   if [[ -d "$WHEELHOUSE" ]] && compgen -G "$WHEELHOUSE/*.whl" >/dev/null; then
-    status "📦 Lokales Offline-Wheelhouse erkannt. Es wird kein Paketindex verwendet."
+    status "📦 Lokales Offline-Wheelhouse erkannt. Integrität wird geprüft ..."
+    "$BASE_PYTHON" "$ROOT_DIR/scripts/verify_wheelhouse_integrity.py" "$ROOT_DIR" || die "Lokales Wheelhouse ist unvollständig, beschädigt oder unerwartet. Nichts installiert." 8
+    status "🟢 Wheelhouse-Integrität PASS. Es wird kein Paketindex verwendet."
     confirm "PySide6 $EXPECTED_PYSIDE6 jetzt ausschließlich aus dem lokalen wheelhouse/ in .venv installieren?" || die "Abgebrochen. Keine Paketinstallation durchgeführt." 7
     "$VENV_PYTHON" -m pip install       --disable-pip-version-check       --no-index       --find-links "$WHEELHOUSE"       --requirement "$REQUIREMENTS"
   else

@@ -18,6 +18,11 @@ import subprocess
 import sys
 import zipfile
 
+try:
+    from .wheelhouse_integrity import validate_wheelhouse_dir
+except ImportError:
+    from wheelhouse_integrity import validate_wheelhouse_dir
+
 ROOT = Path(__file__).resolve().parents[1]
 FIXED_ZIP_TIME = (1980, 1, 1, 0, 0, 0)
 RUNTIME_TOP_LEVEL = {
@@ -129,9 +134,10 @@ def build_package(
     if wheelhouse is not None:
         if not wheelhouse.is_dir():
             raise ValueError(f"Wheelhouse fehlt: {wheelhouse}")
-        wheel_files = sorted(wheelhouse.glob("*.whl"), key=lambda path: path.name)
-        if not wheel_files:
-            raise ValueError("Wheelhouse enthält keine .whl-Dateien.")
+        wheel_files, wheel_failures = validate_wheelhouse_dir(wheelhouse)
+        if wheel_failures:
+            raise ValueError("Ungültiges Wheelhouse: " + " | ".join(wheel_failures))
+        wheel_files = list(wheel_files)
         for path in wheel_files:
             rel = f"wheelhouse/{path.name}"
             entries.append((rel, path.read_bytes(), 0o644))
