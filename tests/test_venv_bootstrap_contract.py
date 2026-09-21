@@ -31,9 +31,27 @@ class VenvBootstrapContractTests(unittest.TestCase):
     def test_i17_uses_venv_python(self) -> None:
         text = (ROOT / "start.sh").read_text(encoding="utf-8")
         self.assertIn(
+            'exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i17_auto_evidence.py"',
+            text,
+        )
+        self.assertIn(
             'exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i17_target_evidence.py" --guided',
             text,
         )
+
+    def test_start_sh_remains_canonical_user_entrypoint(self) -> None:
+        text = (ROOT / "start.sh").read_text(encoding="utf-8")
+        for option in (
+            "--gui",
+            "--menu",
+            "--preflight",
+            "--json",
+            "--i17",
+            "--i17-auto",
+            "--i17-guided",
+            "--i17-offscreen",
+        ):
+            self.assertIn(option, text)
 
     def test_check_mode_does_not_create_or_install(self) -> None:
         text = (ROOT / "start.sh").read_text(encoding="utf-8")

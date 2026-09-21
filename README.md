@@ -22,7 +22,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I14 Accessibility-Evidence | Fokusvertrag für Button/ComboBox/TextEdit automatisiert grün; reale Desktop-/Laienprüfung bleibt OPEN | 🟨 reale Evidence OPEN |
 | I15 Read-only Inventar | rekursiver B01-gebundener Nur-Lese-Inventarkern mit Symlink-Sperre, Unicode/Leerzeichen, Größenfakten und strukturierten Befunden implementiert | 🟢 Repository grün |
 | I16 Preview-Application | Inventar → reversible Trash-Preview über gemeinsamen Application-Core; GUI/CLI sammeln nur die Ordnerwahl ein | 🟢 Repository grün |
-| I17 Real-Accessibility | Zielsystem-Helfer, manuelle 100/150/200-%-Matrix und Screenshot-Vertrag vorbereitet; echter Desktop-/Laienlauf OPEN | 🟨 reale Evidence OPEN |
+| I17 Real-Accessibility | automatisierte Qt-Pipeline für 100/150/200 %, Tab/Shift+Tab, Fokus, synthetische Preview und fünf Screenshots; Chromium bündelt Bericht und eine finale Human-Abnahme | 🟨 I17-AUTO/HUMAN Evidence OPEN |
 | I18 Inventar-Komfort | read-only Suche, Sortierung und Top-10/50/100-Größenansichten im Domain-/Application-Core; sichtbare GUI-Anbindung wartet auf realen I17-Lauf | 🟢 Repository grün; UI weiter gegated |
 | I19 Zielwahl-Decision | Same-Root-Zielwahl ohne Overwrite beschlossen; externe Ziele bleiben gesperrt; statischer Read-only-Lock blockiert Schreib-APIs im Produktcode | 🟢 Decision + Guard grün |
 | I20 Diagnose-Observability | redigierter read-only Diagnosebericht als Klartext/JSON, CLI-only Use Case und stdout-Helfer; kein Datei-Export | 🟢 Repository grün |
@@ -101,7 +101,7 @@ Die vollständigen Trigger und Stop-Bedingungen stehen in [AGENTS.md](AGENTS.md)
 
 ## Lokale Python-Umgebung
 
-Der Standardweg ist **Venv-first**. System-Python wird nur verwendet, um die lokale `.venv` anzulegen; GUI und I17 laufen anschließend ausschließlich über `.venv/bin/python`.
+Der Standardweg ist **Venv-first** und **`start.sh` ist dauerhaft der einzige offizielle Nutzer-Einstiegspunkt**. System-Python wird nur verwendet, um die lokale `.venv` anzulegen; GUI, CLI und I17 laufen anschließend über die validierte Projektumgebung. Neue Startmodi werden in `start.sh` ergänzt statt durch neue Nutzerbefehle neben dem Starter.
 
 Empfohlene Befehle:
 
@@ -137,7 +137,7 @@ Der Gate umfasst inzwischen die vollständige Unit-/Integrationssuite, den read-
 
 1. **B00/B01:** Designsystem, Preflight sowie Pfad-/Symlink-Grenzen sind dokumentiert bzw. implementiert; reale Zweitgeräte-Evidence bleibt offen.
 2. **I10–I16:** Registry, read-only Shell, Preview-/Recovery-Verträge, Inventar und gemeinsamer Inventory→Preview-Pfad sind implementiert.
-3. **I17:** automatisierte Vorarbeit ist grün; der reale 100/150/200-%-Desktop-/Laienlauf bleibt das sichtbare Accessibility-Gate.
+3. **I17:** I17-AUTO übernimmt Qt-, Layout-, Fokus-, Preview- und Screenshot-Evidence; Chromium zeigt Bericht und genau eine finale I17-HUMAN-Laienabnahme.
 4. **I18–I21:** Inventar-Komfort, Read-only-Lock, Diagnose-Observability und Same-Root Copy/Move-Preview sind im Repository grün.
 5. **I22–I24/I26:** Diagnose-Export ist entschieden und bis zum vollständig read-only ExportPlan-/Payload-Preflight vorgezogen; echter Writer und Guard-REOPEN bleiben gesperrt.
 6. **Schreibpfade:** weiterhin `0` produktiv freigegeben.
@@ -154,7 +154,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**Realer I17-B-Zielsystemlauf bleibt das nächste sichtbare UI-Gate. Parallel darf I27 ausschließlich als Writer-spezifischer Guard-/No-clobber-Decision-Block vorbereitet werden; ein produktiver Diagnose-Writer bleibt weiterhin gesperrt.**
+**I17-D wird über `./start.sh --i17` real auf dem Zielsystem ausgeführt. Danach folgt die Repository-Hygiene-/Aktualitätsanalyse; I25 bleibt bis zum vollständigen I17-PASS gesperrt.**
 
 
 ## Screenshots
@@ -188,8 +188,8 @@ Solange Executor und Persistenz nicht ausdrücklich freigegeben sind, prüft `sc
 Für Support/Debugging steht ein read-only, redigierter Snapshot bereit:
 
 ```bash
-python3 scripts/diagnostic_snapshot.py
-python3 scripts/diagnostic_snapshot.py --json
+./start.sh --preflight
+./start.sh --json
 ```
 
 Er schreibt keine Datei, nutzt kein Netzwerk und zeigt keine Recovery-IDs. Home-Pfade, E-Mails und typische Token-Muster werden vor der Ausgabe redigiert.

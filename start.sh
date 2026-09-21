@@ -49,7 +49,10 @@ PROVOWARE Venv-Starter
 Aufruf:
   ./start.sh --setup       .venv anlegen/prüfen, PySide6 installieren falls bestätigt
   ./start.sh --check       nur prüfen, nichts verändern
-  ./start.sh --i17         I17-B geführt starten
+  ./start.sh --i17         I17-D automatisch + Chromium-Abnahme starten
+  ./start.sh --i17-auto    Alias für --i17
+  ./start.sh --i17-guided  alten geführten I17-B-Lauf starten
+  ./start.sh --i17-offscreen  technische Pipeline ohne Human-Abnahme
   ./start.sh --gui         GUI starten
   ./start.sh --menu        Konsolenmenü starten
   ./start.sh --preflight   read-only Preflight starten
@@ -71,7 +74,7 @@ case "$ACTION" in
     show_help
     exit 0
     ;;
-  --setup|--check|--i17|--gui|--menu|--preflight|--json)
+  --setup|--check|--i17|--i17-auto|--i17-guided|--i17-offscreen|--gui|--menu|--preflight|--json)
     ;;
   *)
     show_help
@@ -184,8 +187,14 @@ if [[ "$ACTION" == "--check" || "$ACTION" == "--setup" ]]; then
 fi
 
 case "$ACTION" in
-  --i17)
+  --i17|--i17-auto)
+    exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i17_auto_evidence.py"
+    ;;
+  --i17-guided)
     exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i17_target_evidence.py" --guided
+    ;;
+  --i17-offscreen)
+    exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i17_auto_evidence.py" --offscreen --auto-only
     ;;
   --gui)
     exec "$VENV_PYTHON" "$ROOT_DIR/start.py" --gui
