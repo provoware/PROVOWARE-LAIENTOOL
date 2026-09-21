@@ -29,7 +29,8 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I21 Same-Root Copy/Move Preview | gemeinsamer Core erzeugt Copy-/Move-Preview nur innerhalb derselben Root; Overwrite, externe Ziele und Auto-Rename blockiert | 🟢 Repository grün |
 | I22 Diagnose-Export Decision | späterer expliziter redigierter lokaler Export grundsätzlich zulässig, aber nur mit eigenem Writer-/Guard-REOPEN; aktuell keine Implementierung | 🟢 Decision eingefroren |
 | I23 Zielauswahl Adapter-Decision | gemeinsamer späterer GUI-/CLI-Workflow für I18-Auswahl + I21 Copy/Move-Preview festgelegt; sichtbare Implementierung wartet auf realen I17-Lauf | 🟢 Decision eingefroren |
-| I24 Diagnose-Export Writer Design | create-only/no-overwrite, Partial-/Crash-Strategie und gezielter Guard-REOPEN technisch festgelegt; noch kein Writer | 🟨 CI ausstehend |
+| I24 Diagnose-Export Writer Design | create-only/no-overwrite, Partial-/Crash-Strategie und gezielter Guard-REOPEN technisch festgelegt; noch kein Writer | 🟢 Design eingefroren |
+| I26 Diagnose-Export Preflight | immutable ExportPlan + serialisierter Payload, zweites Redaction-Gate, SHA-256/Größe und No-overwrite-Zielprüfung; vollständig read-only | 🟨 CI ausstehend |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -133,7 +134,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I24 Writer-Design über CI einfrieren. Danach bleibt der reale I17-Zielsystemlauf das sichtbare UI-Gate; ein späterer Diagnose-Export darf nur über einen eigenen read-only Preflight-Core und gezielten Writer-REOPEN weitergehen.**
+**I26 Export-Preflight über CI einfrieren. Reales UI bleibt durch I17 gegated; der Diagnose-Writer bleibt gesperrt, bis Writer-spezifischer Guard, No-clobber-Beweis und Failure/Race-Tests separat freigegeben sind.**
 
 
 ## Screenshots

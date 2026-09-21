@@ -1,82 +1,89 @@
 # PROVOWARE – Current Iteration
 
-## I24 – Diagnose-Export Writer Design
+## I26 – Diagnose-Export Preflight Core
 
 **Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
 **Fortschritt:** `█████████░ 90 %`
 
 ## A – FESTER PLAN
 
-**Ziel:** create-only/no-overwrite, Partial-Write/Crash-Verhalten und gezielten Read-only-Guard-REOPEN für einen späteren Diagnose-Export technisch festlegen, ohne einen Writer zu implementieren.
+**Ziel:** I24-Writer-Design in einen vollständig read-only ExportPlan-/Payload-Preflight überführen, ohne Writer oder Guard-REOPEN.
 
-**Entscheidungen:**
+**Checkpoints:**
 
-- 🟢 genau ein späteres Writer-Modul
-- 🟢 keine Schreiblogik in Diagnostics/Application/Adaptern
-- 🟢 Redaction vollständig vor Writer
-- 🟢 immutable ExportPlan vor Write
-- 🟢 create-only / no-overwrite
-- 🟢 temporäre Partial-Datei im Zielordner
-- 🟢 Größe/Hash vor finalem Commit prüfen
-- 🟢 kein `os.replace()` als overwrite-fähiger Fallback
-- 🟢 parallele Namens-Races fail-closed
-- 🟢 ENOSPC/Permission/Crash als Pflicht-Testfälle
-- 🟢 Guard-REOPEN nur für exakten Writer-Pfad
-- 🟢 alle übrigen Produktmodule bleiben vollständig write-locked
-- 🔒 noch kein Writer
-- 🔒 noch keine Guard-Allowlist
-- 🔒 kein Datei-Export
+- 🟢 immutable ExportPlan
+- 🟢 immutable ExportPreparation
+- 🟢 JSON/Text-Serialisierung
+- 🟢 Redaction-Flag Pflicht
+- 🟢 Schreibfreigabe im Report blockiert
+- 🟢 Zielordner existierend / kein Symlink
+- 🟢 Dateiname ohne Pfad
+- 🟢 Format/Suffix-Konsistenz
+- 🟢 bestehende Zieldatei blockiert
+- 🟢 Symlink-Zieldatei blockiert
+- 🟢 zweites Redaction-Gate auf serialisiertem Payload
+- 🟢 SHA-256 + Byte-Länge
+- 🟢 write_enabled=False
+- 🟢 overwrite_allowed=False
+- 🟢 Unit-/Safety-Tests
+- 🔵 Repository-/PR-CI
+- 🔵 Merge/Post-Merge
 
 ## B – VARIABLE FOLGEAUFGABE
 
-**Quelle letzter Lauf:** I23 wurde gemergt und Post-Merge-CI grün, während `CURRENT_ITERATION.md` Merge/Post-Merge noch offen zeigte.
+**Quelle letzter Lauf:** I24 wurde gemergt und Post-Merge vollständig grün, während I24-Doku Merge/Post-Merge noch offen auswies.
 
-**Maßnahme:** Statusdrift beim Wechsel auf I24 synchronisiert.
+**Maßnahme:** Statusdrift beim Wechsel auf I26 synchronisiert.
 
 **Status:** 🟢 erledigt.
 
 ## Sicherheitsgrenze
 
-I24 öffnet keinerlei Schreibpfad.
+I26 erzeugt ausschließlich Daten im Speicher.
 
-Der bestehende `scripts/read_only_guard.py` bleibt unverändert und muss weiterhin den gesamten Produktbaum blockieren.
+Kein:
+
+- Datei-Write;
+- Temp-File;
+- Rename;
+- Delete;
+- fsync;
+- Guard-REOPEN.
 
 ## Nicht-Ziele
 
-- keine Produktcodeänderung;
-- keine Exportdatei;
-- keine Temp-Datei;
-- keine Guard-Ausnahme;
-- keine Registry-Änderung;
+- kein Writer;
+- keine Guard-Allowlist;
+- keine Registry;
 - keine GUI-/CLI-Erweiterung;
+- keine Nutzerfreigabe;
 - kein Netzwerk;
 - kein Executor.
 
 ## Exit-Gates
 
-1. Writer-Modulgrenze eindeutig.
-2. Redaction-before-write eingefroren.
-3. create-only/no-overwrite eindeutig.
-4. Partial-/Crash-Strategie definiert.
-5. Race/ENOSPC/Permission-Testmatrix definiert.
-6. gezielter Guard-REOPEN eindeutig.
-7. Repository-Contract PASS.
-8. Info-Text-Impact PASS.
-9. Read-only-Lock PASS.
-10. vollständige Regression-Suite PASS.
-11. finaler Diff ohne Produktcode.
-12. Post-Merge-CI PASS.
+1. ExportPlan-Tests PASS.
+2. zweites Redaction-Gate PASS.
+3. No-overwrite-Preflight PASS.
+4. Read-only-Lock PASS.
+5. Repository-Contract PASS.
+6. Info-Text-Impact PASS.
+7. vollständige Regression-Suite PASS.
+8. Core Diagnostic PASS.
+9. Diagnostic Snapshot PASS.
+10. finaler Diff ohne Schreibpfad.
+11. Post-Merge-CI PASS.
 
 ## Nächste drei vorgeplante Schritte
 
 ### 1. 🔵 I17-B – realer GUI-Zielsystemlauf
-Echte Shell 100/150/200 %, Tastatur, Fokus und Screenshots abschließen.
+Weiterhin einziges sichtbares UI-Gate.
 
 ### 2. 🔵 I25 – Adapter-Implementierung
-Nur nach grünem I17: I18-Auswahl + I21 Copy/Move-Preview in GUI/Zahlenmenü.
+Erst nach grünem I17.
 
-### 3. 🔵 I26 – Diagnose-Export Preflight Core
-Unabhängig vom Writer später nur immutable ExportPlan/Payload-Validierung als read-only Core vorbereiten; weiterhin kein Write.
+### 3. 🔵 I27 – Writer-spezifischer Guard Decision/Prototype
+Nur nach I26: zuerst exakte Guard-Architektur und No-clobber-Plattformbeweis; noch kein produktiver Export-Adapter.
 
 
 **Repository-/PR-CI:** 🟢 PASS
