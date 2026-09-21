@@ -69,6 +69,50 @@ Für Tests, Diagnose, Agentenläufe und Reparaturschleifen gilt zusätzlich:
 
 **Stop-Signale:** gleicher Fehler zweimal unverändert, Timeout zweimal am selben Punkt, wachsender Scope oder mehr als zwei Reparaturzyklen ohne Ursachenbeleg. Dann wird der Block als `OPEN`/`FAIL` beendet und neu geplant.
 
+
+### Effizienzstandard: Release Candidate + Finalisierung
+
+Ziel ist **maximaler Informationsgewinn pro Lauf bei minimaler Repository-Bewegung**. Sicherheit und Nachweisstärke bleiben unverändert.
+
+Verbindlicher Standard:
+
+`READ → DECIDE → ONE COHERENT WRITE BATCH → TARGETED → FULL GATE → RC → FINALIZE DOC/EVIDENCE → ONE REMOTE HEAD → CI → DIFF → MERGE → POST-MERGE VERIFY`
+
+Dabei gilt:
+
+- **kein Commit pro Einzelgate** und kein eigener Commit nur für „Test grün“, „Status aktualisiert“ oder „Evidence ergänzt“, wenn diese Informationen in einem gemeinsamen Finalisierungsbatch gebunden werden können;
+- Produkt-/Teständerungen werden lokal bzw. im Arbeitsstand gesammelt, bis ein kohärenter **Release Candidate (RC)** vorliegt;
+- vor dem ersten Review-Push möglichst zuerst targeted Tests, danach genau ein vollständiger lokaler Gate-Lauf auf demselben RC;
+- Evidence darf den **geprüften RC-SHA/Fingerprint** referenzieren. Ein anschließender reiner Dokumentations-/Evidence-Commit macht den RC-Nachweis nicht ungültig und erzwingt keine Fingerprint-Endlosschleife;
+- nach grünem RC folgt höchstens **ein Finalisierungsbatch** für README/TODO/CURRENT_ITERATION/Evidence/PR-Text, soweit betroffen;
+- ein reiner Finalisierungsbatch löst lokal nur die dafür relevanten Repository-/Dokumentationsgates aus; die zentrale PR-CI bleibt der vollständige unabhängige Endnachweis;
+- `docs/CURRENT_ITERATION.md` wird an **Iterationsgrenzen** aktualisiert, nicht nach jedem Untergate;
+- ein PR soll im Normalfall aus **einem fachlichen Commit plus optional einem Finalisierungscommit** bestehen. Zusätzliche Reparaturcommits sind nur zulässig, wenn CI oder Review neue Information erzeugt;
+- kein inkrementelles Remote-Pushen nur zur Fehlersuche, wenn derselbe Fehler lokal reproduzierbar ist;
+- vor Merge wird der finale Diff einmal als Ganzes gegen Scope, Nicht-Ziele, Statusdrift und unnötige Dateien geprüft;
+- nach erfolgreichem Merge werden überholte Arbeitsbranches entfernt, sobald keine bewusst zu bewahrenden einzigartigen Änderungen mehr darauf liegen.
+
+### Testökonomie
+
+Tests werden nach Änderungswirkung gewählt, nicht nach Gewohnheit:
+
+1. **L0 Repository/Contract** bei Prozess-, Doku- und Strukturänderungen;
+2. **L1 Targeted** für direkt betroffene Fachlogik;
+3. **L2 Cross-Core** nur bei realer Kopplung/Sicherheitswirkung;
+4. **L3 Full Gate** einmal auf dem RC vor Merge;
+5. **L4 Real Evidence** nur für Eigenschaften, die CI nicht objektiv belegen kann.
+
+Ein bereits grüner unveränderter RC wird nicht erneut vollständig getestet, nur weil anschließend reine Dokumentation ergänzt wurde. Die PR-CI prüft den finalen Branch unabhängig vollständig.
+
+### Architekturökonomie
+
+- neue Abstraktion nur bei mindestens zwei realen Nutzern oder klarer Sicherheits-/Testgrenze;
+- keine Datei-/Klassenzerlegung nur wegen Zeilenzahl;
+- bei Modulen an der Beobachtungsschwelle zuerst **Kohäsion messen**: neue Verantwortung abtrennen, bestehende zusammengehörige Verantwortung zusammenlassen;
+- Adapter dürfen keinen wachsenden Application-Core durch UI-spezifische Verzweigungen erzwingen;
+- neue Komfortfunktion bevorzugt über vorhandene Use-Cases/Modelle anbinden statt neue Parallelpfade zu schaffen.
+
+
 ## 4. Sicherheitsgrenzen
 
 - Keine stille Installation oder Downloads.
