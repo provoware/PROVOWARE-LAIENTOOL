@@ -2,8 +2,8 @@
 
 ## I34 – Plugin-Grenze
 
-**Status:** 🟨 RC · AUTOMATISCHE GATES LAUFEN
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🟢 AUTO PASS · FREEZE-BEREIT
+**Fortschritt:** `██████████ 100 %`
 
 ## A – PLAN
 
@@ -32,8 +32,12 @@ NONE. I25/I31 Human-Gates und B01-Zweitgerät bleiben bewusst geparkt.
 5. Full Suite PASS.
 6. Repository-/Read-only-/Package-/GUI-Regressionsgates PASS.
 
+## AUTO-Ergebnis
+
+Der zunächst zu breite Guard wurde durch CI korrekt erkannt: bestehendes `importlib.util.find_spec()` im read-only Preflight ist Capability-Erkennung, kein Plugin-Laden. Der reparierte Guard erlaubt diesen Fall, blockiert aber weiterhin echte dynamische Ladepfade.
+
 ## Nächste drei Schritte
 
-1. I34 vollständig automatisch prüfen und Evidence binden.
-2. Bei Grün mergen.
-3. Danach nächsten automatisierbaren Security-/Release-Block wählen; keine Human-Einzeltests.
+1. 🟢 I34 Evidence an reparierten RC `61c83eb21cfede0510eb4d78726726b5ccae128d` binden und mergen.
+2. 🔵 danach den nächsten rein automatisierbaren Security-/Release-Block wählen.
+3. 🔒 I25/I31 Human-Gates sowie B01-Zweitgerät weiter gesammelt offen halten.

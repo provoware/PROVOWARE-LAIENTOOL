@@ -42,3 +42,5 @@ Dateiname: `EV-YYYYMMDD-NNN-kurzname.md`
 - `EV-20260922-010-i32-portable-offline-package.md` – I32 deterministisches Linux-x86_64-ZIP, Offline-Wheelhouse, Fremdpfad- und Bootstrap-Nachweis.
 
 - `EV-20260922-011-i33-wheelhouse-integrity.md` – I33 Exact-Set-/Version-/Plattform-/Manifest-/SHA-256-Nachweis für das Linux-x86_64-Offline-Wheelhouse.
+
+- `EV-20260922-012-i34-plugin-boundary.md` – I34 data-only Plugin-/Capability-Grenze, dynamische Loader gesperrt, read-only `find_spec()` explizit als legitimer Preflight-Fall regressiert.
