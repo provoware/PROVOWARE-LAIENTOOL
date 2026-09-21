@@ -44,6 +44,24 @@ class ReadOnlyGuardTests(unittest.TestCase):
     def test_read_only_open_mode_is_allowed(self) -> None:
         self.assertEqual(analyze_source("open('x', 'rb')"), ())
 
+    def test_string_replace_is_allowed(self) -> None:
+        self.assertEqual(
+            analyze_source("value = 'a-b'.replace('-', '')"),
+            (),
+        )
+
+    def test_path_replace_is_blocked(self) -> None:
+        violations = analyze_source(
+            "from pathlib import Path\np = Path('a')\np.replace('b')"
+        )
+        self.assertTrue(any("Path-Schreib-API .replace" in item for item in violations))
+
+    def test_derived_path_replace_is_blocked(self) -> None:
+        violations = analyze_source(
+            "from pathlib import Path\nroot = Path('a')\ntarget = root / 'b'\ntarget.replace('c')"
+        )
+        self.assertTrue(any("Path-Schreib-API .replace" in item for item in violations))
+
     def test_plain_read_only_code_is_allowed(self) -> None:
         self.assertEqual(analyze_source("value = Path('x').exists()"), ())
 
