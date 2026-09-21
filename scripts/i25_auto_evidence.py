@@ -93,6 +93,21 @@ def visible_geometry_ok(widget) -> bool:
     return widget.isVisible() and size.width() > 0 and size.height() > 0
 
 
+def dialog_geometry_failures(dialog, *, max_width: int = 1280, max_height: int = 900) -> list[str]:
+    """Return deterministic dialog geometry failures for the supported viewport."""
+    failures: list[str] = []
+    size = dialog.size()
+    if not dialog.isVisible():
+        failures.append("Dialog ist nicht sichtbar.")
+    if size.width() <= 0 or size.height() <= 0:
+        failures.append("Dialog besitzt keine nutzbare Größe.")
+    if size.width() > max_width:
+        failures.append(f"Dialogbreite {size.width()} > {max_width}.")
+    if size.height() > max_height:
+        failures.append(f"Dialoghöhe {size.height()} > {max_height}.")
+    return failures
+
+
 def run_scale_checks(app, window, evidence_dir: Path) -> list[dict[str, object]]:
     results = []
     for scale in SCALES:
@@ -161,9 +176,12 @@ def run_focus_check(app, window, evidence_dir: Path) -> dict[str, object]:
 
 
 def run_workflow_check(app, window, fixtures: dict[str, Path], evidence_dir: Path) -> dict[str, object]:
-    from PySide6.QtWidgets import QAbstractItemView
+    from PySide6.QtCore import Qt
+    from PySide6.QtTest import QTest
+    from PySide6.QtWidgets import QAbstractItemView, QDialog
 
     failures: list[str] = []
+    dialog_scale_results: list[dict[str, object]] = []
     root = fixtures["root"]
     preparation = prepare_inventory_view(
         root,
@@ -173,37 +191,136 @@ def run_workflow_check(app, window, fixtures: dict[str, Path], evidence_dir: Pat
         failures.append(f"Inventarvorbereitung: {preparation.status}")
         return {"status": "FAIL", "failures": failures}
 
-    file_dialog, file_list = window.build_file_selection_dialog(preparation)
-    file_dialog.show()
-    app.processEvents()
-    if file_list.selectionMode() != QAbstractItemView.ExtendedSelection:
-        failures.append("Dateiauswahl ist nicht als Mehrfachauswahl konfiguriert.")
-    if file_list.count() != 2:
-        failures.append(f"Erwartet 2 synthetische Dateien, gefunden {file_list.count()}.")
-    file_list.setCurrentRow(0)
-    file_list.item(1).setSelected(True)
-    app.processEvents()
-    file_shot = evidence_dir / FILE_DIALOG_SCREENSHOT
-    if not save_png(file_dialog, file_shot):
-        failures.append("Dateiauswahl-Screenshot fehlgeschlagen.")
-    file_dialog.close()
-
-    target_dialog, target_list, targets = window.build_target_selection_dialog(root)
-    if target_dialog is None or target_list is None or targets.status != "PASS":
-        failures.append(f"Zielwahlliste nicht vollständig: {targets.status}")
-    else:
-        expected = (".", "Eingang", "Ziel", "Ziel/Unter Ziel")
-        if targets.directories != expected:
-            failures.append(f"Same-Root-Zielliste abweichend: {targets.directories!r}")
-        if any("Extern-Link" in value for value in targets.directories):
-            failures.append("Symlink-Ziel wurde auswählbar angeboten.")
-        target_dialog.show()
-        target_list.setCurrentRow(targets.directories.index("Ziel"))
+    for scale in SCALES:
+        window.set_scale_percent(scale)
         app.processEvents()
-        target_shot = evidence_dir / TARGET_DIALOG_SCREENSHOT
-        if not save_png(target_dialog, target_shot):
-            failures.append("Zielauswahl-Screenshot fehlgeschlagen.")
-        target_dialog.close()
+
+        scale_failures: list[str] = []
+        file_dialog, file_list = window.build_file_selection_dialog(preparation)
+        file_dialog.show()
+        app.processEvents()
+
+        scale_failures.extend(
+            f"Dateiauswahl {scale} %: {item}"
+            for item in dialog_geometry_failures(file_dialog)
+        )
+        if file_list.selectionMode() != QAbstractItemView.ExtendedSelection:
+            scale_failures.append(
+                f"Dateiauswahl {scale} %: Mehrfachauswahl ist nicht aktiviert."
+            )
+        if file_list.count() != 2:
+            scale_failures.append(
+                f"Dateiauswahl {scale} %: erwartet 2 Dateien, gefunden {file_list.count()}."
+            )
+
+        file_list.setFocus(Qt.FocusReason.TabFocusReason)
+        app.processEvents()
+        if app.focusWidget() is not file_list:
+            scale_failures.append(
+                f"Dateiauswahl {scale} %: Dateiliste erhält keinen Tastaturfokus."
+            )
+        else:
+            QTest.keyClick(file_list, Qt.Key.Key_Tab)
+            app.processEvents()
+            after_tab = app.focusWidget()
+            if after_tab is None or after_tab is file_list:
+                scale_failures.append(
+                    f"Dateiauswahl {scale} %: Tab verlässt die Dateiliste nicht."
+                )
+            QTest.keyClick(after_tab, Qt.Key.Key_Tab, Qt.KeyboardModifier.ShiftModifier)
+            app.processEvents()
+            if app.focusWidget() is not file_list:
+                scale_failures.append(
+                    f"Dateiauswahl {scale} %: Shift+Tab kehrt nicht zur Dateiliste zurück."
+                )
+
+        file_list.setCurrentRow(0)
+        file_list.item(1).setSelected(True)
+        app.processEvents()
+        if len(file_list.selectedItems()) != 2:
+            scale_failures.append(
+                f"Dateiauswahl {scale} %: Mehrfachauswahl liefert nicht 2 Einträge."
+            )
+
+        if scale == 150:
+            file_shot = evidence_dir / FILE_DIALOG_SCREENSHOT
+            if not save_png(file_dialog, file_shot):
+                scale_failures.append("Dateiauswahl-Screenshot fehlgeschlagen.")
+
+        file_dialog.reject()
+        app.processEvents()
+        if file_dialog.result() != QDialog.Rejected:
+            scale_failures.append(
+                f"Dateiauswahl {scale} %: Abbruch liefert nicht Rejected."
+            )
+
+        target_dialog, target_list, targets = window.build_target_selection_dialog(root)
+        if target_dialog is None or target_list is None or targets.status != "PASS":
+            scale_failures.append(
+                f"Zielwahlliste {scale} % nicht vollständig: {targets.status}"
+            )
+        else:
+            expected = (".", "Eingang", "Ziel", "Ziel/Unter Ziel")
+            if targets.directories != expected:
+                scale_failures.append(
+                    f"Same-Root-Zielliste {scale} % abweichend: {targets.directories!r}"
+                )
+            if any("Extern-Link" in value for value in targets.directories):
+                scale_failures.append(
+                    f"Zielwahlliste {scale} %: Symlink-Ziel wurde auswählbar angeboten."
+                )
+            target_dialog.show()
+            app.processEvents()
+            scale_failures.extend(
+                f"Zielauswahl {scale} %: {item}"
+                for item in dialog_geometry_failures(target_dialog)
+            )
+            if target_list.selectionMode() != QAbstractItemView.SingleSelection:
+                scale_failures.append(
+                    f"Zielauswahl {scale} %: Auswahlmodus ist nicht SingleSelection."
+                )
+
+            target_list.setFocus(Qt.FocusReason.TabFocusReason)
+            app.processEvents()
+            if app.focusWidget() is not target_list:
+                scale_failures.append(
+                    f"Zielauswahl {scale} %: Zielliste erhält keinen Tastaturfokus."
+                )
+            else:
+                QTest.keyClick(target_list, Qt.Key.Key_Down)
+                app.processEvents()
+                if target_list.currentRow() < 0:
+                    scale_failures.append(
+                        f"Zielauswahl {scale} %: Pfeiltaste wählt keinen Eintrag."
+                    )
+
+            target_list.setCurrentRow(targets.directories.index("Ziel"))
+            app.processEvents()
+            if target_list.currentRow() != targets.directories.index("Ziel"):
+                scale_failures.append(
+                    f"Zielauswahl {scale} %: Zielordner lässt sich nicht stabil auswählen."
+                )
+
+            if scale == 150:
+                target_shot = evidence_dir / TARGET_DIALOG_SCREENSHOT
+                if not save_png(target_dialog, target_shot):
+                    scale_failures.append("Zielauswahl-Screenshot fehlgeschlagen.")
+
+            target_dialog.reject()
+            app.processEvents()
+            if target_dialog.result() != QDialog.Rejected:
+                scale_failures.append(
+                    f"Zielauswahl {scale} %: Abbruch liefert nicht Rejected."
+                )
+
+        dialog_scale_results.append(
+            {
+                "scale_percent": scale,
+                "status": "PASS" if not scale_failures else "FAIL",
+                "failures": scale_failures,
+            }
+        )
+        failures.extend(scale_failures)
 
     selected = ("Eingang/Datei mit Leerzeichen.txt", "Eingang/Grüße-äöü.txt")
     target = str(fixtures["target"])
@@ -254,6 +371,7 @@ def run_workflow_check(app, window, fixtures: dict[str, Path], evidence_dir: Pat
         "file_screenshot": FILE_DIALOG_SCREENSHOT,
         "target_screenshot": TARGET_DIALOG_SCREENSHOT,
         "preview_screenshot": PREVIEW_SCREENSHOT,
+        "dialog_scale_checks": dialog_scale_results,
     }
 
 
