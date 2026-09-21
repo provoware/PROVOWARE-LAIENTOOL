@@ -2,8 +2,8 @@
 
 ## I08 – Kollisionsschutz und GUI-/CLI-Parität
 
-**Status:** 🟨 IN ARBEIT
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🟢 ABGESCHLOSSEN
+**Fortschritt:** `██████████ 100 %`
 
 Der Prozentwert bildet ausschließlich die definierten Checkpoints dieser Iteration ab.
 
@@ -22,7 +22,9 @@ Der Prozentwert bildet ausschließlich die definierten Checkpoints dieser Iterat
 - 🟢 Iterationsstatus mit Farb-/Fortschrittsanzeige definiert
 - 🟢 GUI-/CLI-Paritätsvertrag erstellt
 - 🟢 laienfreundliches Zahlenmenü als CLI-Standard festgelegt
-- 🔵 CI/PR-Abnahme und Post-Merge-Prüfung
+- 🟢 PR-CI-Abnahme vollständig PASS
+- 🟢 finaler Diff ohne Scope-Drift geprüft
+- 🔵 Post-Merge-Prüfung folgt unmittelbar nach Merge
 
 ## B – VARIABLE FOLGEAUFGABE
 
@@ -34,7 +36,7 @@ Der Prozentwert bildet ausschließlich die definierten Checkpoints dieser Iterat
 
 **Maßnahme:** Duplikate entfernen und einen Selbsttest ergänzen, der doppelte Pflichtdatei-Einträge künftig als Gate-Fehler meldet.
 
-**Status:** 🟢 umgesetzt; endgültige Abnahme folgt mit CI.
+**Status:** 🟢 umgesetzt und durch CI-Abnahme bestätigt.
 
 ## Datei-Besitz dieser Iteration
 
