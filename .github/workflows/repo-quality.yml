@@ -28,6 +28,8 @@ jobs:
             BASE_SHA="$(git rev-parse HEAD^)"
           fi
           python3 scripts/info_text_guard.py --base "$BASE_SHA"
+      - name: Enforce read-only product lock
+        run: python3 scripts/read_only_guard.py
       - name: Run full unit and integration suite
         run: PYTHONPATH=src python3 -m unittest discover -s tests -v
       - name: Run temporary-filesystem core diagnostic
