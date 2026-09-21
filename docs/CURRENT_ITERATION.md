@@ -2,8 +2,8 @@
 
 ## I35 – Portable Artifact Provenance Binding
 
-**Status:** 🟨 RC · AUTOMATISCHE GATES LAUFEN
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🟢 AUTO PASS · FREEZE-BEREIT
+**Fortschritt:** `██████████ 100 %`
 
 ## A – PLAN
 
@@ -36,8 +36,12 @@ Keine Signatur-/Authentizitätsbehauptung. ZIP und Sidecar gemeinsam austauschba
 5. Full Repository Gate PASS.
 6. GUI-Cross-Regressionsgates PASS, soweit ausgelöst.
 
+## AUTO-Ergebnis
+
+Commit-/Manifest-/Paketwurzel-/ZIP-Name-/Sidecar-Bindung und echter Offline-Bootstrap sind vollständig grün.
+
 ## Nächste drei Schritte
 
-1. I35 vollständig automatisch prüfen und Evidence binden.
-2. Bei Grün mergen.
-3. Danach verbleibende rein automatische Status-/Release-Sicherheitsarbeit priorisieren; Human-Gates weiter bündeln.
+1. 🟢 I35 Evidence an RC `98920d7af0d16c986c26742e859ca6f41fa18fed` binden und mergen.
+2. 🔵 danach verbleibende rein automatische Status-/Release-Sicherheitsarbeit priorisieren.
+3. 🔒 I25/I31 Human-Gates und B01-Zweitgerät weiterhin gesammelt offen halten.
