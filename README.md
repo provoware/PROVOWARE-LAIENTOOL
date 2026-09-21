@@ -21,7 +21,8 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I13 B06 Recovery-Vertrag | Zustandsautomat, Journal-/Undo-Vertrag und Crash-Matrix implementiert; keine Persistenz/kein Executor | 🟢 Repository grün |
 | I14 Accessibility-Evidence | Fokusvertrag für Button/ComboBox/TextEdit automatisiert grün; reale Desktop-/Laienprüfung bleibt OPEN | 🟨 reale Evidence OPEN |
 | I15 Read-only Inventar | rekursiver B01-gebundener Nur-Lese-Inventarkern mit Symlink-Sperre, Unicode/Leerzeichen, Größenfakten und strukturierten Befunden implementiert | 🟢 Repository grün |
-| I16 Preview-Application | Inventar → reversible Trash-Preview über gemeinsamen Application-Core; GUI/CLI sammeln nur die Ordnerwahl ein | 🟨 CI ausstehend |
+| I16 Preview-Application | Inventar → reversible Trash-Preview über gemeinsamen Application-Core; GUI/CLI sammeln nur die Ordnerwahl ein | 🟢 Repository grün |
+| I17 Real-Accessibility | Zielsystem-Helfer, manuelle 100/150/200-%-Matrix und Screenshot-Vertrag vorbereitet; echter Desktop-/Laienlauf OPEN | 🟨 reale Evidence OPEN |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -125,4 +126,25 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I16 vollständig über CI einfrieren; danach I17 als realen Accessibility-Zielsystemlauf durchführen. Schreibpfade bleiben weiterhin gesperrt.**
+**I17-Evidence-Infrastruktur über CI einfrieren und danach den Ein-Befehl-Zielsystemlauf real ausführen. UI-Ausbau darf anschließend auf dem bestehenden read-only Core fortgesetzt werden; Schreibpfade bleiben gesperrt.**
+
+
+## Screenshots
+
+Echte Produktoberflächen können im README gezeigt werden. Für belastbare Produktabbildungen gilt:
+
+- bevorzugter Pfad: `docs/assets/screenshots/readme/`;
+- nur echte Zielsystem-Screenshots aus einem dokumentierten I17-/Folgelauf;
+- keine unnötigen privaten Pfade, Nutzernamen oder Dateinamen;
+- Mockups separat unter `docs/assets/mockups/` und sichtbar als **Designentwurf** kennzeichnen;
+- Mockups zählen niemals als Accessibility-/Produkt-Evidence.
+
+Geplantes I17-Set: 100 %, 150 %, 200 %, Tastaturfokus und Dateivorschau.
+
+## Regressionsstrategie
+
+Die Entwicklung verwendet ab I17 die Matrix `docs/REGRESSION_MATRIX.md`:
+
+**gezielte betroffene Tests zuerst → vollständige Testsuite vor Merge → Post-Merge-CI → reale Evidence nur dort, wo CI sie nicht ersetzen kann.**
+
+Damit werden frühe Iterationsläufe kürzer, ohne die finale Abnahme zu schwächen.
