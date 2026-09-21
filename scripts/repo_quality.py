@@ -41,6 +41,7 @@ REQUIRED = (
     "docs/I22_DIAGNOSTIC_EXPORT_DECISION.md",
     "docs/I23_TARGET_ADAPTER_DECISION.md",
     "docs/I24_DIAGNOSTIC_EXPORT_WRITER_DESIGN.md",
+    "docs/I26_DIAGNOSTIC_EXPORT_PREFLIGHT.md",
     "docs/DEBUGGING_STANDARD.md",
     "docs/REGRESSION_MATRIX.md",
     "docs/evidence/EV-20260921-004-i14-accessibility.md",
