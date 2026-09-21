@@ -2,8 +2,8 @@
 
 ## I15 – read-only Dateiinventar + I14-Fokus-DELTA
 
-**Status:** 🟨 IMPLEMENTIERT / CI-ABNAHME AUSSTEHEND
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
+**Fortschritt:** `█████████░ 90 %`
 
 Der Prozentwert bildet ausschließlich definierte I15-Checkpoints ab.
 
@@ -38,8 +38,9 @@ Der bestätigte I14-Fokusbefund wurde zuerst separat umgesetzt und vollständig 
 - 🟢 Zugriffsfehler als Befund statt Gesamtcrash
 - 🟢 keine Preview-/Application-/GUI-/CLI-Vorwegnahme
 - 🟢 Unit-Tests angelegt
-- 🔵 Repository-/PR-CI
-- 🔵 finaler Diff / Merge / Post-Merge
+- 🟢 Repository-/PR-CI PASS
+- 🟢 finaler Diff ohne Scope-Drift
+- 🔵 Merge / Post-Merge
 
 ## Datei-Besitz – A-PLAN
 
