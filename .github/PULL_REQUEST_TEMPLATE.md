@@ -35,8 +35,14 @@ Ein Satz:
 
 ## UX / Accessibility
 
-- [ ] nicht betroffen ODER Tastatur/Fokus/Skalierung/Kontrast geprüft
+- [ ] nicht betroffen ODER `docs/LAIEN_QUALITY_STANDARD.md` gegen Standardweg geprüft
+- [ ] Tastatur/Fokus/Skalierung 100/150/200 %/Kontrast geprüft
 - [ ] wichtige Zustände nicht nur über Farbe vermittelt
+
+## Info-Text-Impact
+
+- [ ] README/TODO/Docs/Evidence sind nicht betroffen ODER passend zum realen Ist-Stand aktualisiert
+- [ ] `python3 scripts/info_text_guard.py --base <BASE_SHA>` ist grün
 
 ## Abschluss
 
