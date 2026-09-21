@@ -15,8 +15,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
       - name: Validate repository contracts
         run: python3 scripts/repo_quality.py
+      - name: Validate triggered info-text impact
+        run: |
+          if [ -n "${GITHUB_BASE_REF:-}" ]; then
+            git fetch origin "$GITHUB_BASE_REF"
+            BASE_SHA="$(git merge-base HEAD "origin/$GITHUB_BASE_REF")"
+          else
+            BASE_SHA="$(git rev-parse HEAD^)"
+          fi
+          python3 scripts/info_text_guard.py --base "$BASE_SHA"
       - name: Run B01 unit tests
         run: PYTHONPATH=src python3 -m unittest discover -s tests -v
       - name: Run read-only preflight
