@@ -23,14 +23,14 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I15 Read-only Inventar | rekursiver B01-gebundener Nur-Lese-Inventarkern mit Symlink-Sperre, Unicode/Leerzeichen, Größenfakten und strukturierten Befunden implementiert | 🟢 Repository grün |
 | I16 Preview-Application | Inventar → reversible Trash-Preview über gemeinsamen Application-Core; GUI/CLI sammeln nur die Ordnerwahl ein | 🟢 Repository grün |
 | I17 Real-Accessibility | Zielsystem-Helfer, manuelle 100/150/200-%-Matrix und Screenshot-Vertrag vorbereitet; echter Desktop-/Laienlauf OPEN | 🟨 reale Evidence OPEN |
-| I18 Inventar-Komfort | read-only Suche, Sortierung und Top-10/50/100-Größenansichten im Domain-/Application-Core; sichtbare GUI-Anbindung wartet auf realen I17-Lauf | 🟨 CI ausstehend |
-| I19 Zielwahl-Decision | Same-Root-Zielwahl ohne Overwrite beschlossen; externe Ziele bleiben gesperrt; statischer Read-only-Lock blockiert Schreib-APIs im Produktcode | 🟨 CI ausstehend |
+| I18 Inventar-Komfort | read-only Suche, Sortierung und Top-10/50/100-Größenansichten im Domain-/Application-Core; sichtbare GUI-Anbindung wartet auf realen I17-Lauf | 🟢 Repository grün; UI weiter gegated |
+| I19 Zielwahl-Decision | Same-Root-Zielwahl ohne Overwrite beschlossen; externe Ziele bleiben gesperrt; statischer Read-only-Lock blockiert Schreib-APIs im Produktcode | 🟢 Decision + Guard grün |
 | I20 Diagnose-Observability | redigierter read-only Diagnosebericht als Klartext/JSON, CLI-only Use Case und stdout-Helfer; kein Datei-Export | 🟢 Repository grün |
 | I21 Same-Root Copy/Move Preview | gemeinsamer Core erzeugt Copy-/Move-Preview nur innerhalb derselben Root; Overwrite, externe Ziele und Auto-Rename blockiert | 🟢 Repository grün |
 | I22 Diagnose-Export Decision | späterer expliziter redigierter lokaler Export grundsätzlich zulässig, aber nur mit eigenem Writer-/Guard-REOPEN; aktuell keine Implementierung | 🟢 Decision eingefroren |
 | I23 Zielauswahl Adapter-Decision | gemeinsamer späterer GUI-/CLI-Workflow für I18-Auswahl + I21 Copy/Move-Preview festgelegt; sichtbare Implementierung wartet auf realen I17-Lauf | 🟢 Decision eingefroren |
 | I24 Diagnose-Export Writer Design | create-only/no-overwrite, Partial-/Crash-Strategie und gezielter Guard-REOPEN technisch festgelegt; noch kein Writer | 🟢 Design eingefroren |
-| I26 Diagnose-Export Preflight | immutable ExportPlan + serialisierter Payload, zweites Redaction-Gate, SHA-256/Größe und No-overwrite-Zielprüfung; vollständig read-only | 🟨 CI ausstehend |
+| I26 Diagnose-Export Preflight | immutable ExportPlan + serialisierter Payload, zweites Redaction-Gate, SHA-256/Größe und No-overwrite-Zielprüfung; vollständig read-only | 🟢 Repository-/Post-Merge-Gate grün |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -54,7 +54,7 @@ Die geplante GUI basiert auf **PySide6/Qt**. **Tkinter ist im Produktionscode au
 
 GUI und Linux-Konsole sind zwei Adapter desselben Fachkerns. Jede fachliche GUI-Funktion benötigt einen gleichwertigen laienfreundlichen Konsolenweg über ein Zahlen-Auswahlmenü; rein visuelle Ausnahmen müssen ausdrücklich begründet sein. Seit I10 beschreibt eine gemeinsame immutable Capability-/Use-Case-Registry Verfügbarkeit und Sicherheitsmetadaten für beide Adapter.
 
-Siehe [ADR-0001](docs/adr/ADR-0001-ui-cli-foundation.md), das [UI-Designsystem](docs/UI_DESIGN_SYSTEM.md), die [Theme-Tokens](docs/theme-tokens.md), den [messbaren Laien-Qualitätsstandard](docs/LAIEN_QUALITY_STANDARD.md), die [Info-Text-Governance](docs/INFO_TEXT_GOVERNANCE.md), den [GUI-/Konsolen-Paritätsvertrag](docs/GUI_CLI_PARITY.md), die [Regressionsmatrix](docs/REGRESSION_MATRIX.md) und den [Debugging-Standard](docs/DEBUGGING_STANDARD.md).
+Siehe [ADR-0001](docs/adr/ADR-0001-ui-cli-foundation.md), das [UI-Designsystem](docs/UI_DESIGN_SYSTEM.md), die [Theme-Tokens](docs/theme-tokens.md), den [messbaren Laien-Qualitätsstandard](docs/LAIEN_QUALITY_STANDARD.md), die [Info-Text-Governance](docs/INFO_TEXT_GOVERNANCE.md), den [GUI-/Konsolen-Paritätsvertrag](docs/GUI_CLI_PARITY.md), die [Regressionsmatrix](docs/REGRESSION_MATRIX.md), den [Debugging-Standard](docs/DEBUGGING_STANDARD.md), den [Dokumentationsindex](docs/README.md) und den [Wartbarkeitsvertrag](docs/MAINTENANCE.md).
 
 ## Repository-Struktur
 
@@ -65,7 +65,9 @@ Siehe [ADR-0001](docs/adr/ADR-0001-ui-cli-foundation.md), das [UI-Designsystem](
 ├── README.md                         # zentrale Projektübersicht
 ├── todo.txt                          # operative priorisierte Arbeitsliste
 ├── docs/
-│   ├── CURRENT_ITERATION.md          # A/B-Iteration, Besitzmatrix, Status, nächste 3 Schritte
+│   ├── README.md                     # navigierbarer Dokumentationsindex
+│   ├── MAINTENANCE.md                # Quellen der Wahrheit + Wartungsregeln
+│   ├── CURRENT_ITERATION.md          # aktueller Arbeitsblock und nächste 3 Schritte
 │   ├── adr/                          # Architekturentscheidungen
 │   └── evidence/                     # Regeln für reproduzierbare Nachweise
 ├── scripts/repo_quality.py           # dependency-freier Repository-Gate
@@ -75,7 +77,7 @@ Siehe [ADR-0001](docs/adr/ADR-0001-ui-cli-foundation.md), das [UI-Designsystem](
     └── workflows/repo-quality.yml
 ```
 
-Produktcode unter `src/` und zugehörige Tests werden nur blockweise angelegt, wenn Scope und Abnahme definiert sind. Aktuell existieren B01-Preflight/Pfadgrenzen, die gemeinsame Capability-Registry sowie der read-only I11 Application-/GUI-/CLI-Shell-Kern samt Tests; leere Architektur wird nicht auf Vorrat erzeugt.
+Produktcode unter `src/` und zugehörige Tests werden nur blockweise erweitert, wenn Scope und Abnahme definiert sind. Der aktuelle Kern umfasst Preflight/Pfadgrenzen, Registry/Application-Core, read-only GUI/CLI-Shell, Inventar/View, Preview-/Recovery-Verträge sowie redigierte Diagnose- und Export-Preflight-Verträge. Produktive Schreibpfade bleiben gesperrt; leere Architektur wird nicht auf Vorrat erzeugt.
 
 ## Entwicklungsdisziplin
 
@@ -99,28 +101,29 @@ Die vollständigen Trigger und Stop-Bedingungen stehen in [AGENTS.md](AGENTS.md)
 
 ## Automatische Qualitätsprüfung
 
-`.github/workflows/repo-quality.yml` läuft ohne Projektabhängigkeiten und prüft zunächst nur Repository-Verträge:
+`.github/workflows/repo-quality.yml` läuft ohne Projektabhängigkeiten und prüft Repository-Verträge:
 
-- Pflichtdateien vorhanden;
-- operative TODO-Struktur konsistent;
-- Baseline enthält REQ-BASELINE-1 und B00–B11;
-- keine Tkinter-Imports in zukünftigem Python-Produktionscode;
-- GitHub Actions besitzen minimale `permissions:` und externe Actions sind auf Commit-SHAs gepinnt;
+- stabile Pflichtdateien und dynamischen Iterationsindex;
+- operative TODO-Struktur, Prioritäten und Duplikate;
+- Baseline-Marker REQ-BASELINE-1 und B00–B11;
+- Python-Syntax in Produktcode, Skripten, Tests und Starter;
+- keine Tkinter-Imports im Python-Produktionscode;
+- GitHub Actions mit minimalen `permissions:` und gepinnten externen Actions;
+- interne relative Markdown-Links und versehentliche Tabellenumbrüche;
+- keine flüchtigen CI-Statuskopien in README/TODO;
 - kein Trailing-Whitespace in zentralen Text-/Codeformaten;
-- dokumentationsrelevante Änderungen führen über einen diff-basierten Info-Text-Impact-Guard;
-- `todo.txt` bleibt schema- und prioritätsgeprüft, ohne eine künstlich feste Eintragszahl.
+- diff-basierten Info-Text-Impact bei dokumentationsrelevanten Änderungen.
 
 Der Gate umfasst inzwischen die vollständige Unit-/Integrationssuite, den read-only Preflight und einen temporären End-to-End-Core-Diagnoselauf. Reale GUI-Wahrnehmung bleibt bewusst ein separates Evidence-Gate.
 
-## Aktuelle Reihenfolge
+## Aktueller technischer Stand
 
-1. **B00:** Designrichtung, vier Themes, Neon-/Workflow-Semantik und Accessibility-Grundregeln sind dokumentiert.
-2. **B01:** B01-A Preflight und B01-B Pfad-/Symlink-Grenzen sind implementiert; der read-only Zweitgeräte-Evidence-Runner ist vorbereitet, die reale physische Ausführung bleibt offen.
-3. **I10/I11:** gemeinsame Registry sowie read-only Application-/CLI-/GUI-Shell sind implementiert; reale visuelle Accessibility-Evidence bleibt OPEN.
-4. **I12/B05:** immutable Preview-Vertrag ist implementiert; kein Executor und keine Schreibfreigabe.
-5. **I13/B06:** Journal-/Undo-/Recovery-Zustandsvertrag ist implementiert; Persistenz und Executor bleiben weiterhin gesperrt.
-6. **I14/B04:** automatisierter Fokus-/Kontrast-/Skalierungsvertrag ist grün; reale Zielsystem-Evidence bleibt OPEN.
-7. **I15/I16:** read-only Inventar und gemeinsamer Inventory→Preview-Application-Pfad sind implementiert; Executor und Persistenz bleiben gesperrt.
+1. **B00/B01:** Designsystem, Preflight sowie Pfad-/Symlink-Grenzen sind dokumentiert bzw. implementiert; reale Zweitgeräte-Evidence bleibt offen.
+2. **I10–I16:** Registry, read-only Shell, Preview-/Recovery-Verträge, Inventar und gemeinsamer Inventory→Preview-Pfad sind implementiert.
+3. **I17:** automatisierte Vorarbeit ist grün; der reale 100/150/200-%-Desktop-/Laienlauf bleibt das sichtbare Accessibility-Gate.
+4. **I18–I21:** Inventar-Komfort, Read-only-Lock, Diagnose-Observability und Same-Root Copy/Move-Preview sind im Repository grün.
+5. **I22–I24/I26:** Diagnose-Export ist entschieden und bis zum vollständig read-only ExportPlan-/Payload-Preflight vorgezogen; echter Writer und Guard-REOPEN bleiben gesperrt.
+6. **Schreibpfade:** weiterhin `0` produktiv freigegeben.
 
 ## Quellen der Wahrheit
 
@@ -134,7 +137,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I26 Export-Preflight über CI einfrieren. Reales UI bleibt durch I17 gegated; der Diagnose-Writer bleibt gesperrt, bis Writer-spezifischer Guard, No-clobber-Beweis und Failure/Race-Tests separat freigegeben sind.**
+**Realer I17-B-Zielsystemlauf bleibt das nächste sichtbare UI-Gate. Parallel darf I27 ausschließlich als Writer-spezifischer Guard-/No-clobber-Decision-Block vorbereitet werden; ein produktiver Diagnose-Writer bleibt weiterhin gesperrt.**
 
 
 ## Screenshots

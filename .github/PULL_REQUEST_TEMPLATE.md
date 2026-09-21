@@ -59,6 +59,8 @@ Ein Satz:
 ## Info-Text-Impact
 
 - [ ] README/TODO/Docs/Evidence sind nicht betroffen ODER passend zum realen Ist-Stand aktualisiert
+- [ ] README/TODO kopieren keinen flüchtigen PR-/Merge-/CI-Livestatus
+- [ ] neue Iterationsdokumente sind in `docs/README.md` auffindbar
 - [ ] `python3 scripts/info_text_guard.py --base <BASE_SHA>` ist grün
 
 ## GUI / CLI Parität

@@ -11,6 +11,7 @@ CI aktualisiert Texte nicht selbst. Sie erkennt, **welche Informationsklasse bet
 | Klasse | Beispiele | Zweck |
 | --- | --- | --- |
 | Status | `README.md`, `todo.txt` | Was ist real vorhanden, offen, gesperrt? |
+| Navigation | `docs/README.md` | Wo liegt die führende Detailquelle? |
 | Bedienung | UI-/Workflow-Dokumente | Was sieht und versteht ein Nutzer? |
 | Sicherheit | B01/B05/B06-Dokumente, Evidence | Welche Grenzen und Rückwege gelten? |
 | Architektur | ADRs | Warum wurde eine technische Grenze gewählt? |
@@ -60,6 +61,7 @@ Der Guard ist ein **Staleness-Sensor**, kein Wahrheitsautomat.
 5. Ungeprüfte Funktionen werden als `OPEN` bezeichnet.
 6. README ist Übersicht, nicht zweite Spezifikation.
 7. Baseline bleibt unverändert, solange kein expliziter Change Request sie öffnet.
+8. Flüchtiger PR-/Merge-/CI-Livestatus bleibt in GitHub; dauerhafte Texte speichern Capability-, OPEN-/LOCKED- und historische Evidence-Zustände.
 
 ## 5. Erweiterung neuer Info-Texte
 
@@ -74,7 +76,17 @@ Vor neuer Datei prüfen:
 
 Wenn nein: bestehende Datei erweitern statt Dokumentationsfläche vergrößern.
 
-## 6. Abnahmeregel
+## 6. Dauerhafter Status und Navigation
+
+Der aktuelle GitHub-Workflow-/Merge-Zustand wird nicht in README/TODO gespiegelt. Das vermeidet zwangsläufige Drift direkt nach einem Merge.
+
+- README/TODO verwenden dauerhafte Aussagen wie `PASS`, `OPEN`, `LOCKED` oder konkrete Capability-Fakten.
+- Historische Run-/Commit-IDs gehören in Evidence oder Abschlussnotizen.
+- [Dokumentationsindex](README.md) ist die Navigationsquelle; neue `docs/I??_*.md` werden dort verlinkt.
+- [Wartbarkeitsvertrag](MAINTENANCE.md) definiert die Pflege- und Quellen-der-Wahrheit-Regeln.
+- `scripts/repo_quality.py` prüft interne Markdown-Links, Iterationsindex, Python-Syntax und typische Tabellenbruch-Artefakte.
+
+## 7. Abnahmeregel
 
 Ein PR mit Informationswirkung ist erst mergefähig, wenn:
 
