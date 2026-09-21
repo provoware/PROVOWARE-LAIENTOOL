@@ -163,6 +163,8 @@ Darf nicht ändern:
 
 Stop: Dokumentation stimmt mit geprüftem Ist-Stand überein; keine Behauptung über ungeprüfte Funktion.
 
+Zusätzlich gilt der diff-basierte Info-Text-Vertrag aus `docs/INFO_TEXT_GOVERNANCE.md`: Änderungen mit Informationswirkung müssen im selben Änderungspaket passende Status-, Prozess-, UX- oder Evidence-Texte nachführen. Der CI-Guard erkennt fehlende Nachführung, schreibt aber niemals selbst Dokumentation.
+
 ### Explorer 🔎
 Trigger: unbekannter Codepfad, mehrere mögliche Besitzer oder Architekturfrage vor einem Patch.
 Modus: read-only.
@@ -193,7 +195,7 @@ Stop: unabhängiger Prüfbericht mit maximal drei Hauptbefunden plus exakten Rep
 
 Trigger: sichtbare GUI-, Fokus-, Navigation-, Theme-, Skalierungs- oder Textänderung.
 
-Stop: Befunde für 100/150/200 %, Tastatur, Fokus, Kontrast und Reduced Motion; keine Reparaturen im selben Prüfauftrag.
+Stop: Befunde für 100/150/200 %, Tastatur, Fokus, Kontrast und Reduced Motion; keine Reparaturen im selben Prüfauftrag. Sichtbare Kernworkflows werden zusätzlich gegen `docs/LAIEN_QUALITY_STANDARD.md` geprüft; technisches PASS ersetzt kein Laien-PASS.
 
 ### Sicherheitsprüfer 🛡️
 
