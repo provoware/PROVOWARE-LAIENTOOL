@@ -19,7 +19,9 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from provoware_laientool.application_core import (  # noqa: E402
+    prepare_copy_preview,
     prepare_inventory_view,
+    prepare_move_preview,
     prepare_trash_preview,
 )
 from provoware_laientool.inventory import scan_inventory  # noqa: E402
@@ -96,6 +98,55 @@ def run_diagnostic() -> dict[str, object]:
             and preview.check.allowed,
             f"status={preview.status}",
         )
+
+        target_dir = root / "Ziel"
+        target_dir.mkdir()
+        copy_preview = prepare_copy_preview(
+            root,
+            ("alpha.txt",),
+            target_dir,
+        )
+        move_preview = prepare_move_preview(
+            root,
+            ("Unter Ordner/ä Bild mit Leerzeichen.png",),
+            target_dir,
+        )
+        record(
+            "same-root-copy-preview",
+            copy_preview.status == "PASS"
+            and copy_preview.plan is not None
+            and copy_preview.check is not None
+            and copy_preview.check.allowed
+            and not copy_preview.plan.writes_enabled
+            and not (target_dir / "alpha.txt").exists(),
+            f"status={copy_preview.status}",
+        )
+        record(
+            "same-root-move-preview",
+            move_preview.status == "PASS"
+            and move_preview.plan is not None
+            and move_preview.check is not None
+            and move_preview.check.allowed
+            and not move_preview.plan.writes_enabled
+            and not (target_dir / "ä Bild mit Leerzeichen.png").exists(),
+            f"status={move_preview.status}",
+        )
+
+        collision = target_dir / "alpha.txt"
+        collision.write_bytes(b"existing")
+        blocked_copy = prepare_copy_preview(
+            root,
+            ("alpha.txt",),
+            target_dir,
+        )
+        record(
+            "overwrite-blocked",
+            blocked_copy.status == "BLOCKED"
+            and blocked_copy.plan is None
+            and collision.read_bytes() == b"existing",
+            f"status={blocked_copy.status}",
+        )
+
         record(
             "sources-unchanged",
             first.read_bytes() == b"abc"
