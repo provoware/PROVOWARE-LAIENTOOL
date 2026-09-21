@@ -1,6 +1,6 @@
 # B01-A – Zielplattform, Capability-Erkennung und read-only Start-Preflight
 
-**Status:** implementiert, physische Zweitgeräte-Prüfung noch OPEN  
+**Status:** implementiert, physische Zweitgeräte-Prüfung noch OPEN
 **Bezug:** REQ-001, REQ-003, REQ-004; AQ-003, AQ-010, AQ-013, AQ-020
 
 ## Ziel
