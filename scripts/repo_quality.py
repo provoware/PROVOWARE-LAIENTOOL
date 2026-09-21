@@ -24,9 +24,7 @@ REQUIRED = (
     "docs/UPDATE_ORCHESTRATION.md",
     "docs/LAIEN_QUALITY_STANDARD.md",
     "docs/INFO_TEXT_GOVERNANCE.md",
-    "scripts/info_text_guard.py",
-    "docs/LAIEN_QUALITY_STANDARD.md",
-    "docs/INFO_TEXT_GOVERNANCE.md",
+    "docs/GUI_CLI_PARITY.md",
     "scripts/info_text_guard.py",
     "docs/evidence/EV-20260921-002-b01a-preflight.md",
     ".github/PULL_REQUEST_TEMPLATE.md",
@@ -41,6 +39,10 @@ errors: list[str] = []
 def fail(message: str) -> None:
     errors.append(message)
 
+
+if len(REQUIRED) != len(set(REQUIRED)):
+    duplicates = sorted({rel for rel in REQUIRED if REQUIRED.count(rel) > 1})
+    fail(f"Doppelte Pflichtdatei-Einträge im Repository-Gate: {duplicates}")
 
 for rel in REQUIRED:
     if not (ROOT / rel).is_file():
@@ -125,7 +127,7 @@ if errors:
     sys.exit(1)
 
 print("🟢 Repository-Gate PASS")
-print(" - Pflichtstruktur vorhanden")
+print(" - Pflichtstruktur vorhanden und ohne doppelte Gate-Einträge")
 print(" - Baseline-Marker vorhanden")
 print(" - TODO-Schema, Sortierung und Duplikate konsistent")
 print(" - kein Tkinter im Python-Produktionscode")
