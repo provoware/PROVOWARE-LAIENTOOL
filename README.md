@@ -78,7 +78,7 @@ Siehe [ADR-0001](docs/adr/ADR-0001-ui-cli-foundation.md), das [UI-Designsystem](
     └── workflows/repo-quality.yml
 ```
 
-Produktcode unter `src/` und zugehörige Tests werden nur blockweise erweitert, wenn Scope und Abnahme definiert sind. Der aktuelle Kern umfasst Preflight/Pfadgrenzen, Registry/Application-Core, read-only GUI/CLI-Shell, Inventar/View, Preview-/Recovery-Verträge sowie redigierte Diagnose- und Export-Preflight-Verträge. Produktive Schreibpfade bleiben gesperrt; leere Architektur wird nicht auf Vorrat erzeugt.
+Produktcode unter `src/` und zugehörige Tests werden nur blockweise erweitert, wenn Scope und Abnahme definiert sind. Der aktuelle Kern umfasst Preflight/Pfadgrenzen, Registry/Application-Core, einen separaten read-only Transfer-Application-Baustein für Same-Root Copy/Move-Preview, GUI/CLI-Shell, Inventar/View, Preview-/Recovery-Verträge sowie redigierte Diagnose- und Export-Preflight-Verträge. Produktive Schreibpfade bleiben gesperrt; leere Architektur wird nicht auf Vorrat erzeugt.
 
 ## Entwicklungsdisziplin
 

@@ -84,7 +84,8 @@ Ein Modul ab ungefähr **500 Zeilen** ist kein Fehler, aber ein Anlass zur Veran
 
 Diese Punkte sind bewusst zu beobachten, aber nicht automatisch zu refactoren:
 
-- `application_core.py`: gemeinsamer Use-Case-Knoten; weitere Verantwortung nur nach Kohäsionsprüfung.
+- `application_core.py`: gemeinsamer Navigation-/Result-Knoten; Same-Root Transfer-Preview ist als eigene stabile Verantwortung nach `transfer_application.py` ausgelagert.
+- `transfer_application.py`: ausschließlich read-only Zielordner-Ermittlung und Copy/Move-Preview-Vorbereitung; kein Executor und keine Adapterlogik.
 - README/TODO: keine erneute per-Iteration-CI-Chronik aufbauen.
 - `scripts/repo_quality.py`: nur stabile Repository-Verträge prüfen; neue Iterationsdateien werden dynamisch erkannt statt einzeln hart codiert.
 - GUI/CLI: keine Fachlogik in Adapter zurückwandern lassen.
