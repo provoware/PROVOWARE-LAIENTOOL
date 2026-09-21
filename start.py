@@ -29,12 +29,18 @@ def main(argv: list[str] | None = None) -> int:
         from provoware_laientool.gui_shell import main as gui_main
         return gui_main()
 
+    if args == ["--gui-i25-evidence"]:
+        from provoware_laientool.gui_shell import create_main_window
+        app, window = create_main_window(evidence_mode=True)
+        window.show()
+        return app.exec()
+
     if args in ([], ["--json"]):
         from provoware_laientool.preflight import main as preflight_main
         return preflight_main(args)
 
     print(
-        "Unbekannte Option. Erlaubt: --json, --menu, --gui",
+        "Unbekannte Option. Erlaubt: --json, --menu, --gui, --gui-i25-evidence",
         file=sys.stderr,
     )
     return 2

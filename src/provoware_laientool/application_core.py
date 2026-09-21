@@ -272,9 +272,77 @@ def available_actions() -> tuple[str, ...]:
     )
 
 
+TRANSFER_PREVIEW_IDS = ("files.preview_copy", "files.preview_move")
+
+
 def action_requires_root(use_case_id: str) -> bool:
     """Return whether an adapter must collect one explicit root path."""
-    return use_case_id == "files.preview_trash"
+    return use_case_id == "files.preview_trash" or use_case_id in TRANSFER_PREVIEW_IDS
+
+
+def _format_target_preview(
+    use_case_id: str,
+    preparation: TargetPreviewPreparation,
+) -> ActionResult:
+    title = (
+        "Kopieren – Vorschau"
+        if use_case_id == "files.preview_copy"
+        else "Verschieben – Vorschau"
+    )
+    if preparation.status != "PASS" or preparation.plan is None:
+        errors = preparation.errors or ("Die Vorschau ist noch nicht vollständig.",)
+        return ActionResult(
+            use_case_id=use_case_id,
+            title=title,
+            body=(
+                "Was ist passiert? Die Transfer-Vorschau wurde nicht freigegeben.\n"
+                "Was bedeutet das? Es wird nichts kopiert oder verschoben.\n"
+                "Befunde:\n- "
+                + "\n- ".join(errors)
+                + "\nWas kann ich tun? Prüfe Auswahl und Zielordner und versuche es erneut.\n\n"
+                "🔒 Es wurden keine Dateien verändert."
+            ),
+            status=preparation.status,
+        )
+
+    plan = preparation.plan
+    root = Path(plan.root)
+    first_target = Path(plan.items[0].target or root)
+    try:
+        target_label = first_target.parent.relative_to(root).as_posix() or "."
+    except ValueError:
+        target_label = first_target.parent.name
+
+    lines = [
+        "🔒 Reine Vorschau – es wird nichts ausgeführt.",
+        "",
+        f"Aktion: {'Kopieren' if use_case_id == 'files.preview_copy' else 'Verschieben'}",
+        f"Dateien: {plan.total_items}",
+        f"Gesamtgröße: {plan.total_bytes_estimate} Byte",
+        f"Zielordner innerhalb der gewählten Wurzel: {target_label}",
+        "",
+        "Geplante Wirkung:",
+    ]
+    for item in plan.items[:10]:
+        lines.append(f"- {item.effect}")
+    if len(plan.items) > 10:
+        lines.append(f"- … plus {len(plan.items) - 10} weitere")
+    lines.extend(
+        [
+            "",
+            "Rückweg:",
+            "Alle Einträge sind im aktuellen Preview-Vertrag als reversibel markiert.",
+            "Ein Executor ist weiterhin gesperrt.",
+            "",
+            "🔒 Es wurden keine Dateien verändert.",
+        ]
+    )
+    return ActionResult(
+        use_case_id=use_case_id,
+        title=title,
+        body="\n".join(lines),
+        status="PASS",
+    )
 
 
 def prepare_trash_preview(root: Path) -> PreviewPreparation:
@@ -401,7 +469,13 @@ def _format_preview(preparation: PreviewPreparation) -> ActionResult:
     )
 
 
-def execute(use_case_id: str, *, root: str | None = None) -> ActionResult:
+def execute(
+    use_case_id: str,
+    *,
+    root: str | None = None,
+    selected_relative_paths: tuple[str, ...] = (),
+    target_dir: str | None = None,
+) -> ActionResult:
     entry = get_use_case(use_case_id)
     if entry is None:
         return ActionResult(
@@ -415,7 +489,7 @@ def execute(use_case_id: str, *, root: str | None = None) -> ActionResult:
             status="OPEN",
         )
 
-    if entry.status != "READY":
+    if entry.status != "READY" and use_case_id not in TRANSFER_PREVIEW_IDS:
         return ActionResult(
             use_case_id=use_case_id,
             title=entry.label,
@@ -426,6 +500,38 @@ def execute(use_case_id: str, *, root: str | None = None) -> ActionResult:
             ),
             status=entry.status,
         )
+
+    if use_case_id in TRANSFER_PREVIEW_IDS:
+        if root is None or not root.strip():
+            return ActionResult(
+                use_case_id=use_case_id,
+                title=entry.label,
+                body=(
+                    "Was ist passiert? Es wurde kein Ordner ausgewählt.\n"
+                    "Was bedeutet das? Es wurde keine Transfer-Vorschau erzeugt.\n"
+                    "Was kann ich tun? Wähle zuerst ausdrücklich einen Ordner.\n\n"
+                    "🔒 Es wurden keine Dateien verändert."
+                ),
+                status="OPEN",
+            )
+        if target_dir is None or not target_dir.strip():
+            return ActionResult(
+                use_case_id=use_case_id,
+                title=entry.label,
+                body=(
+                    "Was ist passiert? Es wurde kein Zielordner ausgewählt.\n"
+                    "Was bedeutet das? Es wird nichts kopiert oder verschoben.\n"
+                    "Was kann ich tun? Wähle einen vorhandenen Zielordner innerhalb der Wurzel.\n\n"
+                    "🔒 Es wurden keine Dateien verändert."
+                ),
+                status="OPEN",
+            )
+        preparation = (
+            prepare_copy_preview(Path(root), selected_relative_paths, Path(target_dir))
+            if use_case_id == "files.preview_copy"
+            else prepare_move_preview(Path(root), selected_relative_paths, Path(target_dir))
+        )
+        return _format_target_preview(use_case_id, preparation)
 
     if use_case_id == "app.overview":
         return ActionResult(
