@@ -29,6 +29,7 @@ REQUIRED = (
     "docs/I10_CAPABILITY_REGISTRY.md",
     "docs/I11_READONLY_SHELL.md",
     "docs/I12_PREVIEW_MODEL.md",
+    "docs/I13_RECOVERY_CONTRACT.md",
     "docs/CURRENT_ITERATION.md",
     "scripts/info_text_guard.py",
     "scripts/second_device_evidence.py",
