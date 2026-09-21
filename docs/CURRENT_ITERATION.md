@@ -2,8 +2,8 @@
 
 ## I10 – Gemeinsame Capability-/Use-Case-Registry
 
-**Status:** 🟨 IN ARBEIT
-**Fortschritt:** `██████░░░░ 60 %`
+**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
+**Fortschritt:** `█████████░ 90 %`
 
 Der Prozentwert bildet ausschließlich die definierten Checkpoints dieser Iteration ab.
 
@@ -22,8 +22,9 @@ Der Prozentwert bildet ausschließlich die definierten Checkpoints dieser Iterat
 - 🟢 Paritätsvalidator blockiert GUI ohne CLI
 - 🟢 keine zukünftigen Produktfunktionen als READY vorgetäuscht
 - 🟢 Unit-Tests für Kernverträge angelegt
-- 🔵 Repository-/CI-Gates
-- 🔵 finaler Diff / Merge / Post-Merge
+- 🟢 Repository-/PR-CI-Gates PASS
+- 🟢 finaler Diff ohne Scope-Drift
+- 🔵 Merge / Post-Merge
 
 ## B – VARIABLE FOLGEAUFGABE
 
