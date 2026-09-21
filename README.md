@@ -33,7 +33,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I25 Transfer-Preview Adapter | gemeinsamer I18/I21-Pfad für Copy-/Move-Vorschau, CLI-Mehrfachauswahl und GUI-Prüfmodus implementiert; Registry bleibt bis neuer realer Accessibility-Evidence OPEN | 🟨 Implementiert · READY gegated |
 | I26 Diagnose-Export Preflight | immutable ExportPlan + serialisierter Payload, zweites Redaction-Gate, SHA-256/Größe und No-overwrite-Zielprüfung; vollständig read-only | 🟢 Repository-/Post-Merge-Gate grün |
 | I27 Diagnostic Writer Guard | exakter Writer-REOPEN-Vertrag, statische Partial-FD-Provenienz und No-clobber Partial→Final-Publish-Regeln | 🟢 Sicherheitsgate grün |
-| I28 Diagnose-Writer Testlab | isolierter create-only/no-clobber Writer mit Hash/Größe, Directory-fsync und automatischer Failure-Matrix; ohne Adapter/Registry | 🟨 RC · produktiv nicht erreichbar |
+| I28 Diagnose-Writer Testlab | isolierter create-only/no-clobber Writer mit Hash/Größe, Directory-fsync und automatischer Race/Crash/ENOSPC/PermissionError-Matrix; ohne Adapter/Registry | 🟢 AUTO PASS · produktiv nicht erreichbar |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -165,7 +165,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I25 bleibt an seiner einzigen Human-Wahrnehmungsfrage gegated. Parallel prüft I28 den dedizierten Diagnose-Writer ausschließlich automatisch im Testlabor; eine Nutzerfreigabe oder Adapter-Anbindung entsteht daraus nicht.**
+**I25 bleibt an seiner einzigen Human-Wahrnehmungsfrage gegated. I28 ist als automatischer Writer-Testlab-Baustein grün; als nächstes wird ausschließlich der Autorisierungs-/Adaptervertrag entschieden, weiterhin ohne automatische Produktfreigabe.**
 
 
 ## Screenshots
