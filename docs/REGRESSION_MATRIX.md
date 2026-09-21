@@ -94,3 +94,5 @@ Kein absichtlich roter Push und keine fachfremden Tests in frühen Schleifen.
 | I33 Wheelhouse-Integrität | `tests/test_i33_wheelhouse_integrity.py` + Portable-Package-Gate; exact set/version/platform/hash before offline pip |
 
 | I34 Plugin-Grenze | `tests/test_i34_plugin_boundary.py` + `scripts/plugin_boundary_guard.py`; data-only, READY/read-only only, kein Loader/Install/Netzwerk |
+
+| I35 Paket-Provenienz | `tests/test_i35_package_provenance.py` + Portable-Package-Gate; Commit/Manifest/Paketwurzel/ZIP-Name/Sidecar/Bytes gebunden |

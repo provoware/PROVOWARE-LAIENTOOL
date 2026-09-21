@@ -13,6 +13,8 @@ on:
       - "scripts/verify_wheelhouse_integrity.py"
       - "tests/test_i32_portable_package.py"
       - "tests/test_i33_wheelhouse_integrity.py"
+      - "tests/test_i35_package_provenance.py"
+      - "tests/test_i35_package_provenance.py"
       - ".github/workflows/portable-package.yml"
   push:
     branches:
@@ -69,7 +71,7 @@ jobs:
         run: |
           ARCHIVE="$(find dist -maxdepth 1 -type f -name '*.zip' -print -quit)"
           test -n "$ARCHIVE"
-          timeout 8m python3 scripts/validate_portable_package.py             "$ARCHIVE"             --require-wheelhouse             --runtime-check             --report dist/package-validation.json
+          timeout 8m python3 scripts/validate_portable_package.py             "$ARCHIVE"             --checksum "${ARCHIVE}.sha256"             --require-wheelhouse             --runtime-check             --report dist/package-validation.json
       - name: Preserve portable package
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

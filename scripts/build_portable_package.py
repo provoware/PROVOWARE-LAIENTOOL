@@ -14,6 +14,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import re
 import subprocess
 import sys
 import zipfile
@@ -24,6 +25,7 @@ except ImportError:
     from wheelhouse_integrity import validate_wheelhouse_dir
 
 ROOT = Path(__file__).resolve().parents[1]
+COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
 FIXED_ZIP_TIME = (1980, 1, 1, 0, 0, 0)
 RUNTIME_TOP_LEVEL = {
     "README.md",
@@ -115,7 +117,9 @@ def build_package(
     wheelhouse: Path | None = None,
     commit: str | None = None,
 ) -> tuple[Path, Path, dict[str, object]]:
-    commit = commit or current_commit()
+    commit = (commit or current_commit()).lower()
+    if not COMMIT_RE.fullmatch(commit):
+        raise ValueError("Paket-Commit muss exakt ein 40-stelliger Git-SHA-1 in Hex sein.")
     tag = platform_tag()
     package_root = f"PROVOWARE-LAIENTOOL-{commit[:12]}-{tag}"
     output_dir.mkdir(parents=True, exist_ok=True)
