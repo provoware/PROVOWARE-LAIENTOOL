@@ -99,6 +99,7 @@ def _is_role(node: ast.AST, role: str) -> bool:
         f"{role}_path",
         f"{role}_name",
         f"{role}_dir",
+        f"{role}_fd",
         f"{role}_dir_fd",
     }
     return name in accepted or any(name.endswith("_" + value) for value in accepted)
