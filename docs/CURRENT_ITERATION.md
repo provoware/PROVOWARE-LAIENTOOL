@@ -2,7 +2,7 @@
 
 ## I17-B – Geführter realer GUI-/Accessibility-Zielsystemlauf
 
-**Status:** 🟨 EVIDENCE-ASSISTENT IMPLEMENTIERT – REALER ZIELSYSTEMLAUF OFFEN  
+**Status:** 🟨 EVIDENCE-ASSISTENT IMPLEMENTIERT – REALER ZIELSYSTEMLAUF OFFEN
 **Fortschritt:** `██████░░░░ 60 %`
 
 **Basis:** `b1a7bbd47c74316fc391177bea112fc836e73caf`
