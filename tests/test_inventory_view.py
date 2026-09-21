@@ -2,6 +2,10 @@ from __future__ import annotations
 
 import unittest
 
+from pathlib import Path
+import tempfile
+
+from provoware_laientool.application_core import prepare_inventory_view
 from provoware_laientool.inventory import InventoryItem, InventoryResult
 from provoware_laientool.inventory_view import (
     SORT_NAME_ASC,
@@ -104,6 +108,33 @@ class InventoryViewTests(unittest.TestCase):
                 sample_inventory(),
                 InventoryViewSpec(sort="random"),
             )
+
+    def test_shared_application_path_scans_then_builds_view(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "Downloads"
+            root.mkdir()
+            (root / "small.txt").write_bytes(b"1")
+            (root / "large.bin").write_bytes(b"12345")
+
+            result = prepare_inventory_view(
+                root,
+                InventoryViewSpec(sort=SORT_SIZE_DESC, limit=10),
+            )
+
+        self.assertEqual(result.status, "PASS")
+        self.assertIsNotNone(result.view)
+        assert result.view is not None
+        self.assertEqual(result.view.items[0].relative_path, "large.bin")
+
+    def test_shared_application_path_blocks_missing_root(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            result = prepare_inventory_view(
+                Path(temp) / "missing",
+                InventoryViewSpec(),
+            )
+
+        self.assertEqual(result.status, "BLOCKED")
+        self.assertIsNone(result.view)
 
 
 if __name__ == "__main__":
