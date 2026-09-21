@@ -2,8 +2,8 @@
 
 ## I23 – Same-Root Zielauswahl Adapter-Decision
 
-**Status:** 🟨 ENTSCHEIDUNG DOKUMENTIERT / CI-ABNAHME AUSSTEHEND
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
+**Fortschritt:** `█████████░ 90 %`
 
 ## A – FESTER PLAN
 
@@ -62,6 +62,10 @@ Daher definiert I23 nur den Adaptervertrag. Sichtbare GUI-Erweiterungen werden n
 8. vollständige Regression-Suite PASS.
 9. finaler Diff ohne Produktcode.
 10. Post-Merge-CI PASS.
+
+**Repository-/PR-CI:** 🟢 PASS
+**Finaler Diff:** 🟢 nur Decision-/Statusdoku
+**Merge/Post-Merge:** 🔵 ausstehend
 
 ## Nächste drei vorgeplante Schritte
 
