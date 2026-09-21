@@ -2,7 +2,7 @@
 
 ## Status
 
-Technischer Shell-/Paritätsvertrag implementiert. Reale visuelle GUI-Evidence für 100/150/200 %, Fokus und Kontrast bleibt bis zu einem ausführbaren PySide6-/Display-Lauf **OPEN**.
+Technischer Shell-/Paritätsvertrag implementiert. Die reale Accessibility-Gesamtabnahme wird inzwischen durch I17-D automatisiert vorbereitet und bleibt bis zum echten `./start.sh --i17`-Lauf **OPEN**.
 
 ## Ziel
 
@@ -32,26 +32,28 @@ Alle drei sind gleichzeitig:
 
 ## Startwege
 
+Der dauerhafte offizielle Nutzer-Einstiegspunkt ist ausschließlich `start.sh`.
+
 Bestehender B01-Preflight:
 
 ```bash
-python3 start.py
-python3 start.py --json
+./start.sh --preflight
+./start.sh --json
 ```
 
 Laienfreundliches Zahlenmenü:
 
 ```bash
-python3 start.py --menu
+./start.sh --menu
 ```
 
-Optionale PySide6-GUI:
+PySide6-GUI:
 
 ```bash
-python3 start.py --gui
+./start.sh --gui
 ```
 
-Fehlt PySide6, wird nichts installiert. Der Nutzer erhält stattdessen den sicheren Hinweis auf `--menu`.
+Der Starter validiert die projektlokale Venv und installiert nichts still. Direkte `python3 start.py ...`-Aufrufe sind nur interne Entwicklerwege.
 
 ## CLI-Vertrag
 
