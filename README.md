@@ -37,7 +37,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I29 Diagnose-Export Authorization Decision | Doppelbestätigung, Plan-Fingerprint, Cancel-Semantik, GUI/CLI-Parität und neue Registry-Sicherheitsklasse festgelegt | 🟢 Decision eingefroren |
 | I30 Diagnose-Export Autorisierung | nichtvisuelle zweistufige sessiongebundene Autorisierung mit Fingerprint-, Stale-, Manipulations- und Replay-Schutz; Writer one-shot; Registry bleibt OPEN | 🟢 AUTO PASS · keine Standardadapter |
 | I31 Diagnose-Export Adapter-Evidence | GUI-/CLI-Prüfmodus auf demselben I26/I30/I28-Pfad; 100/150/200 %, Tastatur, Doppelbestätigung, Cancel, BLOCKED und exakt-eine-Datei-PASS automatisch belegt | 🟢 AUTO PASS · Human-Gate offen · Registry OPEN |
-| Schreibpfade | 0 freigegeben | 🔒 gesperrt |
+| Schreibpfade | 0 freigegeben | 🔒 gesperrt |\n| B07 Paketierung | I32 reproduzierbares Portable-Source-ZIP; Offline-Dependency-Bundle separat offen | 🟨 teilweise umgesetzt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
 
@@ -171,7 +171,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I25 und I31 besitzen jeweils nur noch eine finale Human-Wahrnehmungsfrage. I31 ist technisch vollständig AUTO PASS; bis zur einen Gesamtabnahme bleibt diagnostics.export_local OPEN und im normalen Produktweg unsichtbar.**
+**I25 und I31 bleiben mit je einer finalen Human-Wahrnehmungsfrage geparkt. I32 bearbeitet parallel B07 vollständig automatisch: reproduzierbares Portable-ZIP, Fremdpfad und fail-closed Offline-Check.**
 
 
 ## Screenshots

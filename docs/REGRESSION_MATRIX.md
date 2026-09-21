@@ -89,3 +89,4 @@ READ
 ```
 
 Kein absichtlich roter Push und keine fachfremden Tests in frühen Schleifen.
+\n| I32 Portable ZIP | `tests/test_i32_portable_package.py` + `scripts/build_portable_zip.py`; Reproducibility/Manifest/Fremdpfad/Offline-Check |\n

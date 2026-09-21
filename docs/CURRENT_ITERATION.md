@@ -1,48 +1,26 @@
 # PROVOWARE – Current Iteration
+## I32 – Portable ZIP / Fremdpfad / Offline-Paketvertrag
+**Status:** 🟨 RC · AUTOMATISCHE GATES LAUFEN
+**Fortschritt:** `████████░░ 80 %`
 
-## I31 – Diagnose-Export GUI-/CLI-Prüfmodus
+**A – PLAN:** B07 erhält eine reproduzierbare Portable-Source-ZIP-Form.  
+**B – DELTA:** NONE; I31-HUMAN bleibt bewusst geparkt.
 
-**Status:** 🟢 AUTO PASS · HUMAN-GATE OPEN
-**Fortschritt:** `█████████▌ 95 %`
+Implementiert: deterministischer ZIP-Builder, Manifest/Hashes, `start.sh` als kanonischer Einstieg, Desktop-Klickoberfläche als reine Delegation, Fremdpfad/Unicode, Offline-Hilfe, fail-closed `--check`, eigener CI-Paketgate.
 
-## Implementiert
-
-- gemeinsamer GUI-/CLI-Adapter auf I26/I30/I28;
-- normaler Produktweg bleibt unverändert;
-- Registry `diagnostics.export_local` bleibt OPEN und in normalen Adaptern verborgen;
-- drei kanonische Prüfstarts über `start.sh`;
-- synthetische Diagnosedaten und temporäre Zielordner;
-- automatisierte GUI-Evidence bei 100/150/200 %;
-- Tastatur-/Fokusvertrag;
-- Doppelbestätigung;
-- Cancel;
-- Failure-Darstellung;
-- exakt eine Datei bei PASS;
-- CI-Evidence-Artefakt.
-
-## Sicherheitsgrenze
-
-Der I31-Prüfmodus schreibt ausschließlich in eigens erzeugte temporäre Testordner. Keine echten Nutzdateien werden als Fixture verwendet. Der normale GUI-/CLI-Produktpfad kann den OPEN-Use-Case weiterhin nicht aufrufen.
+Nicht behauptet wird eine frische vollständig offline einrichtbare GUI; PySide6 wird nicht gebündelt.
 
 ## Exit-Gates
-
-1. I31 Adaptertests.
-2. I30 Autorisierungsregression.
-3. I28 Writer-Regression.
-4. I27 Spezialguard + globaler Read-only-Lock.
-5. I31 offscreen 100/150/200.
-6. GUI Cancel / PASS / BLOCKED.
-7. CLI Cancel / PASS.
-8. exakt eine neue Testdatei bei PASS.
-9. Full Suite/Core Diagnostic/Preflight.
-10. Registry bleibt OPEN.
-
-## AUTO-Ergebnis
-
-Der technische I31-Pfad ist vollständig grün. Verbleibend ist ausschließlich die finale Human-Gesamtabnahme des sichtbaren Prüfmodus.
+1. zwei Builds byte-identisch;
+2. Manifest/Hashes PASS;
+3. keine Venv/Git/Buildreste;
+4. Fremdpfad PASS;
+5. Offline-Hilfe PASS;
+6. Offline-Check ohne Mutation;
+7. Full Gate PASS;
+8. ZIP-CI-Artefakt vorhanden.
 
 ## Nächste drei Schritte
-
-1. 🟢 I31 Evidence an RC `2a90de7a45ca900d9cc203f4d6db4c4ee806e6c3` binden und mergen.
-2. 🟨 irgendwann genau eine Human-Gesamtabnahme über `./start.sh --i31-evidence`; keine weiteren Einzeltests.
-3. 🔒 erst bei Human-PASS einen separaten Freeze-/READY-Decision-Block eröffnen; bis dahin bleibt der normale Produktweg gesperrt.
+1. I32 automatisch prüfen und Evidence binden.
+2. Bei Grün mergen.
+3. I33 Offline-Dependency-Bundle-Decision rein automatisch durchführen.

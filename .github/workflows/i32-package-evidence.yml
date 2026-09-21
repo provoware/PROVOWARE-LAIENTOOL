@@ -1,0 +1,34 @@
+name: i32-package-evidence
+on:
+  pull_request:
+    paths: ["scripts/build_portable_zip.py","tests/test_i32_portable_package.py","start.sh","start.py","requirements-gui.txt","src/**","scripts/**","docs/**","README.md","AGENTS.md","PROVOWARE_TODO_INPUT_POOL0.md","todo.txt",".github/workflows/i32-package-evidence.yml"]
+  push:
+    branches: [main]
+    paths: ["scripts/build_portable_zip.py","tests/test_i32_portable_package.py","start.sh","start.py","requirements-gui.txt","src/**","scripts/**","docs/**","README.md","AGENTS.md","PROVOWARE_TODO_INPUT_POOL0.md","todo.txt",".github/workflows/i32-package-evidence.yml"]
+concurrency:
+  group: i32-package-evidence-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  portable-package:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 1
+      - name: Run I32 package regression
+        run: timeout 4m env PYTHONPATH=. python3 -m unittest tests.test_i32_portable_package -v
+      - name: Build portable ZIP
+        run: timeout 2m python3 scripts/build_portable_zip.py --output dist/PROVOWARE-LAIENTOOL-portable.zip
+      - name: Verify portable ZIP
+        run: timeout 2m python3 scripts/build_portable_zip.py --verify-only dist/PROVOWARE-LAIENTOOL-portable.zip
+      - name: Preserve portable ZIP
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: provoware-portable-${{ github.sha }}
+          path: dist/PROVOWARE-LAIENTOOL-portable.zip
+          if-no-files-found: error
+          retention-days: 14
