@@ -32,3 +32,5 @@ Dateiname: `EV-YYYYMMDD-NNN-kurzname.md`
 - `EV-20260921-005-i17-real-accessibility.md` – realer I17-D-Zielsystemlauf: AUTO PASS + HUMAN PASS, Freeze-Nachweis.
 
 - `EV-20260921-006-branch-hygiene-i27.md` – Altbranch-Klassifikation, gerettete MOVE-Reversibilitätsinvariante und gehärteter I27-Transplant.
+
+- `EV-20260921-007-i28-diagnostic-writer-testlab.md` – automatischer I28 No-clobber Writer-, Failure- und Race-Nachweis.

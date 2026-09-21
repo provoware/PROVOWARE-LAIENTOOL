@@ -2,8 +2,8 @@
 
 ## I28 – Diagnostic Export Writer Testlab
 
-**Status:** 🟨 AUTOMATISCHER WRITER-RC · KEIN NUTZERPFAD
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🟢 AUTOMATISCH PASS · KEIN NUTZERPFAD
+**Fortschritt:** `██████████ 100 %`
 
 ## A – FESTER PLAN
 
@@ -87,6 +87,6 @@ Im Produkt existiert kein Pfad, der `write_enabled=True` erzeugt.
 
 ## Nächste drei Schritte
 
-1. 🟨 I28-RC vollständig automatisch prüfen und Fehler ausschließlich innerhalb des Writer-/Guard-Scope beheben.
+1. 🟢 I28 automatisiert grün einfrieren; Writer bleibt ohne Nutzerpfad.
 2. 🔵 nach grünem I28 eine getrennte Autorisierungs-/Adapter-Decision treffen; kein automatisches Aktivieren des Writers.
 3. 🔒 I25-Human-Gate bleibt unabhängig offen und erzeugt keine Zwischenarbeit.
