@@ -2,8 +2,8 @@
 
 ## I21 – Same-Root Copy/Move Preview Application
 
-**Status:** 🟨 IMPLEMENTIERT / CI-ABNAHME AUSSTEHEND
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
+**Fortschritt:** `█████████░ 90 %`
 
 ## A – FESTER PLAN
 
@@ -33,8 +33,9 @@
 - 🟢 kein Registry-/GUI-/CLI-Ausbau
 - 🟢 Unit-/Negativtests
 - 🟢 Core-Diagnostic um Copy/Move/Overwrite erweitert
-- 🔵 Repository-/PR-CI
-- 🔵 finaler Diff / Merge / Post-Merge
+- 🟢 Repository-/PR-CI PASS
+- 🟢 finaler Diff ohne Scope-Drift
+- 🔵 Merge / Post-Merge
 
 ## B – VARIABLE FOLGEAUFGABE
 
