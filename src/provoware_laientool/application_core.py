@@ -153,10 +153,6 @@ def _prepare_same_root_target_preview(
         source = resolved_root / relative_path
         target = resolved_target_dir / Path(relative_path).name
 
-        if target.exists():
-            errors.append(f"Ziel existiert bereits: {target}")
-            continue
-
         source_decision = validate_path(
             resolved_root,
             source,
@@ -183,6 +179,10 @@ def _prepare_same_root_target_preview(
 
         if source_decision.resolved == target_decision.resolved:
             errors.append(f"Quelle und Ziel sind identisch: {relative_path}")
+            continue
+
+        if target.exists():
+            errors.append(f"Ziel existiert bereits: {target}")
             continue
 
         effect_verb = "kopiert" if action == ACTION_COPY else "verschoben"
