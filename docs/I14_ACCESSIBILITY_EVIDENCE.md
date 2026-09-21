@@ -3,7 +3,7 @@
 ## Status
 
 **Automatisierbarer Teil:** 🔴 FAIL
-**Realer Desktop-/Laiennachweis:** 🟨 OPEN
+**Historischer realer Desktop-/Laiennachweis dieser Iteration:** 🟨 OPEN
 
 I14 ist eine Prüfiteration. Sie repariert die geprüfte I11-GUI nicht im selben Prüfauftrag.
 
@@ -69,7 +69,7 @@ Der UX-/Accessibility-Prüfer arbeitet gemäß `AGENTS.md` read-only. Ein Befund
 
 Der fehlende explizite Fokusvertrag wird daher als nächster DELTA-Block vorgemerkt.
 
-## Reale Prüfung bleibt OPEN
+## Historische reale Prüfung blieb in I14 OPEN
 
 Folgende Punkte können nicht seriös aus Quelltext oder CI allein als PASS behauptet werden:
 
@@ -114,4 +114,4 @@ Der in I14 dokumentierte Fokusbefund wird in I15 als separater DELTA behandelt.
 
 Im I15-Branch wurden explizite `QComboBox:focus`- und `QTextEdit:focus`-Regeln ergänzt. Der historische I14-Befund bleibt unverändert gültig für den damaligen Stand.
 
-Die reale Desktop-/Laienprüfung bleibt weiterhin **OPEN**. Erst ein grüner automatisierter Re-Check plus späterer echter Zielsystemlauf darf den Fokusvertrag höherstufen.
+Der historische I14-Stand bleibt unverändert dokumentiert. Der spätere I17-D-Zielsystemlauf hat die aktuelle reale Accessibility-Gesamtabnahme inzwischen erfolgreich als PASS bestätigt.

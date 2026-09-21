@@ -28,3 +28,5 @@ Dateiname: `EV-YYYYMMDD-NNN-kurzname.md`
 - Fakten, Annahmen und Vermutungen nicht vermischen;
 - keine Secrets oder unnötigen personenbezogenen Pfade;
 - nach RC-Freeze Evidence ergänzen, aber RC nicht reparieren.
+
+- `EV-20260921-005-i17-real-accessibility.md` – realer I17-D-Zielsystemlauf: AUTO PASS + HUMAN PASS, Freeze-Nachweis.
