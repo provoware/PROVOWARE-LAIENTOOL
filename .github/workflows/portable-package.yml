@@ -1,0 +1,78 @@
+name: portable-package
+
+on:
+  pull_request:
+    paths:
+      - "PROVOWARE.desktop"
+      - "start.sh"
+      - "start.py"
+      - "requirements-gui.txt"
+      - "scripts/build_portable_package.py"
+      - "scripts/validate_portable_package.py"
+      - "tests/test_i32_portable_package.py"
+      - ".github/workflows/portable-package.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "PROVOWARE.desktop"
+      - "start.sh"
+      - "start.py"
+      - "requirements-gui.txt"
+      - "scripts/build_portable_package.py"
+      - "scripts/validate_portable_package.py"
+      - "tests/test_i32_portable_package.py"
+      - ".github/workflows/portable-package.yml"
+
+concurrency:
+  group: portable-package-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-offline-package:
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact package source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+      - name: Restore pip download cache
+        uses: actions/cache@3edfce9056124e459a23f683a21433670d47daca
+        with:
+          path: ~/.cache/pip
+          key: portable-pip-${{ runner.os }}-${{ hashFiles('requirements-gui.txt') }}
+          restore-keys: |
+            portable-pip-${{ runner.os }}-
+      - name: Install runtime library for Qt validation
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends libegl1
+      - name: Download pinned offline wheels
+        run: |
+          mkdir -p build/wheelhouse
+          timeout 8m python3 -m pip download             --disable-pip-version-check             --only-binary=:all:             --dest build/wheelhouse             --requirement requirements-gui.txt
+      - name: Build deterministic portable ZIP
+        run: |
+          timeout 3m python3 scripts/build_portable_package.py             --output-dir dist             --wheelhouse build/wheelhouse
+      - name: Validate ZIP and offline bootstrap from foreign path
+        run: |
+          ARCHIVE="$(find dist -maxdepth 1 -type f -name '*.zip' -print -quit)"
+          test -n "$ARCHIVE"
+          timeout 8m python3 scripts/validate_portable_package.py             "$ARCHIVE"             --require-wheelhouse             --runtime-check             --report dist/package-validation.json
+      - name: Preserve portable package
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: portable-package-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            dist/*.zip
+            dist/*.sha256
+            dist/package-validation.json
+          if-no-files-found: error
+          retention-days: 7
+          include-hidden-files: true

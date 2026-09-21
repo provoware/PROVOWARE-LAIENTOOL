@@ -11,6 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CORE_REQUIRED = (
     "README.md",
+    "PROVOWARE.desktop",
     "start.sh",
     "requirements-gui.txt",
     "AGENTS.md",
@@ -37,6 +38,8 @@ CORE_REQUIRED = (
     "scripts/i17_auto_evidence.py",
     "scripts/i25_auto_evidence.py",
     "scripts/i31_auto_evidence.py",
+    "scripts/build_portable_package.py",
+    "scripts/validate_portable_package.py",
     "scripts/core_diagnostics.py",
     "scripts/read_only_guard.py",
     "scripts/diagnostic_writer_guard.py",
@@ -50,6 +53,7 @@ CORE_REQUIRED = (
     ".github/workflows/repo-quality.yml",
     ".github/workflows/i25-gui-evidence.yml",
     ".github/workflows/i31-export-evidence.yml",
+    ".github/workflows/portable-package.yml",
 )
 TEXT_SUFFIXES = {".md", ".txt", ".py", ".sh", ".yml", ".yaml"}
 PRIORITIES = {"P0", "P1", "P2", "P3"}
@@ -182,7 +186,7 @@ for workflow in (ROOT / ".github" / "workflows").glob("*.y*ml"):
         fail(f"Workflow ohne Concurrency-Schutz: {workflow.relative_to(ROOT)}")
     if re.search(r"(?mi)^\s{2}cancel-in-progress:\s*true\s*$", text) is None:
         fail(f"Workflow ohne Abbruch veralteter Runs: {workflow.relative_to(ROOT)}")
-    if workflow.name in {"i25-gui-evidence.yml", "i31-export-evidence.yml"}:
+    if workflow.name in {"i25-gui-evidence.yml", "i31-export-evidence.yml", "portable-package.yml"}:
         if re.search(r"(?m)^\s{2}push:\s*$", text) is None or "- main" not in text:
             fail(f"{workflow.name} muss relevante Änderungen auch nach Merge auf main prüfen")
     for action in re.findall(r"(?m)^\s*uses:\s*([^\s#]+)", text):
@@ -258,7 +262,7 @@ if errors:
 
 print("🟢 Repository-Gate PASS")
 print(" - stabile Pflichtstruktur und dynamischer Iterationsindex konsistent")
-print(" - start.sh als kanonischer Venv-first Starter und PySide6-Pin konsistent")
+print(" - start.sh als kanonischer Venv-first Starter, Offline-Wheelhouse und PySide6-Pin konsistent")
 print(" - Baseline-Marker vorhanden")
 print(" - TODO-Schema, Sortierung und Duplikate konsistent")
 print(" - Python-Syntax in Produktcode, Skripten, Tests und Starter geprüft")

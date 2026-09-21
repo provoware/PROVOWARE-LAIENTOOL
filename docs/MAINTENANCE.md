@@ -125,6 +125,15 @@ Regeln:
 - technische GUI-Evidence kann dadurch nachträglich aus GitHub geprüft werden, ohne den Nutzer denselben Ablauf erneut ausführen zu lassen;
 - ein grüner unveränderter Stand wird nicht manuell erneut gestartet.
 
+### Portable-Paketvertrag
+
+- Release-/Testpakete werden ausschließlich durch `scripts/build_portable_package.py` erzeugt;
+- `start.sh` bleibt auch im ZIP der einzige kanonische Laufzeit-Starter;
+- ein mitgeliefertes `wheelhouse/` erzwingt Offline-Installation mit `--no-index`; kein stiller Netzwerk-Fallback;
+- jedes ZIP enthält `PACKAGE_MANIFEST.json` mit Commit und SHA-256 aller Nutzdateien;
+- `scripts/validate_portable_package.py` validiert Paketpfade, Manifest, Fremdpfad und optional den Offline-Bootstrap;
+- CI-Paketierung ersetzt keine physische Zweitgeräte-Evidence.
+
 ## 9. Ein-Befehl-Abnahme
 
 ```bash

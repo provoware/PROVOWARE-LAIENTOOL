@@ -38,3 +38,5 @@ Dateiname: `EV-YYYYMMDD-NNN-kurzname.md`
 - `EV-20260922-008-i30-diagnostic-export-authorization.md` – I30 Fingerprint-/Doppelbestätigungs-/Replay-/One-shot-Autorisierungsnachweis.
 
 - `EV-20260922-009-i31-diagnostic-export-adapter-evidence.md` – I31 GUI-/CLI-AUTO-Nachweis mit 100/150/200 %, Tastatur, Doppelbestätigung, Cancel, BLOCKED und exakt-eine-Datei-PASS.
+
+- `EV-20260922-010-i32-portable-offline-package.md` – I32 deterministisches Linux-x86_64-ZIP, Offline-Wheelhouse, Fremdpfad- und Bootstrap-Nachweis.

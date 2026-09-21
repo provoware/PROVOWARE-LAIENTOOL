@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=PROVOWARE
+Comment=PROVOWARE LAIENTOOL starten
+Exec=sh -c 'launcher="$1"; cd "$(dirname "$launcher")"; exec ./start.sh --gui' sh %k
+Terminal=false
+Icon=system-file-manager
+Categories=Utility;
+StartupNotify=true
+X-KDE-SubstituteUID=false
