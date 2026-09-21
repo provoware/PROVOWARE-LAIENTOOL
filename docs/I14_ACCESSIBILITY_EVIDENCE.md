@@ -117,3 +117,12 @@ Ein Repository-/CI-PASS für den Evidence-Runner bedeutet nur:
 - die automatischen Befunde sind reproduzierbar.
 
 Es bedeutet ausdrücklich **nicht**, dass I14 als Accessibility-Gesamtgate bestanden ist.
+
+
+## I15-Folgekorrektur
+
+Der in I14 dokumentierte Fokusbefund wird in I15 als separater DELTA behandelt.
+
+Im I15-Branch wurden explizite `QComboBox:focus`- und `QTextEdit:focus`-Regeln ergänzt. Der historische I14-Befund bleibt unverändert gültig für den damaligen Stand.
+
+Die reale Desktop-/Laienprüfung bleibt weiterhin **OPEN**. Erst ein grüner automatisierter Re-Check plus späterer echter Zielsystemlauf darf den Fokusvertrag höherstufen.
