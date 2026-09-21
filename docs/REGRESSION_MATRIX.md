@@ -22,6 +22,7 @@ Die Matrix reduziert unnötige lokale/agentische Testläufe. Der zentrale PR-Gat
 | I16 Preview-Application | `tests/test_i16_preview_application.py` |
 | Theme/Fokus/Skalierung | `tests/test_accessibility_evidence.py` |
 | I17 Evidence-Helfer | `tests/test_i17_target_evidence.py` |
+| Diagnostic Export Preflight | `tests/test_diagnostic_export_plan.py` + Read-only-Lock |
 | I18 Inventar-Komfort | `tests/test_inventory_view.py` |
 | Core-Diagnostik | `tests/test_core_diagnostics.py` + `python3 scripts/core_diagnostics.py` |
 | Read-only-Lock | `tests/test_read_only_guard.py` + `python3 scripts/read_only_guard.py` |
