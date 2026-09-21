@@ -1,132 +1,40 @@
-# I17 – Realer Accessibility-Zielsystemlauf
+# I17 – Automatisierte Qt-Evidence mit Chromium-Abnahme
 
 ## Status
 
-**Evidence-Infrastruktur:** 🟢 geführter I17-B-Assistent vorbereitet
-**Realer Zielsystemnachweis:** 🟨 OPEN
+**I17-AUTO:** 🔵 maschinell reproduzierbare Qt-Evidence  
+**I17-HUMAN:** 🟨 genau eine finale Laienabnahme in Chromium  
+**Gesamt:** PASS nur bei AUTO PASS + HUMAN PASS
 
-I17 darf erst vollständig grün werden, wenn die sichtbaren/manuellen Gates auf einer echten PySide6-/Desktop-Session geprüft wurden. CI allein kann diesen Nachweis nicht ersetzen.
+## Verbindlicher Start
 
-## Empfohlener Ein-Befehl-Start
-
-Auf dem echten Kubuntu-/PySide6-Zielsystem im Repository:
+Der offizielle Nutzerstart erfolgt ausschließlich über:
 
 ```bash
 ./start.sh --i17
 ```
 
-Der Starter validiert davor automatisch die projektlokale `.venv`, die Python-Version und PySide6/Qt. Fehlt `.venv` oder PySide6 6.11.2, fragt er ausdrücklich nach, bevor er lokal einrichtet bzw. aus PyPI installiert. System-Python bleibt unverändert.
+Direkte Aufrufe von Python-Skripten sind nur interne Entwickler-/Diagnosewege. Wenn sich Runtime, Venv oder I17 ändern, muss `start.sh` im selben Change-Batch angepasst und getestet werden.
 
-Der geführte Assistent:
+## I17-AUTO
 
-1. prüft den automatisierten Accessibility-Vertrag;
-2. prüft PySide6 und die echte Display-Session;
-3. legt einen **neuen, separaten** lokalen Evidence-Ordner unter `~/PROVOWARE-I17-Evidence/` an;
-4. erzeugt ausschließlich synthetische Testordner für leeren Ordner sowie Unicode/Leerzeichen;
-5. öffnet den Evidence-Ordner im Standard-Dateimanager, soweit verfügbar;
-6. startet die echte PySide6-GUI;
-7. führt begrenzt durch alle manuellen Gates;
-8. akzeptiert `Ja / Nein / Offen / Abbrechen`;
-9. beendet ungültige Eingabewiederholungen nach drei Versuchen mit `OPEN`;
-10. prüft die fünf vorgeschriebenen Screenshot-Dateien;
-11. erzeugt `I17_AUSWERTUNG.txt` und `I17_EVIDENCE.json`;
-12. öffnet die Textauswertung im Standardprogramm, soweit verfügbar.
+Die Pipeline prüft die echte Produktions-GUI automatisch:
 
-Der I17-Assistent selbst installiert nichts. Die vorgelagerte `start.sh`-Einrichtung darf nach ausdrücklicher Bestätigung ausschließlich `.venv` und deren Python-Pakete anlegen/aktualisieren; kein `sudo`, kein `apt`, keine Systeminstallation. Der Produktkern bleibt read-only. Der Assistent schreibt nur in seinen neu angelegten Evidence-Ordner und überschreibt keine vorhandenen Evidence-Läufe.
+1. projektlokale Venv und PySide6/Qt;
+2. reale Qt-/Display-Runtime;
+3. 100 %, 150 % und 200 % Skalierung;
+4. Sichtbarkeit und Geometrie der Kernwidgets;
+5. Tab-Reihenfolge;
+6. Shift+Tab-Reihenfolge;
+7. Fokussetzung;
+8. Abbruch/keine Ordnerauswahl;
+9. leeren synthetischen Ordner;
+10. Unicode-/Leerzeichen-Fixtures;
+11. read-only Dateivorschau;
+12. unveränderte Testdateien;
+13. fünf automatisch erzeugte Screenshots.
 
-### Rückgabecodes
-
-| Code | Bedeutung |
-| ---: | --- |
-| 0 | vollständiger realer PASS |
-| 2 | automatisierter Accessibility-Vertrag FAIL |
-| 3 | echte GUI-/Display-Voraussetzung fehlt |
-| 4 | GUI konnte nicht gestartet werden |
-| 5 | realer Lauf ist OPEN oder manuell FAIL |
-
-## Legacy-/Diagnosewege
-
-Nur Vorprüfung:
-
-```bash
-python3 scripts/i17_target_evidence.py
-```
-
-JSON-Vorprüfung:
-
-```bash
-python3 scripts/i17_target_evidence.py --json
-```
-
-GUI ohne geführte Evidence:
-
-```bash
-python3 scripts/i17_target_evidence.py --launch-gui
-```
-
-## Manuelle Prüfmatrix
-
-### 100 %
-
-- Übersicht lesbar;
-- permanente Anzeige „Sicherer Lese-Modus“ sichtbar;
-- alle Kernaktionen erreichbar;
-- keine abgeschnittene Kernaktion.
-
-### 150 %
-
-Dieselben Punkte erneut prüfen.
-
-### 200 %
-
-Dieselben Punkte erneut prüfen. Zusätzlich:
-
-- Ordnerauswahl für „Dateivorschau“ erreichbar;
-- Ergebnisbereich bedienbar;
-- Navigation bleibt sichtbar oder sinnvoll erreichbar;
-- kein notwendiger Button verschwindet.
-
-## Tastatur
-
-Ohne Maus:
-
-1. Tab durch Theme-Auswahl;
-2. Tab durch Skalierung;
-3. Tab durch alle READY-Funktionen;
-4. Dateivorschau auslösen;
-5. Dialog abbrechen;
-6. erneut öffnen und Ordner auswählen;
-7. Shift+Tab zurück;
-8. Fokus bleibt jederzeit sichtbar.
-
-Ein nicht sichtbarer Fokus ist FAIL.
-
-## Laienprofil
-
-Nach jedem Kernschritt müssen vier Fragen eindeutig beantwortbar sein:
-
-1. Was passiert als Nächstes?
-2. Werden gerade Dateien verändert?
-3. Kann ich zurück oder abbrechen?
-4. Was tue ich, wenn etwas nicht klappt?
-
-Unklare Antwort = UX-Befund.
-
-## Dateivorschau
-
-Mindestens testen:
-
-- Ordnerdialog abbrechen;
-- den vom Assistenten erzeugten leeren Ordner;
-- den vom Assistenten erzeugten Ordner mit Unicode-/Leerzeichen-Dateien;
-- normale erfolgreiche Vorschau;
-- sichtbar: Anzahl, Gesamtgröße, Wirkung und Executor-Sperre.
-
-Keine echte Trash-/Copy-/Move-Aktion darf möglich sein.
-
-## Screenshots
-
-Verbindliche Dateinamen:
+Erzeugte Evidence:
 
 ```text
 i17-100-overview.png
@@ -134,35 +42,72 @@ i17-150-overview.png
 i17-200-overview.png
 i17-keyboard-focus.png
 i17-file-preview.png
+I17_REPORT.html
+I17_AUSWERTUNG.txt
+I17_EVIDENCE.json
 ```
 
-Die Dateien werden im neu angelegten Evidence-Ordner erwartet. Der Assistent prüft deren Vorhandensein, aber **nicht automatisch den Bildinhalt**. Die manuelle Datenschutzprüfung bleibt deshalb ein eigenes Gate.
+## Chromium als sichtbare Oberfläche
 
-## README-Screenshots
+Nach erfolgreicher automatischer Prüfung startet die Pipeline einen ausschließlich lokalen HTTP-Server auf `127.0.0.1` und öffnet Chromium.
 
-Produktabbildungen im README dürfen echte I17-Screenshots verwenden, sobald der zugehörige Lauf dokumentiert und auf private Inhalte geprüft wurde.
+Chromium zeigt:
 
-Empfohlener Repo-Pfad nach bewusster Auswahl geeigneter Bilder:
+- alle automatischen Gates;
+- konkrete Fehlerdetails;
+- die fünf Screenshots;
+- Commit und Plattform;
+- I17-AUTO / I17-HUMAN / Gesamtstatus;
+- genau eine finale Human-Abnahme.
 
-```text
-docs/assets/screenshots/readme/
+Es gibt keinen externen Netzwerkdienst und keine Cloud-Übertragung. Der lokale Server wartet maximal zehn Minuten und beendet sich anschließend.
+
+## I17-HUMAN
+
+Nur bei technischem AUTO-PASS erscheint in Chromium genau eine Frage:
+
+> Ist die Oberfläche insgesamt verständlich, ruhig und ohne zusätzliche Erklärung für einen Laien bedienbar?
+
+- **Ja · PASS** → HUMAN PASS
+- **Nein · FAIL** → HUMAN FAIL
+- **Unsicher · OPEN** → HUMAN OPEN
+
+Die Browserantwort aktualisiert lokal HTML, TXT und JSON.
+
+## Weitere start.sh-Modi
+
+```bash
+./start.sh --i17
+./start.sh --i17-auto
+./start.sh --i17-offscreen
+./start.sh --i17-guided
 ```
 
-Mockups bleiben getrennt unter `docs/assets/mockups/` und zählen niemals als I17-Evidence.
+- `--i17` und `--i17-auto`: echter Desktop + Chromium-Abnahme.
+- `--i17-offscreen`: technische Qt-Pipeline ohne Human-PASS; bleibt für Gesamt-I17 nicht ausreichend.
+- `--i17-guided`: alter geführter I17-B-Vergleichspfad, nicht mehr Standard.
+
+## Sicherheitsgrenze
+
+- ausschließlich synthetische Testdaten;
+- kein Produkt-Executor;
+- kein Copy/Move/Trash;
+- keine Änderungen an Nutzerdaten;
+- kein automatisches Human-PASS;
+- kein externer Webserver;
+- lokaler Server nur auf `127.0.0.1`;
+- maximale Wartezeit zehn Minuten;
+- jeder Evidence-Lauf erhält einen neuen Ordner;
+- ältere Evidence wird nicht überschrieben.
 
 ## PASS-Regel
 
-I17 = PASS nur wenn:
+```text
+I17-AUTO PASS
+    +
+I17-HUMAN PASS
+    =
+I17 GESAMT PASS
+```
 
-- automatisierter Vertrag PASS;
-- echte PySide6-/Display-Session belegt;
-- 100/150/200 % geprüft;
-- Tastaturpfad geprüft;
-- Fokus geprüft;
-- Dateivorschau geprüft;
-- Kontrast/Reduced Motion geprüft;
-- Laienprofil geprüft;
-- Screenshot-Datenschutz manuell bestätigt;
-- alle fünf Screenshot-Dateien vorhanden.
-
-Ein `OPEN` wird niemals automatisch zu PASS hochgestuft.
+Ein AUTO-FAIL kann niemals durch die Human-Abnahme überstimmt werden.
