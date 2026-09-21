@@ -98,10 +98,16 @@ QComboBox {{
     border-radius: {radius}px;
     padding: {padding}px;
 }}
+QComboBox:focus {{
+    border: 2px solid {theme.focus};
+}}
 QTextEdit {{
     background: {theme.surface};
     border: 1px solid {theme.raised};
     border-radius: {radius}px;
     padding: {padding}px;
+}}
+QTextEdit:focus {{
+    border: 2px solid {theme.focus};
 }}
 """
