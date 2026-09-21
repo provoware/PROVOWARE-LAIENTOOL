@@ -32,7 +32,8 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I24 Diagnose-Export Writer Design | create-only/no-overwrite, Partial-/Crash-Strategie und gezielter Guard-REOPEN technisch festgelegt; noch kein Writer | 🟢 Design eingefroren |
 | I25 Transfer-Preview Adapter | gemeinsamer I18/I21-Pfad für Copy-/Move-Vorschau, CLI-Mehrfachauswahl und GUI-Prüfmodus implementiert; Registry bleibt bis neuer realer Accessibility-Evidence OPEN | 🟨 Implementiert · READY gegated |
 | I26 Diagnose-Export Preflight | immutable ExportPlan + serialisierter Payload, zweites Redaction-Gate, SHA-256/Größe und No-overwrite-Zielprüfung; vollständig read-only | 🟢 Repository-/Post-Merge-Gate grün |
-| I27 Diagnostic Writer Guard | exakter Writer-REOPEN-Vertrag, statische Partial-FD-Provenienz und No-clobber Partial→Final-Publish-Regeln; noch kein Writer | 🟨 Sicherheitsgate implementiert · produktiver Write weiter gesperrt |
+| I27 Diagnostic Writer Guard | exakter Writer-REOPEN-Vertrag, statische Partial-FD-Provenienz und No-clobber Partial→Final-Publish-Regeln | 🟢 Sicherheitsgate grün |
+| I28 Diagnostic Writer Testlab | dedizierter No-clobber Writer mit gehaltenem Zielordner-FD, Hash-/Größenprüfung und Failure-/Race-Testmatrix; kein Nutzerpfad | 🟨 automatischer Testlab-RC |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -149,8 +150,8 @@ Der Gate umfasst inzwischen die vollständige Unit-/Integrationssuite, den read-
 3. **I17:** I17-AUTO und I17-HUMAN sind im realen Chromium-Zielsystemlauf grün; I17 ist eingefroren.
 4. **I18–I21:** Inventar-Komfort, Read-only-Lock, Diagnose-Observability und Same-Root Copy/Move-Preview sind im Repository grün.
 5. **I25:** Copy-/Move-Preview ist über denselben Application-Core in CLI und GUI-Prüfmodus angebunden; neue Registry-Einträge bleiben bis realer Folge-Evidence OPEN.
-6. **I22–I24/I26–I27:** Diagnose-Export ist entschieden, read-only vorvalidiert und besitzt nun einen engen statischen Writer-Guard; der echte Writer selbst bleibt gesperrt.
-7. **Schreibpfade:** weiterhin `0` produktiv freigegeben.
+6. **I22–I24/I26–I28:** Diagnose-Export ist entschieden, read-only vorvalidiert und besitzt einen engen statischen Writer-Guard; I28 prüft den dedizierten Writer ausschließlich im automatischen Testlabor ohne GUI/CLI-/Registry-Pfad.
+7. **Schreibpfade:** für Nutzer weiterhin `0` freigegeben; I28-Writer ist intern gegated und nicht erreichbar.
 
 ## Quellen der Wahrheit
 
@@ -164,7 +165,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I25 bleibt an seiner einzigen realen Human-Wahrnehmungsfrage gegated. Parallel wird I27 als rein automatisierbarer Sicherheitsblock abgeschlossen: exakter Diagnose-Writer-Guard, Preview-MOVE-Reversibilität und Altbranch-Hygiene – weiterhin ohne echten Writer oder produktiven Datei-Write.**
+**I25 bleibt an seiner einzigen realen Human-Wahrnehmungsfrage gegated. Parallel läuft I28 vollständig automatisch als isolierter Diagnose-Writer-Testlab-Block; ein Nutzerpfad zum Writer bleibt ausdrücklich gesperrt.**
 
 
 ## Screenshots

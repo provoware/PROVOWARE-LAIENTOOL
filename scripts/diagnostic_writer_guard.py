@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Fail-closed static contract for the one diagnostic export writer module.
 
-I27 does not implement a writer. It defines the exact low-level primitives a
-future writer may use and rejects ambiguous/dynamic write paths.
+I27/I28 permit only one narrow Linux no-clobber writer shape. The guard does
+not prove runtime correctness; it rejects source forms that are broader than
+the reviewed contract.
 """
 
 from __future__ import annotations
@@ -34,7 +35,10 @@ FORBIDDEN_ATTRS = {
 }
 
 WRITE_MODE_MARKERS = {"w", "a", "x", "+"}
-READ_OPEN_FLAGS = {"os.O_RDONLY", "os.O_CLOEXEC", "os.O_NOFOLLOW"}
+READ_FILE_FLAGS = {"os.O_RDONLY", "os.O_CLOEXEC", "os.O_NOFOLLOW"}
+DIRECTORY_FLAGS = {
+    "os.O_RDONLY", "os.O_DIRECTORY", "os.O_CLOEXEC", "os.O_NOFOLLOW",
+}
 CREATE_OPEN_FLAGS = {
     "os.O_CREAT", "os.O_EXCL", "os.O_WRONLY", "os.O_RDWR",
     "os.O_CLOEXEC", "os.O_NOFOLLOW",
@@ -86,46 +90,48 @@ def _role_name(node: ast.AST) -> str | None:
     return None
 
 
-def _is_role_path(node: ast.AST, role: str) -> bool:
+def _is_role(node: ast.AST, role: str) -> bool:
     name = _role_name(node)
-    return bool(name and (name == f"{role}_path" or name.endswith(f"_{role}_path")))
+    if not name:
+        return False
+    accepted = {
+        role,
+        f"{role}_path",
+        f"{role}_name",
+        f"{role}_dir",
+        f"{role}_dir_fd",
+    }
+    return name in accepted or any(name.endswith("_" + value) for value in accepted)
 
 
-def _classify_os_open(call: ast.Call, aliases: dict[str, str]) -> tuple[str, str | None]:
+def _keyword_name(call: ast.Call, keyword_name: str) -> str | None:
+    for keyword in call.keywords:
+        if keyword.arg == keyword_name and isinstance(keyword.value, ast.Name):
+            return keyword.value.id
+    return None
+
+
+def _classify_directory_open(
+    call: ast.Call,
+    aliases: dict[str, str],
+) -> tuple[bool, str | None]:
     if len(call.args) < 2:
-        return "invalid", "os.open braucht statisch prüfbare Pfad- und Flag-Argumente"
+        return False, "Directory-os.open braucht Pfad und statische Flags"
     if any(keyword.arg == "dir_fd" for keyword in call.keywords):
-        return "invalid", "os.open mit dir_fd ist im Writer verboten"
-
+        return False, "Directory-os.open darf nicht selbst relativ zu dir_fd erfolgen"
+    if not _is_role(call.args[0], "target"):
+        return False, "Directory-os.open ist nur für target_dir zulässig"
     flags, static = _flag_names(call.args[1], aliases)
     if not static or not flags:
-        return "invalid", "os.open-Flags müssen vollständig statisch als os.O_* belegbar sein"
-
-    if flags & DANGEROUS_OPEN_FLAGS:
-        bad = ", ".join(sorted(flags & DANGEROUS_OPEN_FLAGS))
-        return "invalid", f"os.open enthält verbotene Flags: {bad}"
-
-    write_intent = bool(flags & (CREATE_REQUIRED | WRITE_ACCESS))
-    if not write_intent:
-        unknown = flags - READ_OPEN_FLAGS
-        if unknown:
-            return "invalid", f"unbekannte/unerlaubte Read-Flags: {', '.join(sorted(unknown))}"
-        return "read", None
-
-    unknown = flags - CREATE_OPEN_FLAGS
-    if unknown:
-        return "invalid", f"unerlaubte Create-Flags: {', '.join(sorted(unknown))}"
-    if not CREATE_REQUIRED <= flags:
-        return "invalid", "schreibendes os.open braucht O_CREAT|O_EXCL"
-    access = flags & WRITE_ACCESS
-    if len(access) != 1:
-        return "invalid", "schreibendes os.open braucht genau O_WRONLY oder O_RDWR"
-    if not _is_role_path(call.args[0], "partial"):
-        return "invalid", "schreibendes os.open ist nur für expliziten partial_path zulässig"
-    return "exclusive-write", None
+        return False, "Directory-os.open-Flags müssen vollständig statisch sein"
+    if flags != DIRECTORY_FLAGS:
+        return False, (
+            "target_dir_fd braucht exakt O_RDONLY|O_DIRECTORY|O_CLOEXEC|O_NOFOLLOW"
+        )
+    return True, None
 
 
-def _exclusive_writer_fds(tree: ast.AST, aliases: dict[str, str]) -> set[str]:
+def _directory_fds(tree: ast.AST, aliases: dict[str, str]) -> set[str]:
     names: set[str] = set()
     for node in ast.walk(tree):
         target: ast.AST | None = None
@@ -138,16 +144,78 @@ def _exclusive_writer_fds(tree: ast.AST, aliases: dict[str, str]) -> set[str]:
             continue
         if _qualified_name(value.func, aliases) != "os.open":
             continue
-        kind, _ = _classify_os_open(value, aliases)
-        if kind == "exclusive-write":
+        flags, static = _flag_names(value.args[1], aliases) if len(value.args) >= 2 else (set(), False)
+        if "os.O_DIRECTORY" not in flags:
+            continue
+        allowed, _ = _classify_directory_open(value, aliases)
+        if allowed and _is_role(target, "target"):
             names.add(target.id)
     return names
 
 
-def analyze_writer_source(source: str, *, filename: str = WRITER_RELATIVE) -> tuple[str, ...]:
+def _classify_partial_open(
+    call: ast.Call,
+    aliases: dict[str, str],
+    safe_dir_fds: set[str],
+) -> tuple[bool, str | None]:
+    if len(call.args) < 2:
+        return False, "Partial-os.open braucht Pfad und statische Flags"
+    if not _is_role(call.args[0], "partial"):
+        return False, "schreibendes os.open ist nur für partial_name/partial_path zulässig"
+
+    flags, static = _flag_names(call.args[1], aliases)
+    if not static or not flags:
+        return False, "os.open-Flags müssen vollständig statisch als os.O_* belegbar sein"
+    if flags & DANGEROUS_OPEN_FLAGS:
+        bad = ", ".join(sorted(flags & DANGEROUS_OPEN_FLAGS))
+        return False, f"os.open enthält verbotene Flags: {bad}"
+    unknown = flags - CREATE_OPEN_FLAGS
+    if unknown:
+        return False, f"unerlaubte Create-Flags: {', '.join(sorted(unknown))}"
+    if not CREATE_REQUIRED <= flags:
+        return False, "schreibendes os.open braucht O_CREAT|O_EXCL"
+    access = flags & WRITE_ACCESS
+    if len(access) != 1:
+        return False, "schreibendes os.open braucht genau O_WRONLY oder O_RDWR"
+
+    dir_fd = _keyword_name(call, "dir_fd")
+    if dir_fd is None or dir_fd not in safe_dir_fds:
+        return False, "Partial-os.open braucht den nachweislich sicheren target_dir_fd"
+    return True, None
+
+
+def _exclusive_writer_fds(
+    tree: ast.AST,
+    aliases: dict[str, str],
+    safe_dir_fds: set[str],
+) -> set[str]:
+    names: set[str] = set()
+    for node in ast.walk(tree):
+        target: ast.AST | None = None
+        value: ast.AST | None = None
+        if isinstance(node, ast.Assign) and len(node.targets) == 1:
+            target, value = node.targets[0], node.value
+        elif isinstance(node, ast.AnnAssign):
+            target, value = node.target, node.value
+        if not isinstance(target, ast.Name) or not isinstance(value, ast.Call):
+            continue
+        if _qualified_name(value.func, aliases) != "os.open":
+            continue
+        allowed, _ = _classify_partial_open(value, aliases, safe_dir_fds)
+        if allowed and _is_role(target, "partial"):
+            names.add(target.id)
+    return names
+
+
+def analyze_writer_source(
+    source: str,
+    *,
+    filename: str = WRITER_RELATIVE,
+) -> tuple[str, ...]:
     tree = ast.parse(source, filename=filename)
     aliases = _import_aliases(tree)
-    safe_fds = _exclusive_writer_fds(tree, aliases)
+    safe_dir_fds = _directory_fds(tree, aliases)
+    safe_writer_fds = _exclusive_writer_fds(tree, aliases, safe_dir_fds)
     violations: list[str] = []
 
     for node in ast.walk(tree):
@@ -158,14 +226,18 @@ def analyze_writer_source(source: str, *, filename: str = WRITER_RELATIVE) -> tu
             elif node.module:
                 modules = [node.module]
             for module in modules:
-                if any(module == prefix or module.startswith(prefix + ".")
-                       for prefix in BLOCKED_IMPORT_PREFIXES):
+                if any(
+                    module == prefix or module.startswith(prefix + ".")
+                    for prefix in BLOCKED_IMPORT_PREFIXES
+                ):
                     violations.append(
-                        f"{filename}:{getattr(node, 'lineno', '?')}: Import im Writer verboten: {module}"
+                        f"{filename}:{getattr(node, 'lineno', '?')}: "
+                        f"Import im Writer verboten: {module}"
                     )
 
         if not isinstance(node, ast.Call):
             continue
+
         name = _qualified_name(node.func, aliases)
         line = getattr(node, "lineno", "?")
 
@@ -175,7 +247,8 @@ def analyze_writer_source(source: str, *, filename: str = WRITER_RELATIVE) -> tu
 
         if isinstance(node.func, ast.Attribute) and node.func.attr in FORBIDDEN_ATTRS:
             violations.append(
-                f"{filename}:{line}: pathlib-/Objekt-Schreib-API verboten: .{node.func.attr}()"
+                f"{filename}:{line}: pathlib-/Objekt-Schreib-API verboten: "
+                f".{node.func.attr}()"
             )
             continue
 
@@ -199,14 +272,22 @@ def analyze_writer_source(source: str, *, filename: str = WRITER_RELATIVE) -> tu
             continue
 
         if name == "os.open":
-            kind, reason = _classify_os_open(node, aliases)
-            if kind == "invalid":
+            flags, static = _flag_names(node.args[1], aliases) if len(node.args) >= 2 else (set(), False)
+            if static and "os.O_DIRECTORY" in flags:
+                allowed, reason = _classify_directory_open(node, aliases)
+            elif static and not (flags & (CREATE_REQUIRED | WRITE_ACCESS)):
+                unknown = flags - READ_FILE_FLAGS
+                allowed = not unknown and not any(keyword.arg == "dir_fd" for keyword in node.keywords)
+                reason = None if allowed else "freies read-only os.open ist im Writer nicht zulässig"
+            else:
+                allowed, reason = _classify_partial_open(node, aliases, safe_dir_fds)
+            if not allowed:
                 violations.append(f"{filename}:{line}: {reason}")
             continue
 
         if name == "os.write":
             fd = node.args[0] if node.args else None
-            if not isinstance(fd, ast.Name) or fd.id not in safe_fds:
+            if not isinstance(fd, ast.Name) or fd.id not in safe_writer_fds:
                 violations.append(
                     f"{filename}:{line}: os.write nur auf exklusiv erzeugtem Partial-FD zulässig"
                 )
@@ -214,24 +295,32 @@ def analyze_writer_source(source: str, *, filename: str = WRITER_RELATIVE) -> tu
 
         if name == "os.link":
             if len(node.args) < 2:
-                violations.append(f"{filename}:{line}: os.link braucht Partial- und Finalpfad")
+                violations.append(f"{filename}:{line}: os.link braucht Partial- und Finalnamen")
                 continue
-            if not _is_role_path(node.args[0], "partial"):
+            if not _is_role(node.args[0], "partial"):
                 violations.append(
-                    f"{filename}:{line}: os.link-Quelle muss expliziter partial_path sein"
+                    f"{filename}:{line}: os.link-Quelle muss partial_name/partial_path sein"
                 )
-            if not _is_role_path(node.args[1], "final"):
+            if not _is_role(node.args[1], "final"):
                 violations.append(
-                    f"{filename}:{line}: os.link-Ziel muss expliziter final_path sein"
+                    f"{filename}:{line}: os.link-Ziel muss final_name/final_path sein"
+                )
+            src_fd = _keyword_name(node, "src_dir_fd")
+            dst_fd = _keyword_name(node, "dst_dir_fd")
+            if (
+                src_fd is None
+                or dst_fd is None
+                or src_fd != dst_fd
+                or src_fd not in safe_dir_fds
+            ):
+                violations.append(
+                    f"{filename}:{line}: os.link muss denselben sicheren target_dir_fd "
+                    "für Quelle und Ziel verwenden"
                 )
             follow = None
             for keyword in node.keywords:
                 if keyword.arg == "follow_symlinks" and isinstance(keyword.value, ast.Constant):
                     follow = keyword.value.value
-                if keyword.arg in {"src_dir_fd", "dst_dir_fd"}:
-                    violations.append(
-                        f"{filename}:{line}: os.link mit *_dir_fd ist im Writer verboten"
-                    )
             if follow is not False:
                 violations.append(
                     f"{filename}:{line}: os.link muss follow_symlinks=False setzen"
@@ -240,13 +329,14 @@ def analyze_writer_source(source: str, *, filename: str = WRITER_RELATIVE) -> tu
 
         if name == "os.unlink":
             target = node.args[0] if node.args else None
-            if target is None or not _is_role_path(target, "partial"):
+            if target is None or not _is_role(target, "partial"):
                 violations.append(
-                    f"{filename}:{line}: os.unlink ist nur für expliziten partial_path zulässig"
+                    f"{filename}:{line}: os.unlink ist nur für partial_name/partial_path zulässig"
                 )
-            if any(keyword.arg == "dir_fd" for keyword in node.keywords):
+            dir_fd = _keyword_name(node, "dir_fd")
+            if dir_fd is None or dir_fd not in safe_dir_fds:
                 violations.append(
-                    f"{filename}:{line}: os.unlink mit dir_fd ist im Writer verboten"
+                    f"{filename}:{line}: os.unlink braucht den sicheren target_dir_fd"
                 )
             continue
 
@@ -254,7 +344,10 @@ def analyze_writer_source(source: str, *, filename: str = WRITER_RELATIVE) -> tu
 
 
 def main() -> int:
-    print("diagnostic_writer_guard ist ein statischer Library-Gate; Ausführung erfolgt über read_only_guard/tests.")
+    print(
+        "diagnostic_writer_guard ist ein statischer Library-Gate; "
+        "Ausführung erfolgt über read_only_guard/tests."
+    )
     return 0
 
 

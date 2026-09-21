@@ -1,81 +1,92 @@
 # PROVOWARE – Current Iteration
 
-## I27 – Diagnostic Writer Guard / Branch-Hygiene
+## I28 – Diagnostic Export Writer Testlab
 
-**Status:** 🟢 AUTOMATISCH PASS · MERGE-READY
-**Fortschritt:** `██████████ 100 %`
+**Status:** 🟨 AUTOMATISCHER WRITER-RC · KEIN NUTZERPFAD
+**Fortschritt:** `████████░░ 80 %`
 
 ## A – FESTER PLAN
 
-I24 und I26 verlangen vor jedem echten Diagnose-Writer:
+I24/I26/I27 sind erfüllt:
 
-- exakten REOPEN nur für `src/provoware_laientool/diagnostic_export.py`;
-- create-only / no-clobber;
-- keinen Overwrite-Fallback;
-- Writer-spezifischen statischen Guard;
-- Race-/Crash-/Failure-Evidence erst im späteren Writer-Block.
+- Writer-Architektur und No-overwrite-Vertrag festgelegt;
+- redigierter Payload + immutable ExportPlan vollständig read-only vorbereitet;
+- exakter Spezialguard nur für `diagnostic_export.py`;
+- alle anderen Produktmodule bleiben write-locked.
 
-I27 implementiert ausschließlich diesen Guard. Noch existiert kein `diagnostic_export.py`.
+I28 implementiert erstmals den dedizierten Writer, aber ausschließlich als Testlab-Baustein. Es gibt weiterhin keinen GUI-/CLI-Adapter, keine Registry-Freigabe und keine automatische Schreibautorisierung.
 
-## B – DELTA AUS DER ALTBRANCH-ANALYSE
+## Directory-FD-Härtung
 
-Vier Remote-Altbranches wurden gegen aktuellen `main` klassifiziert:
-
-- `design/i24-diagnostic-export-writer`: vollständig superseded;
-- `application/i21-transfer-preview`: alte Implementierung superseded durch heutigen I21/`transfer_application.py`;
-- `domain/i12-preview-contract`: Architektur superseded, aber MOVE-Reversibilitätsinvariante gerettet;
-- `security/i27-diagnostic-writer-guard`: Konzept relevant, alter Stand jedoch nicht ausreichend gehärtet; auf frischem Main transplantiert.
-
-Details: `docs/evidence/EV-20260921-006-branch-hygiene-i27.md`.
-
-## I27 Guard-Vertrag
-
-Außerhalb des exakten Diagnose-Writers bleiben sämtliche Low-Level-Write-APIs blockiert.
-
-Im Spezialwriter darf später nur ein statisch beweisbarer Pfad entstehen:
+Der Writer hält den validierten Zielordner über einen `target_dir_fd` offen:
 
 ```text
-partial_path
-→ os.open(O_CREAT | O_EXCL | O_WRONLY/O_RDWR)
-→ nachweislich daraus stammender Partial-FD
-→ os.write/fsync
-→ Hash/Größe zur Laufzeit verifizieren
-→ os.link(partial_path, final_path, follow_symlinks=False)
-→ eigene partial_path entfernen
+target_dir
+→ O_RDONLY|O_DIRECTORY|O_CLOEXEC|O_NOFOLLOW
+→ Device/Inode gegen Pfadprüfung bestätigen
+→ partial_name exklusiv relativ zu target_dir_fd erzeugen
+→ schreiben + fsync
+→ über denselben FD Größe/Hash verifizieren
+→ Zielordneridentität erneut prüfen
+→ hardlink partial_name → final_name über denselben target_dir_fd
+→ directory fsync
+→ eigene Partial-Datei entfernen
+→ directory fsync
 ```
 
-Dynamische Flags, numerische Rohflags, `O_TRUNC`, `O_APPEND`, `O_TMPFILE`, freie FDs, freie Hardlinks, `rename`, `replace`, alternative Writer-/Escape-Bibliotheken und freie Deletes bleiben BLOCKED.
+Dadurch werden Partial-Create, Publish und Cleanup nicht über eine zwischenzeitlich neu aufgelöste freie Pfadkette verbunden.
 
-## Zusätzlich gerettete Preview-Invariante
+## Autorisierungsgrenze
 
-`MOVE` und `TRASH` müssen zentral `reversible=True` besitzen. I21 erzeugte MOVE bereits korrekt; das Preview-Modell erzwingt dies nun ebenfalls fail-closed.
+I26 erzeugt weiterhin `write_enabled=False`.
+
+Der Writer verweigert solche Pläne. Nur die automatisierten I28-Tests erzeugen über `dataclasses.replace(..., write_enabled=True)` eine explizite Testautorisierung.
+
+Im Produkt existiert kein Pfad, der `write_enabled=True` erzeugt.
+
+## Automatische Failure-Matrix
+
+- I26-Plan ohne Autorisierung → BLOCKED;
+- erfolgreicher Export;
+- private Dateirechte;
+- vorhandenes finales Ziel unverändert;
+- falsche Payload-Größe / falscher Hash;
+- manipulierte Finalpfadbindung;
+- Symlink-Zielordner;
+- Partial-Kollision ohne Retry;
+- ENOSPC;
+- PermissionError;
+- Crash vor Publish hinterlässt nur erkennbare Partial-Datei;
+- zwei parallele Writer: exakt ein PASS, ein BLOCKED;
+- keine produktive Erzeugung von `write_enabled=True`.
 
 ## Weiterhin gesperrt
 
-- echter Diagnose-Writer;
-- produktiver Diagnose-Dateiexport;
+- GUI-/CLI-Diagnoseexport;
+- Registry-READY;
+- Nutzer-Autorisierung;
 - allgemeiner Executor;
-- Copy/Move-Write;
+- Copy/Move/Trash-Write;
 - Overwrite;
 - Auto-Rename;
-- Persistenz;
-- Rechteausweitung;
+- Netzwerk;
 - I25 READY ohne finale Human-Abnahme.
 
 ## Exit-Gates
 
-1. I27-Guard-Tests PASS.
-2. Read-only-Lock PASS.
-3. Preview-Reversibilitätsregression PASS.
-4. Repository-Contract PASS.
-5. vollständige Unit-/Integrationssuite PASS.
+1. I28 Writer-Tests PASS.
+2. I27 Writer-Guard PASS.
+3. globaler Read-only-Lock PASS.
+4. vollständige Unit-/Integrationssuite PASS.
+5. Repository-Contract PASS.
 6. Core Diagnostic PASS.
 7. Diagnose/Preflight PASS.
-8. finaler Diff ohne allgemeinen Write-Reopen.
-9. Post-Merge-Main-Gate PASS.
+8. kein GUI-/CLI-/Registry-Pfad zum Writer.
+9. finaler Diff ohne breiten Write-Reopen.
+10. Post-Merge-Main-Gate PASS.
 
 ## Nächste drei Schritte
 
-1. 🟨 I27-RC automatisch vollständig prüfen und nur bei Grün mergen.
-2. 🔵 danach den dedizierten Diagnose-Writer als separaten kleinen Testlab-Block planen/implementieren; zunächst ohne GUI/CLI-Adapter.
-3. 🔒 Writer erst nach Race/Crash/ENOSPC/PermissionError/Hash-/No-clobber-Evidence fachlich freigeben; I25-Human-Gate bleibt unabhängig offen.
+1. 🟨 I28-RC vollständig automatisch prüfen und Fehler ausschließlich innerhalb des Writer-/Guard-Scope beheben.
+2. 🔵 nach grünem I28 eine getrennte Autorisierungs-/Adapter-Decision treffen; kein automatisches Aktivieren des Writers.
+3. 🔒 I25-Human-Gate bleibt unabhängig offen und erzeugt keine Zwischenarbeit.

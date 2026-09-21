@@ -51,14 +51,16 @@ class ReadOnlyGuardTests(unittest.TestCase):
     def test_exact_writer_path_uses_specialized_guard(self) -> None:
         safe = (
             "import os\n"
-            "partial_path = 'partial'\n"
-            "final_path = 'final'\n"
-            "partial_fd = os.open(partial_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)\n"
+            "target_dir = '.'\n"
+            "partial_name = 'partial'\n"
+            "final_name = 'final'\n"
+            "target_dir_fd = os.open(target_dir, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC | os.O_NOFOLLOW)\n"
+            "partial_fd = os.open(partial_name, os.O_CREAT | os.O_EXCL | os.O_RDWR | os.O_CLOEXEC | os.O_NOFOLLOW, 0o600, dir_fd=target_dir_fd)\n"
             "os.write(partial_fd, b'data')\n"
             "os.fsync(partial_fd)\n"
             "os.close(partial_fd)\n"
-            "os.link(partial_path, final_path, follow_symlinks=False)\n"
-            "os.unlink(partial_path)\n"
+            "os.link(partial_name, final_name, src_dir_fd=target_dir_fd, dst_dir_fd=target_dir_fd, follow_symlinks=False)\n"
+            "os.unlink(partial_name, dir_fd=target_dir_fd)\n"
         )
         self.assertEqual(analyze_product_source(WRITER_RELATIVE, safe), ())
         self.assertTrue(

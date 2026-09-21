@@ -34,7 +34,7 @@ Schreibendes `os.open` ist nur zulässig, wenn statisch beweisbar:
 - optional `O_CLOEXEC` / `O_NOFOLLOW`;
 - kein `O_TRUNC`, `O_APPEND`, `O_TMPFILE`;
 - keine dynamischen oder numerischen Rohflags;
-- kein `dir_fd`.
+- I28 darf relative Partial-Operationen ausschließlich über einen statisch belegten `target_dir_fd` aus `O_RDONLY|O_DIRECTORY|O_CLOEXEC|O_NOFOLLOW` ausführen.
 
 Nicht vollständig statisch belegbar => **BLOCKED**.
 
@@ -50,11 +50,11 @@ Ein späterer Publish darf ausschließlich diesem Vertrag folgen:
 os.link(partial_path, final_path, follow_symlinks=False)
 ```
 
-Quelle muss `partial_path`, Ziel `final_path` sein. `rename`, `replace`, freie Hardlinks und `*_dir_fd` bleiben blockiert.
+Seit I28 ist die noch engere Form zulässig: Quelle `partial_name` und Ziel `final_name` müssen relativ zum **gleichen**, statisch belegten `target_dir_fd` veröffentlicht werden. Beliebige oder unterschiedliche `*_dir_fd`, `rename`, `replace` und freie Hardlinks bleiben blockiert.
 
 ## Löschgrenze
 
-`os.unlink()` ist ausschließlich auf explizitem `partial_path` zulässig. Finale Pfade und freie Löschpfade bleiben blockiert.
+`os.unlink()` ist ausschließlich für `partial_name`/`partial_path` und – im I28-Writer – relativ zum belegten `target_dir_fd` zulässig. Finale Pfade und freie Löschpfade bleiben blockiert.
 
 ## Escape-Härtung
 
