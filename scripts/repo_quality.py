@@ -36,16 +36,20 @@ CORE_REQUIRED = (
     "scripts/accessibility_evidence.py",
     "scripts/i17_auto_evidence.py",
     "scripts/i25_auto_evidence.py",
+    "scripts/i31_auto_evidence.py",
     "scripts/core_diagnostics.py",
     "scripts/read_only_guard.py",
     "scripts/diagnostic_writer_guard.py",
     "src/provoware_laientool/diagnostic_export.py",
+    "src/provoware_laientool/diagnostic_export_adapter.py",
+    "src/provoware_laientool/diagnostic_export_gui.py",
     "scripts/diagnostic_snapshot.py",
     "scripts/second_device_evidence.py",
     ".github/PULL_REQUEST_TEMPLATE.md",
     ".github/CODEOWNERS",
     ".github/workflows/repo-quality.yml",
     ".github/workflows/i25-gui-evidence.yml",
+    ".github/workflows/i31-export-evidence.yml",
 )
 TEXT_SUFFIXES = {".md", ".txt", ".py", ".sh", ".yml", ".yaml"}
 PRIORITIES = {"P0", "P1", "P2", "P3"}
@@ -87,6 +91,9 @@ if starter_sh.is_file():
         "--gui",
         "--i25-evidence",
         "--i25-offscreen",
+        "--i31-evidence",
+        "--i31-offscreen",
+        "--i31-cli-evidence",
         "--menu",
         "--preflight",
         "--json",
@@ -99,6 +106,7 @@ if starter_sh.is_file():
         "--second-device-evidence-json",
         "scripts/i17_auto_evidence.py",
         "scripts/i25_auto_evidence.py",
+        "scripts/i31_auto_evidence.py",
         "scripts/diagnostic_snapshot.py",
     ):
         if marker not in starter_text:
@@ -174,9 +182,9 @@ for workflow in (ROOT / ".github" / "workflows").glob("*.y*ml"):
         fail(f"Workflow ohne Concurrency-Schutz: {workflow.relative_to(ROOT)}")
     if re.search(r"(?mi)^\s{2}cancel-in-progress:\s*true\s*$", text) is None:
         fail(f"Workflow ohne Abbruch veralteter Runs: {workflow.relative_to(ROOT)}")
-    if workflow.name == "i25-gui-evidence.yml":
+    if workflow.name in {"i25-gui-evidence.yml", "i31-export-evidence.yml"}:
         if re.search(r"(?m)^\s{2}push:\s*$", text) is None or "- main" not in text:
-            fail("I25-GUI-Evidence muss relevante Änderungen auch nach Merge auf main prüfen")
+            fail(f"{workflow.name} muss relevante Änderungen auch nach Merge auf main prüfen")
     for action in re.findall(r"(?m)^\s*uses:\s*([^\s#]+)", text):
         if action.startswith("./"):
             continue

@@ -36,3 +36,5 @@ Dateiname: `EV-YYYYMMDD-NNN-kurzname.md`
 - `EV-20260922-007-i28-diagnostic-writer-testlab.md` – automatischer I28 No-clobber-/Race-/Crash-/Failure-Nachweis auf dem Writer-RC.
 
 - `EV-20260922-008-i30-diagnostic-export-authorization.md` – I30 Fingerprint-/Doppelbestätigungs-/Replay-/One-shot-Autorisierungsnachweis.
+
+- `EV-20260922-009-i31-diagnostic-export-adapter-evidence.md` – I31 GUI-/CLI-AUTO-Nachweis mit 100/150/200 %, Tastatur, Doppelbestätigung, Cancel, BLOCKED und exakt-eine-Datei-PASS.

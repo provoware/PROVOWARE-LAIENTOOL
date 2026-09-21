@@ -55,6 +55,9 @@ Aufruf:
   ./start.sh --gui         GUI starten
   ./start.sh --i25-evidence I25 automatisch prüfen + eine finale Chromium-Abnahme
   ./start.sh --i25-offscreen I25 technische Evidence ohne Human-Abnahme
+  ./start.sh --i31-evidence I31 GUI+CLI automatisch prüfen + eine finale Human-Abnahme
+  ./start.sh --i31-offscreen I31 technische GUI+CLI-Evidence ohne Human-Abnahme
+  ./start.sh --i31-cli-evidence I31 Konsolen-Prüfmodus mit synthetischen Daten
   ./start.sh --menu        Konsolenmenü starten
   ./start.sh --preflight   read-only Preflight starten
   ./start.sh --json        read-only Preflight als JSON
@@ -79,7 +82,7 @@ case "$ACTION" in
     show_help
     exit 0
     ;;
-  --setup|--check|--i17|--i17-auto|--i17-offscreen|--gui|--i25-evidence|--i25-offscreen|--menu|--preflight|--json|--diagnostics|--diagnostics-json|--second-device-evidence|--second-device-evidence-json)
+  --setup|--check|--i17|--i17-auto|--i17-offscreen|--gui|--i25-evidence|--i25-offscreen|--i31-evidence|--i31-offscreen|--i31-cli-evidence|--menu|--preflight|--json|--diagnostics|--diagnostics-json|--second-device-evidence|--second-device-evidence-json)
     ;;
   *)
     show_help
@@ -206,6 +209,15 @@ case "$ACTION" in
     ;;
   --i25-offscreen)
     exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i25_auto_evidence.py" --offscreen --auto-only
+    ;;
+  --i31-evidence)
+    exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i31_auto_evidence.py"
+    ;;
+  --i31-offscreen)
+    exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i31_auto_evidence.py" --offscreen --auto-only
+    ;;
+  --i31-cli-evidence)
+    exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i31_auto_evidence.py" --cli-demo
     ;;
   --menu)
     exec "$VENV_PYTHON" "$ROOT_DIR/start.py" --menu

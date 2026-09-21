@@ -30,6 +30,7 @@ Die Matrix reduziert unnötige lokale/agentische Testläufe. Der zentrale PR-Gat
 | I28 Diagnose-Writer Testlab | `tests/test_diagnostic_export_writer.py` + I27 Guard + Read-only-Lock; Race/Crash/ENOSPC/PermissionError/Hash/No-clobber |
 | I29 Diagnose-Export Authorization Decision | Doku-/Contract-Gate; keine Produktimplementierung |
 | I30 Diagnose-Export Autorisierung | `tests/test_i30_diagnostic_export_authorization.py` + Registry + I28 Writer-Regressionspfad |
+| I31 Diagnose-Export Adapter-Prüfmodus | `tests/test_i31_diagnostic_export_adapters.py` + `scripts/i31_auto_evidence.py --offscreen --auto-only`; Human-Gate nur final |
 | I20 Diagnose-Observability | `tests/test_diagnostics.py` + `python3 scripts/diagnostic_snapshot.py --json` |
 | I21 Same-Root Copy/Move Preview | `tests/test_i21_same_root_preview.py` + `python3 scripts/core_diagnostics.py` |
 | I25 Transfer-Preview Adapter | `tests/test_i25_transfer_adapters.py` + I21 + Read-only-Lock + `scripts/i25_auto_evidence.py --offscreen --auto-only`; Human-Gate nur final |

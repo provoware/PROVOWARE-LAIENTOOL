@@ -45,6 +45,9 @@ class VenvBootstrapContractTests(unittest.TestCase):
             "--i17",
             "--i17-auto",
             "--i17-offscreen",
+            "--i31-evidence",
+            "--i31-offscreen",
+            "--i31-cli-evidence",
             "--diagnostics",
             "--diagnostics-json",
             "--second-device-evidence",
@@ -60,6 +63,21 @@ class VenvBootstrapContractTests(unittest.TestCase):
         )
         self.assertIn(
             'exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i25_auto_evidence.py" --offscreen --auto-only',
+            text,
+        )
+
+    def test_i31_evidence_routes_through_start_sh(self) -> None:
+        text = (ROOT / "start.sh").read_text(encoding="utf-8")
+        self.assertIn(
+            'exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i31_auto_evidence.py"',
+            text,
+        )
+        self.assertIn(
+            'exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i31_auto_evidence.py" --offscreen --auto-only',
+            text,
+        )
+        self.assertIn(
+            'exec "$VENV_PYTHON" "$ROOT_DIR/scripts/i31_auto_evidence.py" --cli-demo',
             text,
         )
 

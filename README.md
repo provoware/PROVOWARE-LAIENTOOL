@@ -35,7 +35,8 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I27 Diagnostic Writer Guard | exakter Writer-REOPEN-Vertrag, statische Partial-FD-Provenienz und No-clobber Partial→Final-Publish-Regeln | 🟢 Sicherheitsgate grün |
 | I28 Diagnose-Writer Testlab | isolierter create-only/no-clobber Writer mit Hash/Größe, Directory-fsync und automatischer Race/Crash/ENOSPC/PermissionError-Matrix; ohne Adapter/Registry | 🟢 AUTO PASS · produktiv nicht erreichbar |
 | I29 Diagnose-Export Authorization Decision | Doppelbestätigung, Plan-Fingerprint, Cancel-Semantik, GUI/CLI-Parität und neue Registry-Sicherheitsklasse festgelegt | 🟢 Decision eingefroren |
-| I30 Diagnose-Export Autorisierung | nichtvisuelle zweistufige sessiongebundene Autorisierung mit Fingerprint-, Stale-, Manipulations- und Replay-Schutz; Writer one-shot; Registry bleibt OPEN | 🟢 AUTO PASS · keine Adapter |
+| I30 Diagnose-Export Autorisierung | nichtvisuelle zweistufige sessiongebundene Autorisierung mit Fingerprint-, Stale-, Manipulations- und Replay-Schutz; Writer one-shot; Registry bleibt OPEN | 🟢 AUTO PASS · keine Standardadapter |
+| I31 Diagnose-Export Adapter-Evidence | GUI-/CLI-Prüfmodus auf demselben I26/I30/I28-Pfad; 100/150/200 %, Tastatur, Doppelbestätigung, Cancel, BLOCKED und exakt-eine-Datei-PASS automatisch belegt | 🟢 AUTO PASS · Human-Gate offen · Registry OPEN |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -117,6 +118,9 @@ Empfohlene Befehle:
 ./start.sh --i17
 ./start.sh --i25-evidence
 ./start.sh --i25-offscreen
+./start.sh --i31-evidence
+./start.sh --i31-offscreen
+./start.sh --i31-cli-evidence
 ./start.sh --diagnostics
 ```
 
@@ -152,7 +156,7 @@ Der Gate umfasst inzwischen die vollständige Unit-/Integrationssuite, den read-
 3. **I17:** I17-AUTO und I17-HUMAN sind im realen Chromium-Zielsystemlauf grün; I17 ist eingefroren.
 4. **I18–I21:** Inventar-Komfort, Read-only-Lock, Diagnose-Observability und Same-Root Copy/Move-Preview sind im Repository grün.
 5. **I25:** Copy-/Move-Preview ist über denselben Application-Core in CLI und GUI-Prüfmodus angebunden; neue Registry-Einträge bleiben bis realer Folge-Evidence OPEN.
-6. **I22–I24/I26–I30:** Diagnose-Export ist entschieden, vorvalidiert, statisch gegated und im Writer-Testlab grün; I30 ergänzt den nichtvisuellen one-shot Autorisierungs-Core. GUI/CLI bleiben gesperrt.
+6. **I22–I24/I26–I31:** Diagnose-Export ist entschieden, vorvalidiert, statisch gegated und besitzt I30 one-shot Autorisierung; I31 bindet GUI/CLI ausschließlich im synthetischen Prüfmodus an. Normaler Produktweg bleibt gesperrt.
 7. **Produktiv erreichbare Schreibpfade:** weiterhin `0`.
 
 ## Quellen der Wahrheit
@@ -167,7 +171,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I25 bleibt an seiner einzigen Human-Wahrnehmungsfrage gegated. I30 ist automatisch grün. Als nächstes darf I31 den sichtbaren Diagnoseexport ausschließlich als gegateten GUI-/CLI-Prüfmodus anbinden; Registry bleibt bis Auto-Evidence + finaler Human-Abnahme OPEN.**
+**I25 und I31 besitzen jeweils nur noch eine finale Human-Wahrnehmungsfrage. I31 ist technisch vollständig AUTO PASS; bis zur einen Gesamtabnahme bleibt diagnostics.export_local OPEN und im normalen Produktweg unsichtbar.**
 
 
 ## Screenshots
