@@ -34,6 +34,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I26 Diagnose-Export Preflight | immutable ExportPlan + serialisierter Payload, zweites Redaction-Gate, SHA-256/Größe und No-overwrite-Zielprüfung; vollständig read-only | 🟢 Repository-/Post-Merge-Gate grün |
 | I27 Diagnostic Writer Guard | exakter Writer-REOPEN-Vertrag, statische Partial-FD-Provenienz und No-clobber Partial→Final-Publish-Regeln | 🟢 Sicherheitsgate grün |
 | I28 Diagnose-Writer Testlab | isolierter create-only/no-clobber Writer mit Hash/Größe, Directory-fsync und automatischer Race/Crash/ENOSPC/PermissionError-Matrix; ohne Adapter/Registry | 🟢 AUTO PASS · produktiv nicht erreichbar |
+| I29 Diagnose-Export Authorization Decision | Doppelbestätigung, Plan-Fingerprint, Cancel-Semantik, GUI/CLI-Parität und neue Registry-Sicherheitsklasse festgelegt; keine Implementierung | 🟢 Decision eingefroren |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
@@ -150,7 +151,7 @@ Der Gate umfasst inzwischen die vollständige Unit-/Integrationssuite, den read-
 3. **I17:** I17-AUTO und I17-HUMAN sind im realen Chromium-Zielsystemlauf grün; I17 ist eingefroren.
 4. **I18–I21:** Inventar-Komfort, Read-only-Lock, Diagnose-Observability und Same-Root Copy/Move-Preview sind im Repository grün.
 5. **I25:** Copy-/Move-Preview ist über denselben Application-Core in CLI und GUI-Prüfmodus angebunden; neue Registry-Einträge bleiben bis realer Folge-Evidence OPEN.
-6. **I22–I24/I26–I28:** Diagnose-Export ist entschieden, read-only vorvalidiert, statisch gegated und besitzt einen isolierten Writer-Testlab-Baustein; GUI/CLI/Registry bleiben gesperrt.
+6. **I22–I24/I26–I29:** Diagnose-Export ist entschieden, read-only vorvalidiert, statisch gegated und im Writer-Testlab grün; I29 friert zusätzlich Autorisierung, Doppelbestätigung und Adapter-/Registry-Vertrag ein. GUI/CLI bleiben gesperrt.
 7. **Produktiv erreichbare Schreibpfade:** weiterhin `0`.
 
 ## Quellen der Wahrheit
@@ -165,7 +166,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I25 bleibt an seiner einzigen Human-Wahrnehmungsfrage gegated. I28 ist als automatischer Writer-Testlab-Baustein grün; als nächstes wird ausschließlich der Autorisierungs-/Adaptervertrag entschieden, weiterhin ohne automatische Produktfreigabe.**
+**I25 bleibt an seiner einzigen Human-Wahrnehmungsfrage gegated. I29 ist als reines Autorisierungs-/Adapter-Decision eingefroren. Als nächstes darf I30 nur das nichtvisuelle Autorisierungsmodell und die Registry-Sicherheitsklasse implementieren; sichtbare Exportadapter bleiben danach weiterhin separat gegated.**
 
 
 ## Screenshots
