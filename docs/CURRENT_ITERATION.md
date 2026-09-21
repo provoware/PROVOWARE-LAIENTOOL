@@ -2,8 +2,8 @@
 
 ## I19 – Preview-Zielwahl Decision Gate + Read-only-Lock DELTA
 
-**Status:** 🟨 IMPLEMENTIERT / CI-ABNAHME AUSSTEHEND
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
+**Fortschritt:** `█████████░ 90 %`
 
 ## A – FESTER PLAN: Zielwahl-Decision-Gate
 
@@ -75,6 +75,10 @@ Externe Datenträger bleiben bis zu einem späteren Multi-Root-Decision-Gate BLO
 7. Info-Text-Impact PASS.
 8. finaler Diff ohne Scope-Drift.
 9. Post-Merge-CI PASS.
+
+**Repository-/PR-CI:** 🟢 PASS
+**Finaler Diff:** 🟢 ohne Scope-Drift
+**Merge/Post-Merge:** 🔵 ausstehend
 
 ## Nächste drei vorgeplante Schritte
 
