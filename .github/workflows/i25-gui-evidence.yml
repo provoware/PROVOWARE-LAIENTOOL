@@ -10,6 +10,21 @@ on:
       - "requirements-gui.txt"
       - "start.sh"
       - ".github/workflows/i25-gui-evidence.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "src/provoware_laientool/**"
+      - "scripts/i25_auto_evidence.py"
+      - "tests/test_i25_auto_evidence.py"
+      - "tests/test_i25_transfer_adapters.py"
+      - "requirements-gui.txt"
+      - "start.sh"
+      - ".github/workflows/i25-gui-evidence.yml"
+
+concurrency:
+  group: i25-gui-evidence-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
