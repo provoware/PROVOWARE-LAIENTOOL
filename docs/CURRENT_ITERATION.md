@@ -3,7 +3,7 @@
 ## I25 – Transfer-Preview Adapter
 
 **Status:** 🟨 AUTONOME HÄRTUNG / AUTO-EVIDENCE
-**Fortschritt:** `█████████░ 90 %`
+**Fortschritt:** `█████████▌ 95 %`
 
 ## A – FESTER PLAN
 
@@ -54,7 +54,7 @@ Zusätzlich wurde der spätere READY-Pfad des Zahlenmenüs explizit auf `run_tra
 5. Diagnose/Preflight PASS.
 6. Info-Text-Impact PASS.
 7. finaler Diff ohne Scope-Drift.
-8. I25-AUTO: 100/150/200 %, Tastatur/Fokus, Mehrfachauswahl, Same-Root-Zielwahl, Preview und Screenshots.
+8. I25-AUTO: 100/150/200 %, Hauptfenster- und Dialog-Tastaturpfade, Mehrfachauswahl, Same-Root-Zielwahl, Cancel-Verhalten, Preview und Screenshots.
 9. I25-HUMAN: genau eine finale Frage zur Gesamtverständlichkeit.
 10. erst danach Registry `READY`.
 
