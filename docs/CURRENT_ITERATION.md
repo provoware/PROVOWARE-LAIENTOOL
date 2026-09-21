@@ -1,89 +1,99 @@
 # PROVOWARE – Current Iteration
 
-## I20 – Diagnose-/Recovery-Observability
+## I21 – Same-Root Copy/Move Preview Application
 
-**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
-**Fortschritt:** `█████████░ 90 %`
+**Status:** 🟨 IMPLEMENTIERT / CI-ABNAHME AUSSTEHEND
+**Fortschritt:** `████████░░ 80 %`
 
 ## A – FESTER PLAN
 
-**Ziel:** datensparsame, read-only Diagnoseberichte für reale Fehlerfälle bereitstellen, ohne Datei-Export, Persistenz, Netzwerk oder automatische Reparatur.
+**Ziel:** den in I19 eingefrorenen Same-Root-Zielvertrag als gemeinsamen read-only Application-Core für Copy-/Move-Preview umsetzen.
 
 **Checkpoints:**
 
-- 🟢 immutable DiagnosticEntry / DiagnosticReport
-- 🟢 Collection-Status getrennt von Health-Status
-- 🟢 Plattform-/Capability-Fakten aus bestehendem Preflight
-- 🟢 optionaler Recovery-Snapshot ohne Recovery-IDs
-- 🟢 Crash-Guidance und Auto-Retry-Status sichtbar
-- 🟢 Home-Pfade redigiert
-- 🟢 E-Mail-Adressen redigiert
-- 🟢 typische GitHub/OpenAI/Bearer-Tokens redigiert
-- 🟢 write_paths_enabled=False
-- 🟢 Klartext-Ausgabe in-memory
-- 🟢 JSON-Ausgabe in-memory
-- 🟢 stdout-only diagnostic_snapshot.py
-- 🟢 CLI-only Registry-Use-Case diagnostics.snapshot
-- 🟢 gemeinsamer Application-Core
-- 🟢 keine GUI-Erweiterung
-- 🟢 CI-Snapshot-Gate
+- 🟢 `prepare_copy_preview()`
+- 🟢 `prepare_move_preview()`
+- 🟢 gemeinsamer interner Same-Root-Builder
+- 🟢 aktuelles vollständiges Inventar als Auswahlquelle
+- 🟢 expliziter existierender Zielordner
+- 🟢 Zielordner B01-validiert
+- 🟢 externe Ziele BLOCKED
+- 🟢 Symlink-Ziele BLOCKED
+- 🟢 fehlender Zielordner BLOCKED
+- 🟢 Ziel-Datei statt Ordner BLOCKED
+- 🟢 unbekannte Auswahl BLOCKED
+- 🟢 doppelte Auswahl BLOCKED
+- 🟢 leere Auswahl OPEN
+- 🟢 Quelle=Ziel BLOCKED
+- 🟢 bestehendes Ziel / Overwrite BLOCKED
+- 🟢 kein Auto-Rename
+- 🟢 I12 `make_plan()` wiederverwendet
+- 🟢 I12 `validate_preview()` erneut ausgeführt
+- 🟢 `writes_enabled=False`
+- 🟢 kein Registry-/GUI-/CLI-Ausbau
+- 🟢 Unit-/Negativtests
+- 🟢 Core-Diagnostic um Copy/Move/Overwrite erweitert
 - 🔵 Repository-/PR-CI
 - 🔵 finaler Diff / Merge / Post-Merge
 
 ## B – VARIABLE FOLGEAUFGABE
 
-Der I19-Post-Merge-Status war repository-seitig grün und wird in I20 als bestätigte Basis übernommen. Kein zusätzlicher Produkt-DELTA erforderlich.
+**Quelle letzter Lauf:** I20 war bereits gemergt und Post-Merge-CI vollständig grün, während `CURRENT_ITERATION.md` Merge/Post-Merge noch als offen auswies.
 
-## Datenschutzgrenze
+**Maßnahme:** Statusdrift beim Wechsel auf I21 synchronisiert.
 
-Der Bericht enthält keine Recovery-IDs und schreibt keine Diagnose-Datei. Redaction erfolgt vor Ausgabe. Netzwerk, Upload, Telemetrie und automatische Reparatur bleiben gesperrt.
+**Status:** 🟢 erledigt.
 
-## Direkter Diagnoseweg
+## Debugging-Schwerpunkt
 
-`python3 scripts/diagnostic_snapshot.py`
-`python3 scripts/diagnostic_snapshot.py --json`
+I21 wird nicht nur über Positivtests abgesichert.
 
-## CLI-only Ausnahme
+Die Negativmatrix enthält bewusst:
 
-`diagnostics.snapshot` ist absichtlich nur im Zahlenmenü verfügbar. Das entspricht dem bestehenden Paritätsvertrag für rein diagnostische CLI-Funktionen und erzeugt keine neue sichtbare GUI-Fachfläche vor Abschluss der realen I17-Evidence.
+- Overwrite;
+- externe Zielwurzel;
+- Symlink-Ziel;
+- fehlenden Zielordner;
+- Ziel ist Datei;
+- identische Quelle/Ziel;
+- unbekannte Auswahl;
+- doppelte Auswahl;
+- leere Auswahl.
+
+Der End-to-End-Core-Diagnostic reproduziert Copy/Move ausschließlich in `tempfile` und bestätigt unveränderte Quellen.
 
 ## Nicht-Ziele
 
-- kein Datei-Export;
-- keine Diagnose-Persistenz;
-- kein Upload/Netzwerk;
-- kein Crash-Reporter;
-- keine Telemetrie;
-- keine automatische Reparatur;
-- keine Journal-Persistenz;
-- keine GUI-Erweiterung;
 - kein Executor;
-- keine Freigabe schreibender Pfade.
+- keine Copy-/Move-Ausführung;
+- keine Persistenz;
+- keine UI-/CLI-Anbindung;
+- kein zweiter Root;
+- kein Cross-Device Move;
+- kein Overwrite;
+- kein Auto-Rename;
+- kein TOCTOU-Executor-Vertrag;
+- keine Rechteausweitung.
 
 ## Exit-Gates
 
-1. Diagnose-/Redaction-Tests PASS.
-2. Registry-/CLI-only-Vertrag PASS.
-3. stdout-JSON parsebar.
-4. Read-only-Lock PASS.
-5. Core-Diagnostic PASS.
-6. vollständige Suite PASS.
-7. Repository-Contract PASS.
-8. Info-Text-Impact PASS.
-9. finaler Diff ohne Scope-Drift.
-10. Post-Merge-CI PASS.
-
-**Repository-/PR-CI:** 🟢 PASS
-**Finaler Diff:** 🟢 ohne Scope-Drift
-**Merge/Post-Merge:** 🔵 ausstehend
+1. I21 Unit-/Negativtests PASS.
+2. erweiterter Core-Diagnostic PASS.
+3. Read-only-Lock PASS.
+4. vollständige Test-Suite PASS.
+5. Repository-Contract PASS.
+6. Info-Text-Impact PASS.
+7. bestehende B01–I20-Verträge regressionsfrei.
+8. finaler Diff ohne Scope-Drift.
+9. Post-Merge-CI PASS.
 
 ## Nächste drei vorgeplante Schritte
 
-### 1. 🔵 I21 – Same-Root Copy/Move Preview Application
-Nur Preview-Erzeugung für explizit gewählte Zielordner innerhalb derselben Root; kein Executor, kein Overwrite.
+### 1. 🔵 I22 – Diagnose-Export Decision Gate
+Entscheiden, ob ein explizit angeforderter redigierter Diagnosebericht später als Datei geschrieben werden darf. Noch keine Implementierung.
 
-### 2. 🔵 I22 – Diagnose-Export Decision Gate
-Entscheiden, ob und wie ein explizit angeforderter redigierter Diagnoseexport später geschrieben werden darf. Noch keine Implementierung.
+### 2. 🔵 I23 – Same-Root Zielauswahl Adapter-Decision
+Erst nach realem I17-Befund entscheiden, wie Dateiauswahl + Zielordner in GUI und Zahlenmenü laiengerecht angebunden werden.
 
-### 3. 🔵 I17-B / I18-B – reale GUI-Evidence und sichtbare Komfort-Anbindung
-Sobald Zielsystemzugriff möglich ist, echten 100/150/200-%-/Tastaturlauf abschließen und danach Such-/Sortieransichten sichtbar anbinden.
+### 3. 🔵 I17-B / UI-Evidence
+Echten 100/150/200-%-/Tastaturlauf weiterhin abschließen, sobald Zielsystemzugriff möglich ist.
