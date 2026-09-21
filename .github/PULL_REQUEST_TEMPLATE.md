@@ -29,6 +29,7 @@ Ein Satz:
 
 - [ ] relevante targeted Tests
 - [ ] `python3 scripts/repo_quality.py`
+- [ ] `python3 scripts/read_only_guard.py` solange Schreibpfade gesperrt sind
 - [ ] `python3 scripts/core_diagnostics.py` falls Core/Safety betroffen
 - [ ] vollständige Suite vor Merge
 - [ ] Diff geprüft
