@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
       - name: Validate repository contracts
         run: python3 scripts/repo_quality.py
-      - name: Run B01-A unit tests
+      - name: Run B01 unit tests
         run: PYTHONPATH=src python3 -m unittest discover -s tests -v
       - name: Run read-only preflight
         run: python3 start.py
