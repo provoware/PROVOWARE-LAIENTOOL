@@ -81,6 +81,7 @@ if starter_sh.is_file():
         "validate_venv",
         "validate_gui_runtime",
         "--gui",
+        "--i25-evidence",
         "--menu",
         "--preflight",
         "--json",

@@ -61,6 +61,17 @@ def run(
             continue
 
         use_case_id = mapping[int(raw)]
+        if use_case_id in TRANSFER_PREVIEW_IDS:
+            output_fn("")
+            run_transfer_preview_flow(
+                use_case_id,
+                input_fn=input_fn,
+                output_fn=output_fn,
+            )
+            output_fn("")
+            input_fn("Enter drücken für das Hauptmenü …")
+            continue
+
         root = None
         if action_requires_root(use_case_id):
             root = input_fn("Ordnerpfad für die reine Vorschau: ").strip()

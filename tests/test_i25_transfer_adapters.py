@@ -104,6 +104,16 @@ class I25ApplicationAdapterTests(unittest.TestCase):
         self.assertIn("Es wurden keine Dateien verändert", joined)
         self.assertFalse((self.target / "eins.txt").exists())
 
+    def test_standard_cli_is_wired_for_future_ready_transfer_entries(self) -> None:
+        source = (
+            Path(__file__).resolve().parents[1]
+            / "src"
+            / "provoware_laientool"
+            / "cli_shell.py"
+        ).read_text(encoding="utf-8")
+        self.assertIn("if use_case_id in TRANSFER_PREVIEW_IDS:", source)
+        self.assertIn("run_transfer_preview_flow(", source)
+
     def test_gui_source_exposes_only_evidence_mode_before_ready(self) -> None:
         source = (
             Path(__file__).resolve().parents[1]

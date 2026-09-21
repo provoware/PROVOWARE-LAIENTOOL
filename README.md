@@ -30,6 +30,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I22 Diagnose-Export Decision | späterer expliziter redigierter lokaler Export grundsätzlich zulässig, aber nur mit eigenem Writer-/Guard-REOPEN; aktuell keine Implementierung | 🟢 Decision eingefroren |
 | I23 Zielauswahl Adapter-Decision | gemeinsamer späterer GUI-/CLI-Workflow für I18-Auswahl + I21 Copy/Move-Preview festgelegt; sichtbare Implementierung wartet auf realen I17-Lauf | 🟢 Decision eingefroren |
 | I24 Diagnose-Export Writer Design | create-only/no-overwrite, Partial-/Crash-Strategie und gezielter Guard-REOPEN technisch festgelegt; noch kein Writer | 🟢 Design eingefroren |
+| I25 Transfer-Preview Adapter | gemeinsamer I18/I21-Pfad für Copy-/Move-Vorschau, CLI-Mehrfachauswahl und GUI-Prüfmodus implementiert; Registry bleibt bis neuer realer Accessibility-Evidence OPEN | 🟨 Implementiert · READY gegated |
 | I26 Diagnose-Export Preflight | immutable ExportPlan + serialisierter Payload, zweites Redaction-Gate, SHA-256/Größe und No-overwrite-Zielprüfung; vollständig read-only | 🟢 Repository-/Post-Merge-Gate grün |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
@@ -110,6 +111,7 @@ Empfohlene Befehle:
 ./start.sh --setup
 ./start.sh --gui
 ./start.sh --i17
+./start.sh --i25-evidence
 ./start.sh --diagnostics
 ```
 
@@ -140,8 +142,9 @@ Der Gate umfasst inzwischen die vollständige Unit-/Integrationssuite, den read-
 2. **I10–I16:** Registry, read-only Shell, Preview-/Recovery-Verträge, Inventar und gemeinsamer Inventory→Preview-Pfad sind implementiert.
 3. **I17:** I17-AUTO und I17-HUMAN sind im realen Chromium-Zielsystemlauf grün; I17 ist eingefroren.
 4. **I18–I21:** Inventar-Komfort, Read-only-Lock, Diagnose-Observability und Same-Root Copy/Move-Preview sind im Repository grün.
-5. **I22–I24/I26:** Diagnose-Export ist entschieden und bis zum vollständig read-only ExportPlan-/Payload-Preflight vorgezogen; echter Writer und Guard-REOPEN bleiben gesperrt.
-6. **Schreibpfade:** weiterhin `0` produktiv freigegeben.
+5. **I25:** Copy-/Move-Preview ist über denselben Application-Core in CLI und GUI-Prüfmodus angebunden; neue Registry-Einträge bleiben bis realer Folge-Evidence OPEN.
+6. **I22–I24/I26:** Diagnose-Export ist entschieden und bis zum vollständig read-only ExportPlan-/Payload-Preflight vorgezogen; echter Writer und Guard-REOPEN bleiben gesperrt.
+7. **Schreibpfade:** weiterhin `0` produktiv freigegeben.
 
 ## Quellen der Wahrheit
 
@@ -155,7 +158,7 @@ Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die
 
 ## Nächster sicherer Schritt
 
-**I17-D ist real grün eingefroren. Nächster Produktblock ist I25: I18-Auswahl + I21 Copy/Move-Preview über denselben Application-Core in GUI und Zahlenmenü anbinden; weiterhin ohne Executor.**
+**I25 ist implementiert, bleibt aber bewusst OPEN. Nächster sicherer Schritt ist die reale Folge-Evidence über `./start.sh --i25-evidence` für 100/150/200 %, Tastatur/Fokus, Mehrfachauswahl, Zielordnerwahl und Laienverständlichkeit. Erst danach dürfen `files.preview_copy` und `files.preview_move` auf READY wechseln.**
 
 
 ## Screenshots
