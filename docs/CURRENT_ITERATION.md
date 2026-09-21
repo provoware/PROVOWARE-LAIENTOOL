@@ -1,41 +1,40 @@
 # PROVOWARE – Current Iteration
 
-## I12 – B05 Immutable Preview-Modell
+## I13 – B06 Recovery-/Journal-Zustandsvertrag
 
-**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
-**Fortschritt:** `█████████░ 90 %`
+**Status:** 🟨 IN ARBEIT
+**Fortschritt:** `███████░░░ 70 %`
 
-Der Prozentwert bildet ausschließlich definierte I12-Checkpoints ab.
+Der Prozentwert bildet ausschließlich definierte I13-Checkpoints ab.
 
 ## A – FESTER PLAN
 
-**Quelle:** I11-Drei-Schritte-Vorausplanung + B05 + AQ-001/AQ-003/AQ-004.
+**Quelle:** I12-Drei-Schritte-Vorausplanung + B06 + AQ-001/AQ-002.
 
-**Ziel:** einen immutable, fail-closed Preview-Vertrag für spätere Dateiaktionen schaffen, der Wirkung, Umfang, Pfadgrenzen und Rückweg beschreibt, ohne irgendeinen Executor oder Schreibzugriff einzuführen.
+**Ziel:** einen reinen immutable Zustandsvertrag für Journal, Undo, Crash und Recovery definieren, bevor Persistenz oder Executor entstehen.
 
 **Checkpoints:**
 
-- 🟢 `PreviewItem` immutable definiert
-- 🟢 `PreviewPlan` immutable definiert
-- 🟢 `PreviewCheck` immutable definiert
-- 🟢 `writes_enabled=False` fest im Plan
-- 🟢 Aktionen auf `copy | move | trash` begrenzt
-- 🟢 irreversible Direktlöschung nicht modelliert
-- 🟢 Quellen an B01-Pfadvertrag gebunden
-- 🟢 Ziele an B01-Pfadvertrag mit Planungsmodus gebunden
-- 🟢 Wirkung, Byte-Umfang, Reversibilität und Recovery-Hinweis verpflichtend validiert
-- 🟢 Tests für Außenpfad, fehlende Quelle, Doppel-ID, negative Größe, identische Quelle/Ziel und Trash-Reversibilität angelegt
-- 🟢 Repository-/PR-CI-Gates PASS
-- 🟢 finaler Diff ohne Scope-Drift
-- 🔵 Merge / Post-Merge
+- 🟢 immutable `RecoveryContract`
+- 🟢 immutable `JournalSnapshot`
+- 🟢 expliziter Zustandsautomat
+- 🟢 gefährliche Zustands-Sprünge gesperrt
+- 🟢 Operation und Undo-Strategie gekoppelt
+- 🟢 Journal-Pflicht nicht deaktivierbar
+- 🟢 `FAILED` benötigt Fehlergrund
+- 🟢 Crash-Matrix definiert
+- 🟢 automatische Wiederholung in allen Crash-Zuständen gesperrt
+- 🟢 Unit-Tests für Happy Path, Blockaden und Crashfälle angelegt
+- 🔵 Repository-/PR-CI-Gates
+- 🔵 finaler Diff / Merge / Post-Merge
 
 ## B – VARIABLE FOLGEAUFGABE
 
-**Quelle letzter Lauf:** I11 war bereits gemergt und Post-Merge-CI grün, während `CURRENT_ITERATION.md` noch „Merge / Post-Merge“ als offen auswies.
+**Quelle letzter Lauf:** Während I12 parallel bearbeitet wurde, landete PR #12 bereits auf `main`.
 
-**Priorität:** Dokumentationsdrift.
+**Priorität:** Kollisionsschutz.
 
-**Maßnahme:** I12 startet vom bestätigten grünen I11-`main`; der alte Status wird damit ersetzt.
+**Maßnahme:** divergierende Parallelfassung nicht mergen; den gemergten I12-`main` als alleinige Wahrheit übernehmen. Kein Doppelpatch.
 
 **Status:** 🟢 erledigt.
 
@@ -43,9 +42,9 @@ Der Prozentwert bildet ausschließlich definierte I12-Checkpoints ab.
 
 | Datei | Schreibender Besitzer | Prüfer |
 | --- | --- | --- |
-| `src/provoware_laientool/preview_model.py` | IMPLEMENT | VERIFY read-only |
-| `tests/test_preview_model.py` | IMPLEMENT/TEST-SCOPE | VERIFY read-only |
-| `docs/I12_PREVIEW_MODEL.md` | DOC | VERIFY read-only |
+| `src/provoware_laientool/recovery_contract.py` | IMPLEMENT | VERIFY read-only |
+| `tests/test_recovery_contract.py` | IMPLEMENT/TEST-SCOPE | VERIFY read-only |
+| `docs/I13_RECOVERY_CONTRACT.md` | DOC | VERIFY read-only |
 | `docs/CURRENT_ITERATION.md` | ORGANIZE/DOC | VERIFY read-only |
 | `README.md` | DOC | VERIFY read-only |
 | `todo.txt` | DOC | VERIFY read-only |
@@ -53,39 +52,38 @@ Der Prozentwert bildet ausschließlich definierte I12-Checkpoints ab.
 
 ## Nicht-Ziele
 
-- kein Dateiinventar;
-- kein Klassifizieren;
-- kein Executor;
-- kein Copy/Move/Delete/Trash-Echtlauf;
-- kein Journal;
-- kein Undo;
-- kein Recovery-Mechanismus;
+- keine Dateioperation;
+- keine Journal-Persistenz;
+- kein Journal-Writer;
+- kein Undo-/Recovery-Executor;
+- kein Retry-System;
 - keine GUI-/CLI-Erweiterung;
-- keine TOCTOU-Freigabe.
+- keine TOCTOU-Freigabe;
+- keine Schreibfreigabe.
 
 ## Exit-Gates
 
-1. Preview-Unit-Tests PASS.
+1. Recovery-Unit-Tests PASS.
 2. vollständige Test-Suite PASS.
 3. Repository-Contract PASS.
 4. Info-Text-Impact PASS.
-5. bestehender B01/I11-Stand regressionsfrei.
+5. bestehender B01/I11/I12-Stand regressionsfrei.
 6. finaler Diff ohne Scope-Drift.
 7. Post-Merge-CI PASS.
 
 ## Nächste drei vorgeplante Schritte
 
-### 1. 🔵 I13 – B06 Recovery-Zustandsvertrag
-**Ziel:** Journal-/Undo-/Crash-/Recovery-Zustände fachlich definieren.
-**Abhängigkeit:** I12 Preview-Vertrag grün.
-**Gate:** Zustandsautomat + Failure-Matrix vollständig; keine produktive Dateioperation.
-
-### 2. 🔵 I14 – reale Shell-/Accessibility-Evidence
+### 1. 🔵 I14 – reale Shell-/Accessibility-Evidence
 **Ziel:** I11 auf echter PySide6-/Display-Umgebung mit 100/150/200 %, Tastatur, Fokus und Kontrast prüfen.
-**Abhängigkeit:** stabiler I11/I12-`main`.
-**Gate:** technisches PASS plus dokumentiertes Laien-/Accessibility-Ergebnis.
+**Abhängigkeit:** stabiler I11–I13-`main`.
+**Gate:** dokumentiertes technisches + Laien-/Accessibility-Ergebnis.
 
-### 3. 🔵 I15 – read-only Dateiinventar
-**Ziel:** B05 erstmals reale Downloads ausschließlich lesend inventarisieren und daraus Preview-Eingaben erzeugen.
-**Abhängigkeit:** Preview- und Recovery-Verträge eingefroren.
-**Gate:** keine Schreiboperation; Pfad-/Symlink-Grenzen; große Mengen/Sondernamen/Fehlerfälle getestet.
+### 2. 🔵 I15 – read-only Dateiinventar
+**Ziel:** Downloads ausschließlich lesend inventarisieren und daraus valide Preview-Eingaben erzeugen.
+**Abhängigkeit:** I12 Preview + I13 Recovery-Vertrag eingefroren.
+**Gate:** keine Schreiboperation; Pfad-/Symlink-Grenzen; Sondernamen/große Mengen/Fehlerfälle getestet.
+
+### 3. 🔵 I16 – Preview-Application-Use-Case
+**Ziel:** valide Preview-Pläne aus bereits ermittelten Inventar-Fakten darstellen.
+**Abhängigkeit:** I15 Inventar.
+**Gate:** GUI/CLI-Parität, keine Persistenz, kein Executor, keine Nutzdaten-Schreiboperation.
