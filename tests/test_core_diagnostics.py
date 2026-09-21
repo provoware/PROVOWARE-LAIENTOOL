@@ -11,7 +11,7 @@ class CoreDiagnosticsTests(unittest.TestCase):
         self.assertEqual(report["mode"], "temporary-filesystem-only")
         self.assertEqual(report["status"], "PASS")
         self.assertEqual(report["failure_count"], 0)
-        self.assertGreaterEqual(len(report["checks"]), 5)
+        self.assertGreaterEqual(len(report["checks"]), 8)
 
 
 if __name__ == "__main__":
