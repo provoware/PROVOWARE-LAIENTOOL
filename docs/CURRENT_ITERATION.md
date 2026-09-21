@@ -2,8 +2,8 @@
 
 ## I24 – Diagnose-Export Writer Design
 
-**Status:** 🟨 DECISION IMPLEMENTIERT / CI AUSSTEHEND
-**Fortschritt:** `████████░░ 80 %`
+**Status:** 🟢 REPOSITORY-ANTEIL ABGESCHLOSSEN
+**Fortschritt:** `█████████░ 90 %`
 
 ## A – FESTER PLAN
 
@@ -77,3 +77,11 @@ Nur nach grünem I17: I18-Auswahl + I21 Copy/Move-Preview in GUI/Zahlenmenü.
 
 ### 3. 🔵 I26 – Diagnose-Export Preflight Core
 Unabhängig vom Writer später nur immutable ExportPlan/Payload-Validierung als read-only Core vorbereiten; weiterhin kein Write.
+
+
+**Repository-/PR-CI:** 🟢 PASS
+**Read-only-Lock:** 🟢 PASS
+**Full Suite:** 🟢 PASS
+**Core Diagnostic:** 🟢 PASS
+**Diagnostic Snapshot:** 🟢 PASS
+**Merge/Post-Merge:** 🔵 ausstehend
