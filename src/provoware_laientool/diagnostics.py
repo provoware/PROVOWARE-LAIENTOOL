@@ -95,8 +95,8 @@ def _preflight_entries(result: PreflightResult) -> tuple[DiagnosticEntry, ...]:
         DiagnosticEntry("capability", key, _bool(value))
         for key, value in caps
     )
-    entries.extend(
-        DiagnosticEntry("start", "profile", result.start_plan.profile),
+    entries.append(
+        DiagnosticEntry("start", "profile", result.start_plan.profile)
     )
     return tuple(entries)
 
