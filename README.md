@@ -38,7 +38,7 @@ Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und 
 | I30 Diagnose-Export Autorisierung | nichtvisuelle zweistufige sessiongebundene Autorisierung mit Fingerprint-, Stale-, Manipulations- und Replay-Schutz; Writer one-shot; Registry bleibt OPEN | 🟢 AUTO PASS · keine Standardadapter |
 | I31 Diagnose-Export Adapter-Evidence | GUI-/CLI-Prüfmodus auf demselben I26/I30/I28-Pfad; 100/150/200 %, Tastatur, Doppelbestätigung, Cancel, BLOCKED und exakt-eine-Datei-PASS automatisch belegt | 🟢 AUTO PASS · Human-Gate offen · Registry OPEN |
 | I32 Portable Offline-Paket | deterministisches Linux-x86_64-ZIP, lokales PySide6-Wheelhouse, Manifest/Hashes, KDE-Klickstarter und Offline-Fremdpfad-Validierung | 🟢 AUTO PASS · B01-Zweitgerät bleibt OPEN |
-| I33 Wheelhouse-Integrität | exaktes Qt-Wheel-Set/Version/Plattform, Build-/Archiv-/Runtime-Hashgate vor Offline-pip | 🟨 RC · keine Signaturbehauptung |
+| I33 Wheelhouse-Integrität | exaktes Qt-Wheel-Set/Version/Plattform, Build-/Archiv-/Runtime-Hashgate vor Offline-pip | 🟢 AUTO PASS · keine Signaturbehauptung |
 | Schreibpfade | 0 freigegeben | 🔒 gesperrt |
 
 > Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
