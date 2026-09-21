@@ -25,7 +25,7 @@ Die Matrix reduziert unnötige lokale/agentische Testläufe. Der zentrale PR-Gat
 | I18 Inventar-Komfort | `tests/test_inventory_view.py` |
 | Core-Diagnostik | `tests/test_core_diagnostics.py` + `python3 scripts/core_diagnostics.py` |
 | Read-only-Lock | `tests/test_read_only_guard.py` + `python3 scripts/read_only_guard.py` |
-| I20 Diagnose-Observability | `tests/test_diagnostics.py` + `python3 scripts/diagnostic_snapshot.py --json` |
+| I20 Diagnose-Observability | `tests/test_diagnostics.py` + `python3 scripts/diagnostic_snapshot.py --json` |\n| I21 Same-Root Copy/Move Preview | `tests/test_i21_same_root_preview.py` + `python3 scripts/core_diagnostics.py` |
 | CLI/GUI-Adapter | Paritäts-/Use-Case-Test + Accessibility-Evidence |
 | Doku/Prozess | `scripts/repo_quality.py` + `scripts/info_text_guard.py` |
 
