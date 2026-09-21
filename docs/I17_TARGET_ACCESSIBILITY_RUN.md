@@ -2,28 +2,65 @@
 
 ## Status
 
-**Evidence-Infrastruktur:** vorbereitet
+**Evidence-Infrastruktur:** 🟢 geführter I17-B-Assistent vorbereitet  
 **Realer Zielsystemnachweis:** 🟨 OPEN
 
-I17 darf erst vollständig grün werden, wenn die sichtbaren/manuellen Gates auf einer echten PySide6-/Desktop-Session geprüft wurden.
+I17 darf erst vollständig grün werden, wenn die sichtbaren/manuellen Gates auf einer echten PySide6-/Desktop-Session geprüft wurden. CI allein kann diesen Nachweis nicht ersetzen.
 
-## Ein-Befehl-Start
+## Empfohlener Ein-Befehl-Start
 
-Auf dem Zielsystem im Repository:
+Auf dem echten Kubuntu-/PySide6-Zielsystem im Repository:
+
+```bash
+python3 scripts/i17_target_evidence.py --guided
+```
+
+Der geführte Assistent:
+
+1. prüft den automatisierten Accessibility-Vertrag;
+2. prüft PySide6 und die echte Display-Session;
+3. legt einen **neuen, separaten** lokalen Evidence-Ordner unter `~/PROVOWARE-I17-Evidence/` an;
+4. erzeugt ausschließlich synthetische Testordner für leeren Ordner sowie Unicode/Leerzeichen;
+5. öffnet den Evidence-Ordner im Standard-Dateimanager, soweit verfügbar;
+6. startet die echte PySide6-GUI;
+7. führt begrenzt durch alle manuellen Gates;
+8. akzeptiert `Ja / Nein / Offen / Abbrechen`;
+9. beendet ungültige Eingabewiederholungen nach drei Versuchen mit `OPEN`;
+10. prüft die fünf vorgeschriebenen Screenshot-Dateien;
+11. erzeugt `I17_AUSWERTUNG.txt` und `I17_EVIDENCE.json`;
+12. öffnet die Textauswertung im Standardprogramm, soweit verfügbar.
+
+Es wird nichts installiert. Der Produktkern bleibt read-only. Der Assistent schreibt nur in seinen neu angelegten Evidence-Ordner und überschreibt keine vorhandenen Evidence-Läufe.
+
+### Rückgabecodes
+
+| Code | Bedeutung |
+| ---: | --- |
+| 0 | vollständiger realer PASS |
+| 2 | automatisierter Accessibility-Vertrag FAIL |
+| 3 | echte GUI-/Display-Voraussetzung fehlt |
+| 4 | GUI konnte nicht gestartet werden |
+| 5 | realer Lauf ist OPEN oder manuell FAIL |
+
+## Legacy-/Diagnosewege
+
+Nur Vorprüfung:
+
+```bash
+python3 scripts/i17_target_evidence.py
+```
+
+JSON-Vorprüfung:
+
+```bash
+python3 scripts/i17_target_evidence.py --json
+```
+
+GUI ohne geführte Evidence:
 
 ```bash
 python3 scripts/i17_target_evidence.py --launch-gui
 ```
-
-Der Helfer:
-
-1. prüft den automatisierten Accessibility-Vertrag erneut;
-2. prüft, ob PySide6 und eine echte Display-Session vorhanden sind;
-3. zeigt alle manuellen I17-Gates;
-4. nennt die erforderlichen Screenshot-Dateinamen;
-5. startet anschließend die echte GUI.
-
-Er installiert nichts und ändert keine Nutzdateien.
 
 ## Manuelle Prüfmatrix
 
@@ -78,8 +115,8 @@ Unklare Antwort = UX-Befund.
 Mindestens testen:
 
 - Ordnerdialog abbrechen;
-- leerer Ordner;
-- Ordner mit Unicode-/Leerzeichen-Datei;
+- den vom Assistenten erzeugten leeren Ordner;
+- den vom Assistenten erzeugten Ordner mit Unicode-/Leerzeichen-Dateien;
 - normale erfolgreiche Vorschau;
 - sichtbar: Anzahl, Gesamtgröße, Wirkung und Executor-Sperre.
 
@@ -97,31 +134,19 @@ i17-keyboard-focus.png
 i17-file-preview.png
 ```
 
-Screenshots sollen keine unnötigen persönlichen Dateinamen, Nutzernamen oder privaten Pfade zeigen.
+Die Dateien werden im neu angelegten Evidence-Ordner erwartet. Der Assistent prüft deren Vorhandensein, aber **nicht automatisch den Bildinhalt**. Die manuelle Datenschutzprüfung bleibt deshalb ein eigenes Gate.
 
 ## README-Screenshots
 
-Produktabbildungen im README dürfen echte I17-Screenshots verwenden, sobald der zugehörige Lauf dokumentiert wurde.
+Produktabbildungen im README dürfen echte I17-Screenshots verwenden, sobald der zugehörige Lauf dokumentiert und auf private Inhalte geprüft wurde.
 
-Empfohlener Repo-Pfad:
+Empfohlener Repo-Pfad nach bewusster Auswahl geeigneter Bilder:
 
 ```text
 docs/assets/screenshots/readme/
 ```
 
-Markdown:
-
-```md
-![PROVOWARE Übersicht bei 100 %](docs/assets/screenshots/readme/i17-100-overview.png)
-```
-
-### Mockups
-
-Mockups/Entwürfe dürfen ebenfalls im Repository liegen, aber:
-
-- eigener Pfad, z. B. `docs/assets/mockups/`;
-- sichtbare Kennzeichnung „Designentwurf / nicht aktuelle Produktoberfläche“;
-- niemals als I17-Evidence verwenden.
+Mockups bleiben getrennt unter `docs/assets/mockups/` und zählen niemals als I17-Evidence.
 
 ## PASS-Regel
 
@@ -133,7 +158,9 @@ I17 = PASS nur wenn:
 - Tastaturpfad geprüft;
 - Fokus geprüft;
 - Dateivorschau geprüft;
+- Kontrast/Reduced Motion geprüft;
 - Laienprofil geprüft;
-- Screenshots/Evidence redigiert und nachvollziehbar.
+- Screenshot-Datenschutz manuell bestätigt;
+- alle fünf Screenshot-Dateien vorhanden.
 
-CI allein kann I17 nicht auf PASS setzen.
+Ein `OPEN` wird niemals automatisch zu PASS hochgestuft.
