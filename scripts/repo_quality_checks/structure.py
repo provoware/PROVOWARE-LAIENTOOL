@@ -43,6 +43,8 @@ CORE_REQUIRED = (
     "scripts/validate_portable_package.py",
     "scripts/wheelhouse_integrity.py",
     "scripts/verify_wheelhouse_integrity.py",
+    "scripts/verify_wheelhouse_baseline.py",
+    "wheelhouse-lock-linux-x86_64.json",
     "scripts/plugin_boundary_guard.py",
     "scripts/core_diagnostics.py",
     "scripts/read_only_guard.py",
