@@ -21,7 +21,7 @@
       "kennung": "DIAGNOSE_DATENSCHUTZ",
       "anzeige": "Diagnose zeigt unerlaubte Daten oder schreibt ohne gültige Freigabe",
       "suchwoerter": ["Diagnose", "Redaktion", "Freigabe", "Wiederholung", "Überschreiben"],
-      "pruefungen": ["tests/test_diagnostics.py", "tests/test_i30_diagnostic_export_authorization.py", "tests/test_i31_diagnostic_export_adapters.py"],
+      "pruefungen": ["tests/test_diagnostics.py", "tests/test_diagnostic_export_plan.py", "tests/test_i30_diagnostic_export_authorization.py", "tests/test_i31_diagnostic_export_adapters.py"],
       "zusaetzliche_pruefung": "python3 scripts/diagnostic_writer_guard.py"
     },
     {

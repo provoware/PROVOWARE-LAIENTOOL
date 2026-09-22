@@ -1,46 +1,63 @@
 # PROVOWARE – Aktueller Arbeitsblock
 
-## I39 – Zweitgeräte-Herkunftsidentität
+## I41 – Diagnosepfadredaktion
 
 **Status:** 🟢 ABGESCHLOSSEN
 **Fortschritt:** `██████████ 100 %`
 **Produktfreigabe:** unverändert; Zweitgeräte- und Human-Gates bleiben offen
 
+## Ziel
+
+Absolute POSIX-, Windows-Laufwerks- und UNC-Pfade in frei übernommenen
+Diagnosetexten so redigieren, dass lokale Pfade und Dateinamen nicht
+weitergegeben werden.
+
 ## Ergebnis
 
-- der P0-Zweitgeräte-Nachweis besitzt jetzt eine eindeutige, offline ermittelte Herkunftsidentität;
-- Portable-Pakete verwenden bevorzugt den 40-stelligen Commit aus `PACKAGE_MANIFEST.json`;
-- echte Git-Checkouts verwenden den lokalen `HEAD`;
-- ohne Manifest und ohne `.git` bleibt ein ausdrücklich gekennzeichneter SHA-256-Fingerprint von `start.py`;
-- ein vorhandenes, aber ungültiges Paketmanifest führt fail-closed zu `FAIL`;
-- Manifest-, Git-, Fallback- und Invalid-Manifest-Pfade sind regressionsgetestet;
-- PR #59 wurde per Squash nach `main` gemergt;
-- Post-Merge-`repo-quality` ist vollständig grün.
+- absolute POSIX-, Windows-Laufwerks- und UNC-Pfade werden durch `<PATH>`
+  ersetzt;
+- Unicode, Leerzeichen und gültige Trennzeichen innerhalb eines Pfades sind
+  regressionsgetestet;
+- Satzzeichen nach einem Pfad, bereits redigierte Home-Pfade und Webadressen
+  bleiben erhalten;
+- ein blockierter Diagnoseexport gibt weder Inhalt noch Schreibplan zurück;
+- 260 Tests und die betroffenen Repository-Guards sind auf dem Release
+  Candidate erfolgreich durchgelaufen;
+- es wurden keine Schreibrechte, Startwege oder Produktfreigaben verändert.
 
-## Verifizierter Abschlusszustand
+## Bewusster Trade-off
 
-- `main`: `6d038c6fce5e16067623ad3d0590852a75dfe62a`
-- Remote-Branches nach I39-Merge: ausschließlich `main`
-- keine GUI-Änderung
-- keine Dateioperation
-- keine neue Paketarchitektur
-- keine Änderung an Schreibfreigaben
-- kein tatsächlicher Zweitgeräte-PASS ohne zweites Gerät
+Die sicherheitsorientierte Erkennung kann in freiem Diagnosetext auch eine
+unproblematische Zeichenfolge redigieren, wenn sie wie ein absoluter Pfad
+aussieht. Diese mögliche Überredaktion ist akzeptiert: Ein weniger ausführlicher
+Diagnosetext ist sicherer als die unbeabsichtigte Weitergabe lokaler Namen.
+
+## Offene Freigaben und Abgrenzung
+
+- Die Zweitgeräteprüfung wurde auf Nutzerentscheidung übersprungen. Sie gilt
+  ausdrücklich **nicht** als bestanden und wird nur nach neuer Freigabe wieder
+  aufgenommen.
+- Die Human-Abnahmen für Kopieren/Verschieben und für die Diagnose-Datei bleiben
+  offen.
+- Ein Inventarlimit wurde nicht eingeführt, weil keine fachlich freigegebene
+  Defaultgrenze vorliegt. Der Befund bleibt nachvollziehbar in `todo.txt`
+  vertagt.
+- Der historische I40-Audit bleibt als damalige Bestandsaufnahme unverändert.
 
 ## Nächster verbindlicher Schritt
 
-**P0 – realer Zweitgeräte-Nachweis**
+**P1 – Human-Abnahme für Kopieren und Verschieben**
 
-Auf einem zweiten Ubuntu-/Kubuntu-Gerät im Projektordner genau einmal:
+Nach ausdrücklicher Freigabe einmal den vorhandenen Bediennachweis über
+`./start.sh --i25-evidence` ausführen. Bis dahin bleiben die Funktionen im
+normalen Programmweg gesperrt.
 
-```bash
-./start.sh --second-device-evidence-json
-```
+### Drei-Schritte-Vorausplanung
 
-Den vollständigen redigierten JSON-Bericht als Evidence übernehmen. Erst ein realer zweiter Zielrechner kann dieses P0-Gate schließen.
-
-Danach folgen weiterhin:
-
-1. P1 – einmalige Human-Abnahme für Kopieren/Verschieben über `./start.sh --i25-evidence`;
-2. P1 – einmalige Human-Abnahme für Diagnose-Datei über `./start.sh --i31-evidence`;
-3. P2 – Erscheinungsbild nur gemeinsam mit der nächsten sichtbaren Bedienänderung nachschärfen.
+1. **Kopieren/Verschieben:** ausdrückliche Human-Freigabe erforderlich; Scope
+   I25-Evidence; Gate `./start.sh --i25-evidence`.
+2. **Diagnose-Datei:** ausdrückliche Human-Freigabe erforderlich; Scope
+   I31-Evidence; Gate `./start.sh --i31-evidence`.
+3. **Inventarlimit:** fachlich freigegebene Defaultgrenze erforderlich; Scope
+   Inventarisierung und direkte Tests; Gate begrenzter Großbaum-Test mit
+   sicherem Abbruch.

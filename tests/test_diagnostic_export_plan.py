@@ -178,7 +178,12 @@ class DiagnosticExportPlanTests(unittest.TestCase):
                 DiagnosticEntry(
                     "message",
                     "unsafe",
-                    "/home/alice/private alice@example.com",
+                    "/srv/Private Ablage/ä Datei.txt",
+                ),
+                DiagnosticEntry(
+                    "message",
+                    "unsafe_windows",
+                    r"C:\Users\Jörg\Meine Datei.txt",
                 ),
             ),
             warnings=(),
@@ -192,6 +197,8 @@ class DiagnosticExportPlanTests(unittest.TestCase):
             filename="PROVOWARE-Diagnose.txt",
         )
         self.assertEqual(result.status, "BLOCKED")
+        self.assertIsNone(result.payload)
+        self.assertIsNone(result.plan)
         self.assertTrue(any("sensible Inhalte" in error for error in result.errors))
 
     def test_plan_is_immutable(self) -> None:

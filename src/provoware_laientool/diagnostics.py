@@ -20,6 +20,16 @@ _EMAIL_PATTERN = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b
 _GITHUB_TOKEN_PATTERN = re.compile(r"\bgh[pousr]_[A-Za-z0-9_]{20,}\b")
 _OPENAI_TOKEN_PATTERN = re.compile(r"\bsk-[A-Za-z0-9_-]{20,}\b")
 _BEARER_PATTERN = re.compile(r"(?i)(\bBearer\s+)[A-Za-z0-9._~+/=-]{12,}")
+_POSIX_PATH_PATTERN = re.compile(
+    r"(?<![A-Za-z0-9_:$\\/])/(?![/\s])[^\r\n]*"
+)
+_WINDOWS_DRIVE_PATH_PATTERN = re.compile(
+    r"(?<![A-Za-z0-9_])[A-Za-z]:[\\/](?!\s)[^\r\n]*"
+)
+_WINDOWS_UNC_PATH_PATTERN = re.compile(
+    r"(?<![A-Za-z0-9_\\])\\\\(?![\\\s])[^\r\n]*"
+)
+_PATH_TRAILING_PUNCTUATION = ".,:!?)]}"
 
 
 @dataclass(frozen=True, slots=True)
@@ -41,6 +51,16 @@ class DiagnosticReport:
     write_paths_enabled: bool = False
 
 
+def _replace_path(match: re.Match[str]) -> str:
+    """Replace one absolute path while preserving sentence punctuation."""
+    value = match.group(0)
+    without_space = value.rstrip()
+    trailing_space = value[len(without_space):]
+    path = without_space.rstrip(_PATH_TRAILING_PUNCTUATION)
+    punctuation = without_space[len(path):]
+    return f"<PATH>{punctuation}{trailing_space}"
+
+
 def redact_text(value: str, *, home: Path | None = None) -> str:
     """Redact common path/identity/token material without writing anything."""
     text = value
@@ -53,6 +73,9 @@ def redact_text(value: str, *, home: Path | None = None) -> str:
     text = _GITHUB_TOKEN_PATTERN.sub("<TOKEN>", text)
     text = _OPENAI_TOKEN_PATTERN.sub("<TOKEN>", text)
     text = _BEARER_PATTERN.sub(r"\1<TOKEN>", text)
+    text = _WINDOWS_UNC_PATH_PATTERN.sub(_replace_path, text)
+    text = _WINDOWS_DRIVE_PATH_PATTERN.sub(_replace_path, text)
+    text = _POSIX_PATH_PATTERN.sub(_replace_path, text)
     return text
 
 

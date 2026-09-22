@@ -85,6 +85,38 @@ class RedactionTests(unittest.TestCase):
     def test_other_text_is_preserved(self) -> None:
         self.assertEqual(redact_text("Ubuntu 24.04 / KDE"), "Ubuntu 24.04 / KDE")
 
+    def test_absolute_paths_are_redacted_with_unicode_and_spaces(self) -> None:
+        cases = (
+            "/srv/Private Ablage/ä Datei.txt",
+            r"C:\Users\Jörg\Meine Datei.txt",
+            r"\\server\Freigabe\Persönlich\Datei 01.txt",
+        )
+        for path in cases:
+            with self.subTest(path=path):
+                redacted = redact_text(f"Fehler: {path}")
+                self.assertEqual(redacted, "Fehler: <PATH>")
+                self.assertNotIn("Datei", redacted)
+
+    def test_path_redaction_preserves_punctuation_home_and_urls(self) -> None:
+        self.assertEqual(redact_text("Fehler: /root/privat.txt."), "Fehler: <PATH>.")
+        self.assertEqual(
+            redact_text("Fehler in /home/alice/private.txt", home=Path("/home/alice")),
+            "Fehler in $HOME/private.txt",
+        )
+        self.assertEqual(
+            redact_text("Quelle https://example.invalid/path"),
+            "Quelle https://example.invalid/path",
+        )
+
+    def test_path_redaction_does_not_leak_valid_separator_characters(self) -> None:
+        for path in (
+            "/srv/Privat;Geheim/akte.txt",
+            "/srv/Privat|Geheim/akte.txt",
+            '/srv/Privat"Geheim/akte.txt',
+        ):
+            with self.subTest(path=path):
+                self.assertEqual(redact_text(path), "<PATH>")
+
 
 class DiagnosticReportTests(unittest.TestCase):
     def test_report_is_read_only_and_redacted(self) -> None:
