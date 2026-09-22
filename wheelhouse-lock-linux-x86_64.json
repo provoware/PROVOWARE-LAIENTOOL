@@ -1,0 +1,27 @@
+{
+  "schema_version": "1",
+  "platform_tag": "linux-x86_64",
+  "requirements_sha256": "385e039f43c455549f3e79039a7b68169284eac3f18a35e0db4fa5ebdec01e44",
+  "wheels": [
+    {
+      "filename": "pyside6-6.11.2-cp310-abi3-manylinux_2_34_x86_64.whl",
+      "size": 572120,
+      "sha256": "dc6d03990489a5085842770718392ef5de36352d8f608d9a9fe03e60af4d7b66"
+    },
+    {
+      "filename": "pyside6_addons-6.11.2-cp310-abi3-manylinux_2_34_x86_64.whl",
+      "size": 175062576,
+      "sha256": "a8b00956925fbdeffc7052cf933506391289f35ac4f3f71a0a167ec195cd47b4"
+    },
+    {
+      "filename": "pyside6_essentials-6.11.2-cp310-abi3-manylinux_2_34_x86_64.whl",
+      "size": 80108947,
+      "sha256": "aaf9f25f0f324874085fa5b26a610318db8a8e243cf85bb3e5400595191c7778"
+    },
+    {
+      "filename": "shiboken6-6.11.2-cp310-abi3-manylinux_2_34_x86_64.whl",
+      "size": 272435,
+      "sha256": "7a7a0a72a9ed26c9bf77d42246b1c736486befb8f31aa2fb29957ea4cdd1c1c2"
+    }
+  ]
+}
