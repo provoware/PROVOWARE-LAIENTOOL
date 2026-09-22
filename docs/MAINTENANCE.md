@@ -42,7 +42,7 @@ So entsteht nach einem Merge kein zwangsläufig falscher README-/TODO-Stand.
 5. bei Produktcode `python3 scripts/read_only_guard.py`;
 6. vollständige Suite vor Merge;
 7. finalen Diff auf Status-/Dokumentationsdrift prüfen;
-8. GitHub-CI abwarten und nur fachlich dauerhafte Ergebnisse dokumentierun.
+8. GitHub-CI abwarten und nur fachlich dauerhafte Ergebnisse dokumentieren.
 
 Der Repository-Gate prüft zusätzlich interne Markdown-Links, Python-Syntax, Iterationsindex, Workflow-Pinning, TODO-Schema und Text-Hygiene.
 
@@ -91,6 +91,15 @@ Diese Punkte sind bewusst zu beobachten, aber nicht automatisch zu refactoren:
 - GUI/CLI: keine Fachlogik in Adapter zurückwandern lassen.
 - Diagnose-Writer: Guard-REOPEN eng halten; keinen allgemeinen Schreibpfad daraus ableiten.
 - Altbranches werden vor Löschung gegen `main` auf einzigartige Fach-/Sicherheitsinvarianten geprüft; alte Implementierungen werden nicht blind gemergt. Die Klassifikation vom 2026-09-21 liegt in `docs/evidence/EV-20260921-006-branch-hygiene-i27.md`.
+
+### Branch- und PR-Hygiene
+
+- Pro Arbeitsblock gibt es höchstens **einen offenen Integrations-PR** gegen `main`.
+- Vor Beginn eines neuen Blocks werden offene PRs und benannte Arbeitsbranches gegen `main` geprüft.
+- Ist ein PR fachlich bereits auf `main` enthalten, wird er mit Verweis auf den belegenden Commit als **überholt** geschlossen; er bleibt nicht als zweiter Integrationspfad offen.
+- Ein alter Branch wird niemals für einen neuen Arbeitsblock wiederverwendet.
+- Vor Branch-Löschung wird geprüft, ob einzigartige Commits oder noch nicht übernommene Sicherheitsinvarianten existieren. Nur eindeutig entbehrliche Branches dürfen entfernt werden.
+- Nach einem erfolgreichen Merge wird die zugehörige Branch-/PR-Hygiene im selben Wartungslauf geprüft, damit offene Altpfade nicht bis zur nächsten Iteration liegenbleiben.
 
 ## 8. Testbudget und Schleifenschutz
 
