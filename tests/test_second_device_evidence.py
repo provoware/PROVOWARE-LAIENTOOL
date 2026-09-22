@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "second_device_evidence.py"
 SPEC = importlib.util.spec_from_file_location("second_device_evidence", SCRIPT)
@@ -54,6 +56,59 @@ class SecondDeviceEvidenceTests(unittest.TestCase):
             path = Path(tmp) / "sample.txt"
             path.write_text("provoware", encoding="utf-8")
             self.assertEqual(MODULE.sha256(path), MODULE.sha256(path))
+
+    def test_source_identity_prefers_package_manifest_commit(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            start = root / "start.py"
+            start.write_text("print('ok')\n", encoding="utf-8")
+            commit = "a" * 40
+            (root / "PACKAGE_MANIFEST.json").write_text(
+                json.dumps({"commit": commit}),
+                encoding="utf-8",
+            )
+            identity = MODULE.source_identity(root, start)
+            self.assertTrue(identity["valid"])
+            self.assertEqual(identity["kind"], "package-manifest-commit")
+            self.assertEqual(identity["commit"], commit)
+
+    def test_source_identity_uses_git_commit_for_checkout(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            start = root / "start.py"
+            start.write_text("print('ok')\n", encoding="utf-8")
+            (root / ".git").mkdir()
+            commit = "b" * 40
+            with mock.patch.object(MODULE, "git_commit", return_value=commit):
+                identity = MODULE.source_identity(root, start)
+            self.assertTrue(identity["valid"])
+            self.assertEqual(identity["kind"], "git-commit")
+            self.assertEqual(identity["commit"], commit)
+
+    def test_invalid_package_manifest_fails_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            start = root / "start.py"
+            start.write_text("print('ok')\n", encoding="utf-8")
+            (root / "PACKAGE_MANIFEST.json").write_text(
+                json.dumps({"commit": "not-a-commit"}),
+                encoding="utf-8",
+            )
+            identity = MODULE.source_identity(root, start)
+            self.assertFalse(identity["valid"])
+            self.assertEqual(identity["kind"], "invalid-package-manifest")
+            self.assertIsNotNone(identity["error"])
+
+    def test_source_identity_falls_back_to_start_fingerprint(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            start = root / "start.py"
+            start.write_text("print('ok')\n", encoding="utf-8")
+            identity = MODULE.source_identity(root, start)
+            self.assertTrue(identity["valid"])
+            self.assertEqual(identity["kind"], "start.py-sha256")
+            self.assertIsNone(identity["commit"])
+            self.assertEqual(identity["fingerprint_sha256"], MODULE.sha256(start))
 
     def test_redaction_key_sets_contain_no_paths(self) -> None:
         for keys in (
