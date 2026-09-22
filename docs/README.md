@@ -74,6 +74,7 @@ Diese Dateien dokumentieren **fachliche Checkpoints**, nicht den flüchtigen Liv
 | I35 | [I35_PACKAGE_PROVENANCE.md](I35_PACKAGE_PROVENANCE.md) |
 | I37 | [I37_REPOSITORY_HYGIENE.md](I37_REPOSITORY_HYGIENE.md) |
 | I38 | [I38_PREBUILD_WHEEL_BASELINE.md](I38_PREBUILD_WHEEL_BASELINE.md) |
+| I39 | [I39_SECOND_DEVICE_SOURCE_IDENTITY.md](I39_SECOND_DEVICE_SOURCE_IDENTITY.md) |
 
 ## Architektur und Evidence
 

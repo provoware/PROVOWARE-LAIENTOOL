@@ -7,12 +7,14 @@ import argparse
 import hashlib
 import json
 import platform
+import re
 import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 START = ROOT / "start.py"
+COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
 
 PLATFORM_KEYS = {
     "system",
@@ -64,6 +66,77 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def package_manifest_commit(root: Path) -> str | None:
+    manifest_path = root / "PACKAGE_MANIFEST.json"
+    if not manifest_path.is_file():
+        return None
+    try:
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError(f"PACKAGE_MANIFEST.json ist nicht lesbar: {exc}") from exc
+    commit = payload.get("commit") if isinstance(payload, dict) else None
+    if not isinstance(commit, str) or not COMMIT_RE.fullmatch(commit):
+        raise ValueError("PACKAGE_MANIFEST.json enthält keinen gültigen 40-stelligen Commit.")
+    return commit
+
+
+def git_commit(root: Path) -> str | None:
+    if not (root / ".git").exists():
+        return None
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=root,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+    except OSError:
+        return None
+    commit = result.stdout.strip().lower()
+    if result.returncode == 0 and COMMIT_RE.fullmatch(commit):
+        return commit
+    return None
+
+
+def source_identity(root: Path = ROOT, start: Path = START) -> dict[str, object]:
+    fingerprint = sha256(start)
+    try:
+        manifest_commit = package_manifest_commit(root)
+    except ValueError as exc:
+        return {
+            "valid": False,
+            "kind": "invalid-package-manifest",
+            "commit": None,
+            "fingerprint_sha256": fingerprint,
+            "error": str(exc),
+        }
+    if manifest_commit is not None:
+        return {
+            "valid": True,
+            "kind": "package-manifest-commit",
+            "commit": manifest_commit,
+            "fingerprint_sha256": fingerprint,
+            "error": None,
+        }
+    repository_commit = git_commit(root)
+    if repository_commit is not None:
+        return {
+            "valid": True,
+            "kind": "git-commit",
+            "commit": repository_commit,
+            "fingerprint_sha256": fingerprint,
+            "error": None,
+        }
+    return {
+        "valid": True,
+        "kind": "start.py-sha256",
+        "commit": None,
+        "fingerprint_sha256": fingerprint,
+        "error": None,
+    }
+
+
 def select_keys(value: object, allowed: set[str]) -> dict[str, object]:
     if not isinstance(value, dict):
         return {}
@@ -95,6 +168,7 @@ def main() -> int:
 
     text_run = run_command([sys.executable, str(START)])
     json_run = run_command([sys.executable, str(START), "--json"])
+    identity = source_identity()
 
     parsed: object | None = None
     parse_error: str | None = None
@@ -106,7 +180,8 @@ def main() -> int:
 
     report = {
         "evidence": "B01-second-device-preflight",
-        "repository_start_sha256": sha256(START),
+        "repository_start_sha256": identity["fingerprint_sha256"],
+        "source_identity": identity,
         "host": {
             "system": platform.system(),
             "machine": platform.machine(),
@@ -121,6 +196,7 @@ def main() -> int:
             if text_run.returncode in {0, 3}
             and json_run.returncode in {0, 3}
             and parsed is not None
+            and identity["valid"] is True
             else "FAIL"
         ),
     }
@@ -135,6 +211,12 @@ def main() -> int:
         print(f"JSON-Preflight Exit-Code: {json_run.returncode}")
         print(f"Python: {report['host']['python']}")
         print(f"Architektur: {report['host']['machine']}")
+        print(f"Herkunft: {identity['kind']}")
+        if identity["commit"]:
+            print(f"Commit: {identity['commit']}")
+        print(f"Start-Fingerprint SHA-256: {identity['fingerprint_sha256']}")
+        if identity["error"]:
+            print(f"Herkunftsfehler: {identity['error']}")
         if parsed is not None:
             print("Preflight-Daten: sicher redigiert verfügbar")
         if parse_error:

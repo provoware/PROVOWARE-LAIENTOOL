@@ -1,37 +1,39 @@
 # PROVOWARE – Aktueller Arbeitsblock
 
-## I37 / I38 – Repository-Hygiene und vorab festgeschriebene Wheelhouse-Baseline
+## I39 – Zweitgeräte-Herkunftsidentität
 
-**Status:** 🟢 ABGESCHLOSSEN
-**Fortschritt:** `██████████ 100 %`
-**Produktfreigabe:** unverändert; bestehende Human-/Zweitgeräte-Gates bleiben offen
+**Status:** 🟡 AUTOMATISCHE ABNAHME LÄUFT
+**Fortschritt:** `████████░░ 80 %`
+**Produktfreigabe:** unverändert; Zweitgeräte- und Human-Gates bleiben offen
 
-## I37 – Abschluss
+## A – Fester Plan
 
-- Repository-Quality-Gate modularisiert und vollständig grün validiert;
-- Repository-/Prozessdokumentation konsistent nachgeführt;
-- Altbranch-Bestand geprüft und der sicherheitsrelevante I33-Rest isoliert;
-- keine Produktlogik- oder Schreibfreigabe ausgeweitet.
+1. den P0-Zweitgeräte-Nachweis vor dem realen Lauf auf eine eindeutige Herkunftsidentität härten;
+2. Portable-Paket-Commit, Git-Checkout-Commit und klar gekennzeichneten Fingerprint-Fallback unterscheiden;
+3. ein vorhandenes, aber ungültiges Paketmanifest fail-closed behandeln;
+4. ausschließlich den Evidence-Pfad ändern – keine Produktlogik und keine Schreibfreigabe.
 
-## I38 – Abschluss
+## Ergebnis im Branch
 
-- feste Linux-x86_64-Wheel-Baseline eingecheckt;
-- dependency-freier Baseline-Prüfer ergänzt;
-- Paketworkflow prüft die Baseline direkt nach `pip download` und vor dem ZIP-Build;
-- Negativtests für manipuliertes Wheel, Zusatz-Wheel und Requirements-Drift vorhanden;
-- PR #57 per Squash nach `main` gemergt;
-- Repository-Quality und Portable-Package nach Merge vollständig grün;
-- sämtliche acht freigegebenen Altbranches anschließend endgültig aus der Remote-Branchliste entfernt.
+- `PACKAGE_MANIFEST.json` ist für Portable-Pakete die bevorzugte Commit-Quelle;
+- ein echter Git-Checkout nutzt ausschließlich seinen lokalen `HEAD`;
+- ohne Manifest und ohne `.git` bleibt ein SHA-256-Fingerprint von `start.py`;
+- ein ungültiges vorhandenes Paketmanifest führt zu `FAIL`;
+- gezielte Regressionstests decken alle Identitätswege ab;
+- B01-Dokumentation beschreibt die Priorität und den Fail-closed-Fall.
 
-## Verifizierter Abschlusszustand
+## Exit-Gates
 
-- Ausgangs-`main` nach I38-Merge: `6714c2b47a8c3d0d86b2ea16cb68a14a20d04333`
-- Remote-Branches nach Bereinigung: ausschließlich `main`
-- `main` ist geschützt
-- keine neue Paketarchitektur
-- keine Änderung an Produktlogik oder Schreibfreigaben
-- kein automatisches Umschreiben der Wheel-Baseline
+1. gezielte Tests für `test_second_device_evidence.py` grün;
+2. vollständiges `repo-quality` grün;
+3. genau ein Remote-Head und Review-Diff ohne Scope-Ausweitung;
+4. danach Squash-Merge und Post-Merge-Quality;
+5. erst anschließend realer P0-Lauf auf einem zweiten Ubuntu-/Kubuntu-Gerät.
 
-## Nächster Schritt
+## Nicht Teil von I39
 
-Der nächste Entwicklungsblock darf ausschließlich vom aktuellen grünen `main` eröffnet werden. Bestehende Human-/Zweitgeräte-Gates bleiben davon unberührt.
+- kein tatsächlicher Zweitgeräte-PASS ohne zweites Gerät;
+- keine GUI-Änderung;
+- keine Dateioperationen;
+- keine neue Paketarchitektur;
+- keine automatische Freigabe von Kopieren, Verschieben oder Diagnose-Datei.
