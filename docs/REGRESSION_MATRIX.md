@@ -10,6 +10,20 @@ Prinzip:
 
 Die Matrix reduziert unnötige lokale/agentische Testläufe. Der zentrale PR-Gate führt weiterhin die vollständige Testsuite aus.
 
+Das maschinenlesbare [Regressionsmanifest](REGRESSIONSMANIFEST.json) bündelt ähnliche Fehler in Fehlerfamilien. Es ist die führende Zuordnung für neue Fehler; diese Seite erklärt den Ablauf für Menschen.
+
+## Lernender Ablauf für neue Fehler
+
+1. Beobachtung ohne persönliche Daten festhalten.
+2. Ursache als Produktfehler, Prüfungsfehler, Umgebungsfehler oder Nachweisfehler einordnen.
+3. Über Suchwörter im Manifest die ähnlichste Fehlerfamilie wählen.
+4. Zuerst nur die dort genannte kleinste Prüfung ausführen.
+5. Den Fehler mit einem neuen Beispiel in einer bestehenden Prüfung absichern.
+6. Nur wenn keine Familie passt, eine neue Familie mit eindeutiger Kennung, Suchwörtern und vorhandenen Prüfpfaden ergänzen.
+7. Das Repository-Gate verhindert leere Kennungen, doppelte Familien und Verweise auf fehlende Prüfdateien.
+
+Das System ändert niemals selbst Programmcode oder erwartete Ergebnisse. „Lernend“ bedeutet hier: bestätigte Ursachen werden dauerhaft einer Familie zugeordnet, sodass derselbe und ein ähnlicher Fehler künftig mit derselben Schutzprüfung gefunden werden.
+
 ## Änderungsart → gezielter Erstlauf
 
 | Änderung | Erstlauf |
@@ -32,6 +46,9 @@ Die Matrix reduziert unnötige lokale/agentische Testläufe. Der zentrale PR-Gat
 | I30 Diagnose-Export Autorisierung | `tests/test_i30_diagnostic_export_authorization.py` + Registry + I28 Writer-Regressionspfad |
 | I31 Diagnose-Export Adapter-Prüfmodus | `tests/test_i31_diagnostic_export_adapters.py` + `scripts/i31_auto_evidence.py --offscreen --auto-only`; Human-Gate nur final |
 | I32 Portable Offline-Paket | `tests/test_i32_portable_package.py` + `portable-package.yml`; deterministisches ZIP, Manifest/Hashes, Fremdpfad und Offline-Wheelhouse |
+| I33 Wheelhouse-Integrität | `tests/test_i33_wheelhouse_integrity.py` + Portable-Package-Gate; exaktes Set, Version, Plattform und Hash vor der Offline-Installation |
+| I34 Plugin-Grenze | `tests/test_i34_plugin_boundary.py` + `scripts/plugin_boundary_guard.py`; nur Daten, nur lesend, keine Installation und kein Netz |
+| I35 Paket-Provenienz | `tests/test_i35_package_provenance.py` + Portable-Package-Gate; Commit, Manifest, Paketwurzel, ZIP-Name, Sidecar und Bytes gebunden |
 | I20 Diagnose-Observability | `tests/test_diagnostics.py` + `python3 scripts/diagnostic_snapshot.py --json` |
 | I21 Same-Root Copy/Move Preview | `tests/test_i21_same_root_preview.py` + `python3 scripts/core_diagnostics.py` |
 | I25 Transfer-Preview Adapter | `tests/test_i25_transfer_adapters.py` + I21 + Read-only-Lock + `scripts/i25_auto_evidence.py --offscreen --auto-only`; Human-Gate nur final |
@@ -90,9 +107,3 @@ READ
 ```
 
 Kein absichtlich roter Push und keine fachfremden Tests in frühen Schleifen.
-
-| I33 Wheelhouse-Integrität | `tests/test_i33_wheelhouse_integrity.py` + Portable-Package-Gate; exact set/version/platform/hash before offline pip |
-
-| I34 Plugin-Grenze | `tests/test_i34_plugin_boundary.py` + `scripts/plugin_boundary_guard.py`; data-only, READY/read-only only, kein Loader/Install/Netzwerk |
-
-| I35 Paket-Provenienz | `tests/test_i35_package_provenance.py` + Portable-Package-Gate; Commit/Manifest/Paketwurzel/ZIP-Name/Sidecar/Bytes gebunden |

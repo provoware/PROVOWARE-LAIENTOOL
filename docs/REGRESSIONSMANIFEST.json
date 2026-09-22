@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "beschreibung": "Ordnet einen neuen Fehler einer bekannten Fehlerfamilie und der kleinsten passenden Prüfung zu.",
+  "lernregel": "Ein bestätigter Fehler ergänzt zuerst eine passende bestehende Familie. Eine neue Familie ist nur erlaubt, wenn keine vorhandene Ursache und keine vorhandene Prüfung passen.",
+  "familien": [
+    {
+      "kennung": "PFAD_SCHUTZ",
+      "anzeige": "Pfad oder symbolischer Verweis verlässt die erlaubte Grenze",
+      "suchwoerter": ["Pfad", "Traversal", "Symlink", "Wurzel"],
+      "pruefungen": ["tests/test_path_policy.py"],
+      "zusaetzliche_pruefung": "python3 scripts/read_only_guard.py"
+    },
+    {
+      "kennung": "VORSCHAU_ABWEICHUNG",
+      "anzeige": "Vorschau stimmt nicht mit Auswahl oder Ziel überein",
+      "suchwoerter": ["Vorschau", "Auswahl", "Ziel", "Kopieren", "Verschieben"],
+      "pruefungen": ["tests/test_preview_model.py", "tests/test_i21_same_root_preview.py", "tests/test_i25_transfer_adapters.py"],
+      "zusaetzliche_pruefung": "python3 scripts/read_only_guard.py"
+    },
+    {
+      "kennung": "DIAGNOSE_DATENSCHUTZ",
+      "anzeige": "Diagnose zeigt unerlaubte Daten oder schreibt ohne gültige Freigabe",
+      "suchwoerter": ["Diagnose", "Redaktion", "Freigabe", "Wiederholung", "Überschreiben"],
+      "pruefungen": ["tests/test_diagnostics.py", "tests/test_i30_diagnostic_export_authorization.py", "tests/test_i31_diagnostic_export_adapters.py"],
+      "zusaetzliche_pruefung": "python3 scripts/diagnostic_writer_guard.py"
+    },
+    {
+      "kennung": "BEDIENUNG_SICHTBARKEIT",
+      "anzeige": "Text, Fokus oder Bedienfolge ist nicht ausreichend wahrnehmbar",
+      "suchwoerter": ["Fokus", "Tastatur", "Kontrast", "Skalierung", "Text"],
+      "pruefungen": ["tests/test_accessibility_evidence.py", "tests/test_i17_auto_evidence.py"],
+      "zusaetzliche_pruefung": "./start.sh --i17-offscreen"
+    },
+    {
+      "kennung": "PAKET_INTEGRITAET",
+      "anzeige": "Paketinhalt, Herkunftsangabe oder Prüfsumme passt nicht",
+      "suchwoerter": ["Paket", "Manifest", "Prüfsumme", "Wheelhouse", "Commit"],
+      "pruefungen": ["tests/test_i32_portable_package.py", "tests/test_i33_wheelhouse_integrity.py", "tests/test_i35_package_provenance.py"],
+      "zusaetzliche_pruefung": "python3 scripts/verify_wheelhouse_integrity.py ."
+    },
+    {
+      "kennung": "WIEDERHERSTELLUNG",
+      "anzeige": "Abbruch, Absturz oder Wiederholung hinterlässt einen falschen Zustand",
+      "suchwoerter": ["Abbruch", "Absturz", "Wiederholung", "Wiederherstellung", "Journal"],
+      "pruefungen": ["tests/test_recovery_contract.py", "tests/test_diagnostic_export_writer.py"],
+      "zusaetzliche_pruefung": "python3 scripts/read_only_guard.py"
+    }
+  ]
+}

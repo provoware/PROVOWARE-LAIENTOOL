@@ -1,217 +1,159 @@
 # PROVOWARE-LAIENTOOL
 
-Laienoptimiertes, sicherheitsorientiertes Desktop-Werkzeug zur Organisation und später kontrollierten Bereinigung des Download-Ordners auf Ubuntu/Kubuntu.
+Ein sicheres Programm zum Ordnen des Download-Ordners unter Ubuntu und Kubuntu. Das Programm zeigt Änderungen zuerst nur als Vorschau. Im normalen Programmweg wird derzeit **keine Datei verschoben, gelöscht oder überschrieben**.
 
-## Projektstatus
+## Auf einen Blick
 
-**Gesamtstatus:** 🟨 PLANUNG / REPOSITORY-FOUNDATION
-**Schreibende Dateioperationen:** 🔒 GESPERRT
-**Produktkern:** 🟨 read-only Kern vorhanden (`preflight`, Pfadgrenzen, gemeinsame Registry, Application-Core, CLI-/GUI-Shell); keine Schreiboperationen
+| Zeichen | Bedeutung | Stand |
+| --- | --- | --- |
+| 🟢 | automatisch geprüft | Programmstart, Vorschau, Diagnose und Schutzregeln |
+| 🟡 | Prüfung durch einen Menschen fehlt | Bedienung für Verschieben/Kopieren und Diagnose-Ausgabe |
+| 🔴 | nicht verfügbar | keine bekannten Hauptfehler |
+| 🔒 | bewusst gesperrt | alle schreibenden Dateiaktionen |
 
-| Bereich | Stand | Anzeige |
-|---|---:|---|
-| Anforderungsbaseline | 9/9 Originalanforderungen erfasst | 🟢 `██████████` 100 % |
-| Qualitätsanforderungen | 20 definiert | 🟢 dokumentiert |
-| Entwicklungsblöcke | B00–B11 definiert | 🟢 12 Blöcke |
-| B00 Visuelle Orientierung | Designsystem definiert | 🟢 `██████████` 100 % |
-| B01 Projektkern/Sicherheitsgrenzen | B01-A Preflight + B01-B Pfadgrenzen implementiert; standardisierter Zweitgeräte-Evidence-Runner vorbereitet, physischer Lauf offen | 🟨 `████████░░` 80 % |
-| I10 GUI-/CLI-Registry | gemeinsame immutable Registry implementiert und geprüft | 🟢 `██████████` 100 % |
-| I11 read-only Shell | gemeinsamer Core + Zahlenmenü + PySide6-Shell implementiert; reale Accessibility-Gesamtevidence über I17-D bestätigt | 🟢 `██████████` 100 % |
-| I12 B05 Preview-Modell | immutable Preview-Vertrag mit B01-Pfadgrenzen implementiert; kein Executor | 🟢 `██████████` 100 % Modellstand |
-| I13 B06 Recovery-Vertrag | Zustandsautomat, Journal-/Undo-Vertrag und Crash-Matrix implementiert; keine Persistenz/kein Executor | 🟢 Repository grün |
-| I14 Accessibility-Evidence | historischer Fokus-/Kontrastvertrag; reale aktuelle Gesamtprüfung wurde in I17-D erfolgreich abgeschlossen | 🟢 durch I17-D real bestätigt |
-| I15 Read-only Inventar | rekursiver B01-gebundener Nur-Lese-Inventarkern mit Symlink-Sperre, Unicode/Leerzeichen, Größenfakten und strukturierten Befunden implementiert | 🟢 Repository grün |
-| I16 Preview-Application | Inventar → reversible Trash-Preview über gemeinsamen Application-Core; GUI/CLI sammeln nur die Ordnerwahl ein | 🟢 Repository grün |
-| I17 Real-Accessibility | automatisierte Qt-Pipeline für 100/150/200 %, Tab/Shift+Tab, Fokus, synthetische Preview und fünf Screenshots; reale Chromium-Human-Abnahme bestätigt | 🟢 FROZEN PASS |
-| I18 Inventar-Komfort | read-only Suche, Sortierung und Top-10/50/100-Größenansichten im Domain-/Application-Core; sichtbare GUI-Anbindung wartet auf realen I17-Lauf | 🟢 Repository grün; UI weiter gegated |
-| I19 Zielwahl-Decision | Same-Root-Zielwahl ohne Overwrite beschlossen; externe Ziele bleiben gesperrt; statischer Read-only-Lock blockiert Schreib-APIs im Produktcode | 🟢 Decision + Guard grün |
-| I20 Diagnose-Observability | redigierter read-only Diagnosebericht als Klartext/JSON, CLI-only Use Case und stdout-Helfer; kein Datei-Export | 🟢 Repository grün |
-| I21 Same-Root Copy/Move Preview | gemeinsamer Core erzeugt Copy-/Move-Preview nur innerhalb derselben Root; Overwrite, externe Ziele und Auto-Rename blockiert | 🟢 Repository grün |
-| I22 Diagnose-Export Decision | späterer expliziter redigierter lokaler Export grundsätzlich zulässig, aber nur mit eigenem Writer-/Guard-REOPEN; aktuell keine Implementierung | 🟢 Decision eingefroren |
-| I23 Zielauswahl Adapter-Decision | gemeinsamer späterer GUI-/CLI-Workflow für I18-Auswahl + I21 Copy/Move-Preview festgelegt; sichtbare Implementierung wartet auf realen I17-Lauf | 🟢 Decision eingefroren |
-| I24 Diagnose-Export Writer Design | create-only/no-overwrite, Partial-/Crash-Strategie und gezielter Guard-REOPEN technisch festgelegt; noch kein Writer | 🟢 Design eingefroren |
-| I25 Transfer-Preview Adapter | gemeinsamer I18/I21-Pfad für Copy-/Move-Vorschau, CLI-Mehrfachauswahl und GUI-Prüfmodus implementiert; Registry bleibt bis neuer realer Accessibility-Evidence OPEN | 🟨 Implementiert · READY gegated |
-| I26 Diagnose-Export Preflight | immutable ExportPlan + serialisierter Payload, zweites Redaction-Gate, SHA-256/Größe und No-overwrite-Zielprüfung; vollständig read-only | 🟢 Repository-/Post-Merge-Gate grün |
-| I27 Diagnostic Writer Guard | exakter Writer-REOPEN-Vertrag, statische Partial-FD-Provenienz und No-clobber Partial→Final-Publish-Regeln | 🟢 Sicherheitsgate grün |
-| I28 Diagnose-Writer Testlab | isolierter create-only/no-clobber Writer mit Hash/Größe, Directory-fsync und automatischer Race/Crash/ENOSPC/PermissionError-Matrix; ohne Adapter/Registry | 🟢 AUTO PASS · produktiv nicht erreichbar |
-| I29 Diagnose-Export Authorization Decision | Doppelbestätigung, Plan-Fingerprint, Cancel-Semantik, GUI/CLI-Parität und neue Registry-Sicherheitsklasse festgelegt | 🟢 Decision eingefroren |
-| I30 Diagnose-Export Autorisierung | nichtvisuelle zweistufige sessiongebundene Autorisierung mit Fingerprint-, Stale-, Manipulations- und Replay-Schutz; Writer one-shot; Registry bleibt OPEN | 🟢 AUTO PASS · keine Standardadapter |
-| I31 Diagnose-Export Adapter-Evidence | GUI-/CLI-Prüfmodus auf demselben I26/I30/I28-Pfad; 100/150/200 %, Tastatur, Doppelbestätigung, Cancel, BLOCKED und exakt-eine-Datei-PASS automatisch belegt | 🟢 AUTO PASS · Human-Gate offen · Registry OPEN |
-| I32 Portable Offline-Paket | deterministisches Linux-x86_64-ZIP, lokales PySide6-Wheelhouse, Manifest/Hashes, KDE-Klickstarter und Offline-Fremdpfad-Validierung | 🟢 AUTO PASS · B01-Zweitgerät bleibt OPEN |
-| I33 Wheelhouse-Integrität | exaktes Qt-Wheel-Set/Version/Plattform, Build-/Archiv-/Runtime-Hashgate vor Offline-pip | 🟢 AUTO PASS · keine Signaturbehauptung |
-| I34 Plugin-Grenze | data-only Manifest-/Capability-Vertrag; nur READY/read-only; Auto-Install/Enable/Netzwerk und echte dynamische Plugin-Ladepfade statisch gesperrt | 🟢 AUTO PASS · keine Plugin-Runtime |
-| I35 Paket-Provenienz | Commit ↔ Manifest ↔ Paketwurzel ↔ ZIP-Name ↔ SHA-256-Sidecar ↔ ZIP-Bytes fail-closed gebunden | 🟢 AUTO PASS · keine Signaturbehauptung |
-| Schreibpfade | 0 freigegeben | 🔒 gesperrt |
+**Freigabefortschritt:** `███░░░░░░░ 25 %` — **3 offene Freigaben**
 
-> Prozentwerte beziehen sich nur auf klar definierte Checkpoints. Dokumentierte Planung ist keine Produktimplementierung.
+Die Prozentzahl bildet genau vier Freigaben ab: automatische Prüfung, Bedienprüfung für Kopieren und Verschieben, Bedienprüfung für die Diagnose-Ausgabe und Prüfung auf einem zweiten Rechner. Die automatische Prüfung ist abgeschlossen. Die übrigen drei Prüfungen sind offen. Eine fertige Planung zählt nicht als fertige Funktion.
 
-## Zielbild
+## Schnellstart in drei Stufen
 
-Der Standardweg soll ohne Terminal und ohne Fachwissen funktionieren: Wizard → Dashboard → geführter Workflow → Vorschau → ausdrückliche Freigabe → verständlicher Abschlusszustand. Fortgeschrittene Optionen werden progressiv geöffnet.
+### Stufe 1 – Erst prüfen
 
-Wichtige Leitplanken:
+1. Öffnen Sie ein Terminal im Projektordner.
+2. Prüfen Sie, ob die nötige lokale Umgebung bereits vorhanden ist:
 
-- keine stille Installation, kein stiller Netzwerkzugriff, keine versteckte Rechteausweitung;
-- Pfade, Dateinamen, Unicode und Symlinks gelten als nicht vertrauenswürdige Eingaben;
-- keine schreibende Dateiaktion ohne Preview, definierte Zielgrenzen und Rückweg;
-- Diagnose nur bewusst aktiviert und datensparsam;
-- Status nie nur über Farbe: Symbol + Klartext + Zahl;
-- 100 %, 150 % und 200 % Skalierung sowie Tastaturbedienung werden als Qualitätsgates behandelt.
+   ```bash
+   ./start.sh --check
+   ```
 
-## Architekturentscheidung
+3. Zeigt die Prüfung gelb oder rot, richten Sie die lokale Umgebung ein:
 
-Die geplante GUI basiert auf **PySide6/Qt**. **Tkinter ist im Produktionscode ausgeschlossen.** Datei- und Tabellenansichten sollen Qt-Modelle/Delegates verwenden; Thumbnails und Vorschauen werden bedarfsgesteuert und außerhalb des UI-Threads geladen.
+   ```bash
+   ./start.sh --setup
+   ```
 
-GUI und Linux-Konsole sind zwei Adapter desselben Fachkerns. Jede fachliche GUI-Funktion benötigt einen gleichwertigen laienfreundlichen Konsolenweg über ein Zahlen-Auswahlmenü; rein visuelle Ausnahmen müssen ausdrücklich begründet sein. Seit I10 beschreibt eine gemeinsame immutable Capability-/Use-Case-Registry Verfügbarkeit und Sicherheitsmetadaten für beide Adapter.
+   Das Programm fragt vor dem Anlegen der Umgebung und vor einem Herunterladen nach. Es nutzt keine Systemrechte.
 
-Siehe [ADR-0001](docs/adr/ADR-0001-ui-cli-foundation.md), das [UI-Designsystem](docs/UI_DESIGN_SYSTEM.md), die [Theme-Tokens](docs/theme-tokens.md), den [messbaren Laien-Qualitätsstandard](docs/LAIEN_QUALITY_STANDARD.md), die [Info-Text-Governance](docs/INFO_TEXT_GOVERNANCE.md), den [GUI-/Konsolen-Paritätsvertrag](docs/GUI_CLI_PARITY.md), die [Regressionsmatrix](docs/REGRESSION_MATRIX.md), den [Debugging-Standard](docs/DEBUGGING_STANDARD.md), den [Dokumentationsindex](docs/README.md) und den [Wartbarkeitsvertrag](docs/MAINTENANCE.md).
+### Stufe 2 – Programm starten
 
-## Repository-Struktur
+1. Starten Sie das Fensterprogramm:
 
-```text
-.
-├── AGENTS.md                         # verbindliche Arbeits- und Agentenregeln
-├── PROVOWARE_TODO_INPUT_POOL0.md    # eingefrorene Baseline + Implementierungs-Input-Pool
-├── README.md                         # zentrale Projektübersicht
-├── todo.txt                          # operative priorisierte Arbeitsliste
-├── docs/
-│   ├── README.md                     # navigierbarer Dokumentationsindex
-│   ├── MAINTENANCE.md                # Quellen der Wahrheit + Wartungsregeln
-│   ├── CURRENT_ITERATION.md          # aktueller Arbeitsblock und nächste 3 Schritte
-│   ├── adr/                          # Architekturentscheidungen
-│   └── evidence/                     # Regeln für reproduzierbare Nachweise
-├── scripts/repo_quality.py           # dependency-freier Repository-Gate
-└── .github/
-    ├── CODEOWNERS
-    ├── PULL_REQUEST_TEMPLATE.md
-    └── workflows/repo-quality.yml
-```
+   ```bash
+   ./start.sh --gui
+   ```
 
-Produktcode unter `src/` und zugehörige Tests werden nur blockweise erweitert, wenn Scope und Abnahme definiert sind. Der aktuelle Kern umfasst Preflight/Pfadgrenzen, Registry/Application-Core, einen separaten read-only Transfer-Application-Baustein für Same-Root Copy/Move-Preview, GUI/CLI-Shell, Inventar/View, Preview-/Recovery-Verträge sowie redigierte Diagnose- und Export-Preflight-Verträge. Produktive Schreibpfade bleiben gesperrt; leere Architektur wird nicht auf Vorrat erzeugt.
+2. Falls kein Fenster möglich ist, starten Sie das einfache Zahlenmenü:
 
-## Entwicklungsdisziplin
+   ```bash
+   ./start.sh --menu
+   ```
 
-Verbindlicher Standard:
+3. Lesen Sie jede Vorschau vollständig. Schreibende Dateiaktionen bleiben gesperrt.
 
-`ORGANIZE → PLAN → IMPLEMENT → VERIFY → DOC → EVIDENCE → CI → DIFF → MERGE → POST-MERGE VERIFY → NEXT-PLAN`
+### Stufe 3 – Hilfe bei einem Problem
 
-Vor jeder Änderung:
+1. Zeigen Sie eine bereinigte Diagnose an:
 
-1. `AGENTS.md` und betroffene REQ/CR/ADR lesen.
-2. Scope in einem Satz und Nicht-Ziele festlegen.
-3. kleinsten zusammenhängenden Write-Batch planen.
-4. nur relevante Tests ausführen.
-5. Ergebnis, Risiken und offene Punkte als Evidence festhalten.
+   ```bash
+   ./start.sh --diagnostics
+   ```
 
-## Subagenten
+2. Für eine gut weitergebbare strukturierte Ausgabe verwenden Sie:
 
-Subagenten sind **triggerbasiert**, nicht standardmäßig aktiv. Explorer, Implementierer, Testprüfer, UX/Accessibility-Prüfer und Sicherheitsprüfer werden nur eingesetzt, wenn ihre Arbeit unabhängig, überschneidungsfrei und messbar günstiger ist. Schreibbesitz an einer Datei hat immer nur ein Agent.
+   ```bash
+   ./start.sh --diagnostics-json
+   ```
 
-Die vollständigen Trigger und Stop-Bedingungen stehen in [AGENTS.md](AGENTS.md). Der Update-Prozess wird zusätzlich durch den [Update-Organisator mit Zwei-Spuren-Modell](docs/UPDATE_ORCHESTRATION.md) geregelt. Der aktuelle A/B-Stand, die Besitzmatrix, der Iterationsfortschritt und die nächsten drei vorgeplanten Schritte stehen in [CURRENT_ITERATION.md](docs/CURRENT_ITERATION.md). Pro Write-Batch hat jede Datei genau einen schreibenden Besitzer; Prüfer bleiben read-only. Jede Iteration endet außerdem mit einer kurzen Drei-Schritte-Vorausplanung.
+3. Beide Befehle zeigen nur Text an. Sie schreiben keine Datei und nutzen kein Netz.
 
-## Lokale Python-Umgebung
+## Voraussetzungen und Abhängigkeiten
 
-Der Standardweg ist **Venv-first** und **`start.sh` ist dauerhaft der einzige offizielle Nutzer-Einstiegspunkt**. System-Python wird nur verwendet, um die lokale `.venv` anzulegen; GUI, CLI und I17 laufen anschließend über die validierte Projektumgebung. Neue Startmodi werden in `start.sh` ergänzt statt durch neue Nutzerbefehle neben dem Starter.
+| Benötigt | Wofür | Wo festgelegt |
+| --- | --- | --- |
+| Ubuntu oder Kubuntu auf einem Rechner mit 64-Bit-Linux | Zielsystem | Paket- und Plattformprüfung |
+| Python ab 3.10 und vor 3.15 | lokale Ausführung | `start.sh` |
+| Python-Modul für lokale Umgebungen | getrennte Projektumgebung | Systempaket der Linux-Verteilung |
+| PySide6 genau in Version 6.11.2 | Fenster und Bedienelemente | `requirements-gui.txt` |
+| eine grafische Sitzung | Fensterprogramm | Linux-Arbeitsfläche |
 
-Empfohlene Befehle:
+Nur PySide6 ist eine direkte Python-Abhängigkeit. `start.sh` installiert niemals mit Systemrechten und nie unbemerkt. Ist ein geprüftes Paketverzeichnis `wheelhouse/` vorhanden, erfolgt die Einrichtung ohne Netz. Andernfalls wird vor dem möglichen Herunterladen ausdrücklich gefragt.
 
-```bash
-./start.sh --check
-./start.sh --setup
-./start.sh --gui
-./start.sh --i17
-./start.sh --i25-evidence
-./start.sh --i25-offscreen
-./start.sh --i31-evidence
-./start.sh --i31-offscreen
-./start.sh --i31-cli-evidence
-./start.sh --diagnostics
-```
+## Was bereits funktioniert
 
-`start.sh` installiert niemals per `sudo`/`apt` und schreibt keine Python-Pakete in das System. Fehlt die lokale Umgebung oder die festgelegte GUI-Abhängigkeit, wird vor dem Erzeugen bzw. vor dem PyPI-Download ausdrücklich gefragt. Für bewusst nicht-interaktive Einrichtung existiert `--yes`.
+- sichere Prüfung von Plattform, Pfaden und symbolischen Verweisen;
+- nur lesendes Erfassen, Suchen und Sortieren von Dateien;
+- Vorschauen für Papierkorb, Kopieren und Verschieben innerhalb derselben Wurzel;
+- gemeinsamer Programmkern für Fenster und Zahlenmenü;
+- bereinigte Diagnose als Text oder strukturierte Ausgabe;
+- automatische Prüfungen für Tastatur, Vergrößerung, Abstürze, knappen Speicherplatz, Rechtefehler und gleichzeitige Zugriffe;
+- tragbares Paket mit Inhaltsliste und Prüfsummen.
 
-Die GUI-Abhängigkeit ist in `requirements-gui.txt` reproduzierbar auf **PySide6 6.11.2** festgelegt. `.venv/` bleibt über `.gitignore` außerhalb des Repositories.
+## Was bewusst noch nicht funktioniert
 
-## Automatische Qualitätsprüfung
+1. **Zweiter Rechner:** Die echte Prüfung auf einem weiteren Zielgerät fehlt.
+2. **Kopieren und Verschieben:** Die abschließende verständliche Bedienprüfung fehlt; der normale Programmweg bleibt gesperrt.
+3. **Diagnose-Datei:** Die abschließende verständliche Bedienprüfung fehlt; die Funktion bleibt im normalen Programmweg gesperrt.
 
-`.github/workflows/repo-quality.yml` läuft ohne Projektabhängigkeiten und prüft Repository-Verträge:
+Die genaue Reihenfolge steht in [`todo.txt`](todo.txt). Der aktuelle Arbeitsblock steht in [`docs/CURRENT_ITERATION.md`](docs/CURRENT_ITERATION.md).
 
-- stabile Pflichtdateien und dynamischen Iterationsindex;
-- operative TODO-Struktur, Prioritäten und Duplikate;
-- Baseline-Marker REQ-BASELINE-1 und B00–B11;
-- Python-Syntax in Produktcode, Skripten, Tests und Starter;
-- keine Tkinter-Imports im Python-Produktionscode;
-- GitHub Actions mit minimalen `permissions:` und gepinnten externen Actions;
-- interne relative Markdown-Links und versehentliche Tabellenumbrüche;
-- keine flüchtigen CI-Statuskopien in README/TODO;
-- kein Trailing-Whitespace in zentralen Text-/Codeformaten;
-- diff-basierten Info-Text-Impact bei dokumentationsrelevanten Änderungen;
-- Concurrency-Schutz: veraltete Runs desselben PR/Refs werden automatisch abgebrochen;
-- I25-GUI-Auto-Evidence läuft bei relevanten PR-Änderungen und nochmals nach Merge auf `main`;
-- synthetische I25-Screenshots sowie JSON/TXT/HTML-Evidence werden als kurzlebiges CI-Artefakt aufbewahrt, damit technische GUI-Befunde ohne erneuten Nutzertest geprüft werden können;
-- der I25-GUI-Gate cached ausschließlich pip-Downloads anhand des gepinnten `requirements-gui.txt`-Fingerprints; die isolierte Venv wird pro Lauf weiterhin neu erzeugt.
+## Befehle in einfacher Sprache
 
-Der Gate umfasst inzwischen die vollständige Unit-/Integrationssuite, den read-only Preflight und einen temporären End-to-End-Core-Diagnoselauf. Reale GUI-Wahrnehmung bleibt bewusst ein separates Evidence-Gate.
+| Vollständiger Befehl | Wirkung |
+| --- | --- |
+| `./start.sh --help` | zeigt alle angebotenen Startarten |
+| `./start.sh --check` | prüft die lokale Umgebung, ohne sie zu verändern |
+| `./start.sh --setup` | richtet die lokale Umgebung nach Rückfrage ein |
+| `./start.sh --gui` | öffnet das Fensterprogramm |
+| `./start.sh --menu` | öffnet das Zahlenmenü im Terminal |
+| `./start.sh --preflight` | prüft Rechner und Arbeitsfläche nur lesend |
+| `./start.sh --diagnostics` | zeigt eine bereinigte Diagnose als Text |
+| `./start.sh --diagnostics-json` | zeigt dieselbe Diagnose in einer festen Datenform |
+| `./start.sh --second-device-evidence-json` | erstellt den Nachweis für die Prüfung auf einem zweiten Rechner |
 
-## Aktueller technischer Stand
+`start.sh` ist der einzige offizielle Einstieg für Nutzer. Direkte Python-Aufrufe sind nur für Entwicklung und automatische Prüfung gedacht.
 
-1. **B00/B01:** Designsystem, Preflight sowie Pfad-/Symlink-Grenzen sind dokumentiert bzw. implementiert; reale Zweitgeräte-Evidence bleibt offen.
-2. **I10–I16:** Registry, read-only Shell, Preview-/Recovery-Verträge, Inventar und gemeinsamer Inventory→Preview-Pfad sind implementiert.
-3. **I17:** I17-AUTO und I17-HUMAN sind im realen Chromium-Zielsystemlauf grün; I17 ist eingefroren.
-4. **I18–I21:** Inventar-Komfort, Read-only-Lock, Diagnose-Observability und Same-Root Copy/Move-Preview sind im Repository grün.
-5. **I25:** Copy-/Move-Preview ist über denselben Application-Core in CLI und GUI-Prüfmodus angebunden; neue Registry-Einträge bleiben bis realer Folge-Evidence OPEN.
-6. **I22–I24/I26–I31:** Diagnose-Export ist entschieden, vorvalidiert, statisch gegated und besitzt I30 one-shot Autorisierung; I31 bindet GUI/CLI ausschließlich im synthetischen Prüfmodus an. Normaler Produktweg bleibt gesperrt.
-7. **I32/B07:** Portable Linux-x86_64 ZIP mit Offline-Wheelhouse und reproduzierbarer Validierung wird automatisiert aufgebaut; physische Zweitgerätefreigabe bleibt separat offen.
-8. **Produktiv erreichbare Schreibpfade:** weiterhin `0`.
+## Bildschirmfoto
 
-## Quellen der Wahrheit
+Ja, ein Bildschirmfoto kann hier eingefügt werden. Es fehlt derzeit bewusst, weil nur ein echtes, bereinigtes Bild aus einer bestätigten Bedienprüfung gezeigt werden darf. Der vorgesehene Ort ist `docs/assets/screenshots/readme/`. Ein Entwurf muss unter `docs/assets/mockups/` liegen und deutlich mit **Entwurf – nicht das fertige Programm** beschriftet sein.
 
-1. aktuelle, explizit freigegebene Aufgabe / Change Request;
-2. `AGENTS.md`;
-3. akzeptierte ADRs;
-4. `PROVOWARE_TODO_INPUT_POOL0.md` als Anforderungsbaseline;
-5. `todo.txt` für operative Reihenfolge.
+Vor der Aufnahme müssen persönliche Ordnernamen, Nutzernamen und Dateinamen entfernt werden. Ein Bildschirmfoto ersetzt keine Bedienprüfung.
 
-Bei Widerspruch wird nicht still geraten: Der Konflikt wird dokumentiert und die sicherere, kleinere Änderung gewählt.
+## Projektaufbau
 
-## Nächster sicherer Schritt
+| Bereich | Inhalt |
+| --- | --- |
+| `src/` | eigentliche Programmlogik |
+| `tests/` | automatische Prüfungen |
+| `scripts/` | Entwicklungs- und Nachweiswerkzeuge |
+| `docs/` | Entscheidungen, Regeln und Prüfnachweise |
+| [`docs/README.md`](docs/README.md) | Verzeichnis aller Informationsdateien und ihres Standes |
+| [`docs/REGRESSIONSMANIFEST.json`](docs/REGRESSIONSMANIFEST.json) | maschinenlesbare Zuordnung ähnlicher Fehler zu passenden Prüfungen |
+| [`AGENTS.md`](AGENTS.md) | verbindliche Regeln für Menschen und Hilfsagenten |
 
-**I25 und I31 bleiben mit je einer finalen Human-Wahrnehmungsfrage geparkt. I35 härtet parallel die portable Release-Provenienz automatisch, ohne eine kryptografische Signatur vorzutäuschen.**
+## Entwicklungsverfahren
 
+Jede Änderung folgt derselben kurzen Kette:
 
-## Screenshots
+**verstehen → planen → einmal zusammenhängend ändern → passend prüfen → vollständig prüfen → Unterschied ansehen → abschließen**
 
-Echte Produktoberflächen können im README gezeigt werden. Für belastbare Produktabbildungen gilt:
+Verbesserungen für Arbeitsaufwand und Codequalität sind bereits möglich und festgelegt:
 
-- bevorzugter Pfad: `docs/assets/screenshots/readme/`;
-- nur echte Zielsystem-Screenshots aus einem dokumentierten I17-/Folgelauf;
-- keine unnötigen privaten Pfade, Nutzernamen oder Dateinamen;
-- Mockups separat unter `docs/assets/mockups/` und sichtbar als **Designentwurf** kennzeichnen;
-- Mockups zählen niemals als Accessibility-/Produkt-Evidence.
+- ähnliche Fehler werden über das Regressionsmanifest einer bestehenden Fehlerfamilie zugeordnet;
+- zuerst läuft nur die kleinste passende Prüfung;
+- die vollständige Prüfung läuft einmal am unveränderten Freigabestand;
+- Dokumentation erhält einen eindeutigen Besitzer und einen festgelegten Aktualisierungsgrund;
+- neue Hilfsschichten entstehen nur bei mindestens zwei echten Nutzern oder einer klaren Sicherheitsgrenze;
+- nach zwei erfolglosen Reparaturversuchen wird neu geplant statt weiterprobiert.
 
-Geplantes I17-Set: 100 %, 150 %, 200 %, Tastaturfokus und Dateivorschau.
+Die Einzelheiten stehen in der [Regressionsmatrix](docs/REGRESSION_MATRIX.md), im [Wartbarkeitsvertrag](docs/MAINTENANCE.md) und in den [Arbeitsregeln](AGENTS.md).
 
-## Regressionsstrategie
+## Verlässliche Informationsquellen
 
-Die Entwicklung verwendet ab I17 die Matrix `docs/REGRESSION_MATRIX.md`:
+1. die aktuelle ausdrücklich freigegebene Aufgabe;
+2. [`AGENTS.md`](AGENTS.md);
+3. angenommene Architekturentscheidungen unter `docs/adr/`;
+4. die eingefrorene Ausgangsliste `PROVOWARE_TODO_INPUT_POOL0.md`;
+5. [`todo.txt`](todo.txt) für offene Arbeit;
+6. diese Übersicht.
 
-**gezielte betroffene Tests zuerst → vollständige Testsuite vor Merge → Post-Merge-CI → reale Evidence nur dort, wo CI sie nicht ersetzen kann.**
-
-Damit werden frühe Iterationsläufe kürzer, ohne die finale Abnahme zu schwächen.
-
-
-## Read-only-Lock
-
-Solange Executor und Persistenz nicht ausdrücklich freigegeben sind, prüft `scripts/read_only_guard.py` den Produktionscode statisch auf typische Schreib-APIs. Der Guard läuft vor der Full-Suite in CI und blockiert auch Import-Aliase sowie nicht statisch als read-only belegbare `open()`-Modi.
-
-
-## Diagnose-Snapshot
-
-Für Support/Debugging steht ein read-only, redigierter Snapshot bereit:
-
-```bash
-./start.sh --diagnostics
-./start.sh --diagnostics-json
-```
-
-Er schreibt keine Datei, nutzt kein Netzwerk und zeigt keine Recovery-IDs. Home-Pfade, E-Mails und typische Token-Muster werden vor der Ausgabe redigiert.
+Bei einem Widerspruch gilt die kleinere und sicherere Auslegung. Schreibende Dateiwege bleiben bis zu einer eigenen Freigabe gesperrt.

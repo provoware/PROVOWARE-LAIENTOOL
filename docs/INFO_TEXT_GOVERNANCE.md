@@ -17,6 +17,7 @@ CI aktualisiert Texte nicht selbst. Sie erkennt, **welche Informationsklasse bet
 | Architektur | ADRs | Warum wurde eine technische Grenze gewählt? |
 | Prozess | `AGENTS.md`, `UPDATE_ORCHESTRATION.md` | Wie wird entwickelt und geprüft? |
 | Nachweis | `docs/evidence/**` | Was wurde konkret geprüft? |
+| Register | `docs/DATEIENREGISTER.md` | Welche Datei führt welchen Stand und wann wird sie gepflegt? |
 
 ## 2. Trigger
 
@@ -84,6 +85,7 @@ Der aktuelle GitHub-Workflow-/Merge-Zustand wird nicht in README/TODO gespiegelt
 - Historische Run-/Commit-IDs gehören in Evidence oder Abschlussnotizen.
 - [Dokumentationsindex](README.md) ist die Navigationsquelle; neue `docs/I??_*.md` werden dort verlinkt.
 - [Wartbarkeitsvertrag](MAINTENANCE.md) definiert die Pflege- und Quellen-der-Wahrheit-Regeln.
+- [Register der Informationsdateien](DATEIENREGISTER.md) hält Zustand, Pflegeanlass und Besitzer der führenden Quellen fest.
 - `scripts/repo_quality.py` prüft interne Markdown-Links, Iterationsindex, Python-Syntax und typische Tabellenbruch-Artefakte.
 
 ## 7. Abnahmeregel
