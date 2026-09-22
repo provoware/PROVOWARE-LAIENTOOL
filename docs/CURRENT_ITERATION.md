@@ -1,37 +1,38 @@
 # PROVOWARE – Aktueller Arbeitsblock
 
-## I36 – Informationsaufbau und Regressionsmanifest
+## I37 – Repository-Hygiene Deep Cleanup
 
-**Status:** 🟢 AUTOMATISCH GEPRÜFT
-**Fortschritt:** `██████████ 100 %` für 6 von 6 Prüfpunkten
-**Freigabestand des Produkts:** `███░░░░░░░ 25 %` · drei Freigaben offen
+**Status:** 🟡 AUTOMATISCHE ABNAHME LÄUFT
+**Fortschritt:** `████████░░ 80 %`
+**Produktfreigabe:** unverändert; bestehende Human-/Zweitgeräte-Gates bleiben offen
 
-## A – Plan
+## A – Fester Plan
 
-README, Arbeitsliste, Dokumentationsindex und Arbeitsregeln werden in einfacher deutscher Sprache auf eindeutige Zuständigkeiten ausgerichtet. Ein geprüftes Regressionsmanifest ordnet ähnliche Fehler der kleinsten passenden Prüfung zu.
+1. acht Altbranches gegen `main`, PRs und Unique-Commits prüfen;
+2. entbehrliche/superseded Pfade eindeutig klassifizieren;
+3. `scripts/repo_quality.py` regressionsneutral modularisieren.
 
-## B – Zusatz aus dem vorherigen Lauf
+## B – Neuer Befund
 
-Der abgeschlossene I35-Stand wird nicht länger als nächster Schritt dargestellt. Die drei bereits offenen echten Bedien- und Geräteprüfungen werden nicht erweitert, sondern klar gezählt und voneinander abgegrenzt.
+`security/i33-offline-wheelhouse-lock` enthält eine auf `main` fehlende vorab festgeschriebene SHA-256-Baseline für die vier Offline-Wheels. Dieser Branch bleibt bis zur separaten Übernahme dieser Sicherheitsinvariante geschützt.
 
-## Ergebnis
+## Ergebnis bisher
 
-1. dreistufige Anleitung mit vollständigen offiziellen Befehlen;
-2. direkte Abhängigkeiten und bewusste Sperren sichtbar;
-3. vier klar priorisierte Arbeitslisteneinträge statt historischer Wiederholungen;
-4. Register mit Zustand, Pflegeanlass und Besitzer der führenden Informationsdateien;
-5. Regressionsmanifest mit sechs ähnlichen Fehlerfamilien und vorhandenen Prüfpfaden;
-6. maschinelle Prüfung von Manifest und Register.
+- 7 von 8 Altbranches fachlich als entbehrlich oder superseded klassifiziert;
+- I33 bewusst **nicht** aussortiert;
+- redundanter PR #43 bereits geschlossen;
+- derzeit keine offenen Alt-Integrations-PRs;
+- Repository-Gate in fünf Prüffamilien zerlegt, Einstieg `scripts/repo_quality.py` bleibt stabil.
 
 ## Grenzen
 
-- keine Änderung an Produktlogik oder Schreibfreigaben;
-- keine Umbenennung bestehender technischer Schnittstellen;
-- kein erfundenes Bildschirmfoto;
-- keine neue Abhängigkeit.
+- keine Produktlogik;
+- kein Executor;
+- keine Änderung an Schreibfreigaben;
+- kein Löschen eines Branches mit nicht übernommener Sicherheitsinvariante.
 
 ## Nächste drei Schritte
 
-1. 🔵 Bedienprüfung für Kopieren und Verschieben mit `./start.sh --i25-evidence` genau einmal durchführen.
-2. 🔵 Bedienprüfung für die Diagnose-Datei mit `./start.sh --i31-evidence` genau einmal durchführen.
-3. 🔵 Zweitgeräteprüfung mit `./start.sh --second-device-evidence-json` auf einem weiteren Zielrechner durchführen.
+1. 🔵 I37-Refactor durch Repository-CI vollständig regressionsprüfen.
+2. 🔵 Nach grünem Merge den I33-P0-Salvage als frischen Security-Block auf aktuellem `main` eröffnen.
+3. 🔵 Danach die sieben als entbehrlich klassifizierten Altbranches endgültig aus der Remote-Branchliste entfernen.
