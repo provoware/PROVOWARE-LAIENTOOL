@@ -11,8 +11,11 @@ on:
       - "scripts/validate_portable_package.py"
       - "scripts/wheelhouse_integrity.py"
       - "scripts/verify_wheelhouse_integrity.py"
+      - "scripts/verify_wheelhouse_baseline.py"
+      - "wheelhouse-lock-linux-x86_64.json"
       - "tests/test_i32_portable_package.py"
       - "tests/test_i33_wheelhouse_integrity.py"
+      - "tests/test_i38_wheelhouse_baseline.py"
       - "tests/test_i35_package_provenance.py"
       - "tests/test_i35_package_provenance.py"
       - ".github/workflows/portable-package.yml"
@@ -28,8 +31,11 @@ on:
       - "scripts/validate_portable_package.py"
       - "scripts/wheelhouse_integrity.py"
       - "scripts/verify_wheelhouse_integrity.py"
+      - "scripts/verify_wheelhouse_baseline.py"
+      - "wheelhouse-lock-linux-x86_64.json"
       - "tests/test_i32_portable_package.py"
       - "tests/test_i33_wheelhouse_integrity.py"
+      - "tests/test_i38_wheelhouse_baseline.py"
       - ".github/workflows/portable-package.yml"
 
 concurrency:
@@ -64,6 +70,9 @@ jobs:
         run: |
           mkdir -p build/wheelhouse
           timeout 8m python3 -m pip download             --disable-pip-version-check             --only-binary=:all:             --dest build/wheelhouse             --requirement requirements-gui.txt
+      - name: Verify precommitted wheel baseline
+        run: |
+          timeout 2m python3 scripts/verify_wheelhouse_baseline.py --wheelhouse build/wheelhouse
       - name: Build deterministic portable ZIP
         run: |
           timeout 3m python3 scripts/build_portable_package.py             --output-dir dist             --wheelhouse build/wheelhouse
