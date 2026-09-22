@@ -87,7 +87,7 @@ Diese Punkte sind bewusst zu beobachten, aber nicht automatisch zu refactoren:
 - `application_core.py`: gemeinsamer Navigation-/Result-Knoten; Same-Root Transfer-Preview ist als eigene stabile Verantwortung nach `transfer_application.py` ausgelagert.
 - `transfer_application.py`: ausschließlich read-only Zielordner-Ermittlung und Copy/Move-Preview-Vorbereitung; kein Executor und keine Adapterlogik.
 - README/TODO: keine erneute per-Iteration-CI-Chronik aufbauen.
-- `scripts/repo_quality.py`: nur stabile Repository-Verträge prüfen; neue Iterationsdateien werden dynamisch erkannt statt einzeln hart codiert.
+- `scripts/repo_quality.py`: bleibt dünner Orchestrator; stabile Prüffamilien liegen unter `scripts/repo_quality_checks/`, neue Iterationsdateien werden weiterhin dynamisch erkannt.
 - GUI/CLI: keine Fachlogik in Adapter zurückwandern lassen.
 - Diagnose-Writer: Guard-REOPEN eng halten; keinen allgemeinen Schreibpfad daraus ableiten.
 - Altbranches werden vor Löschung gegen `main` auf einzigartige Fach-/Sicherheitsinvarianten geprüft; alte Implementierungen werden nicht blind gemergt. Die Klassifikation vom 2026-09-21 liegt in `docs/evidence/EV-20260921-006-branch-hygiene-i27.md`.

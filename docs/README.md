@@ -72,6 +72,7 @@ Diese Dateien dokumentieren **fachliche Checkpoints**, nicht den flüchtigen Liv
 | I33 | [I33_WHEELHOUSE_INTEGRITY.md](I33_WHEELHOUSE_INTEGRITY.md) |
 | I34 | [I34_PLUGIN_BOUNDARY.md](I34_PLUGIN_BOUNDARY.md) |
 | I35 | [I35_PACKAGE_PROVENANCE.md](I35_PACKAGE_PROVENANCE.md) |
+| I37 | [I37_REPOSITORY_HYGIENE.md](I37_REPOSITORY_HYGIENE.md) |
 
 ## Architektur und Evidence
 
