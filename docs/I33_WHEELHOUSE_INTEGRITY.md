@@ -17,7 +17,7 @@ Zusätzliche Distributionen, andere Versionen, doppelte Distributionen oder nich
 
 ## Build-Gate
 
-`build_portable_package.py` verweigert ein Offline-Paket bereits beim Build, wenn der Wheelhouse-Vertrag nicht exakt erfüllt ist.
+Vor dem bestehenden Build-Gate prüft I38 das frisch heruntergeladene Wheelhouse gegen die fest eingecheckte Datei-/Größen-/SHA-256-Baseline. Erst danach verweigert bzw. erlaubt `build_portable_package.py` den Paketbau anhand des bestehenden I33-Wheelhouse-Vertrags.
 
 ## Archiv-Gate
 

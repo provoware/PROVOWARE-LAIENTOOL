@@ -147,3 +147,7 @@ B blockiert B01-B nicht. Daher wird A zuerst umgesetzt; B bleibt als klarer Evid
 ## Repository-Quality-Verantwortungen
 
 `scripts/repo_quality.py` bleibt der einzige stabile Einstiegspunkt für den Repository-Contract. Die eigentlichen Prüffamilien liegen wartbar getrennt unter `scripts/repo_quality_checks/`. Änderungen an diesen Modulen gelten weiterhin als Änderung des Entwicklungs-/CI-Vertrags und müssen deshalb gemeinsam mit passender Prozessdokumentation geprüft werden.
+
+## Portable-Package Supply-Chain-Gate
+
+Für das Linux-x86_64-Offline-Paket gilt ab I38 verbindlich die Reihenfolge `pip download → festgeschriebene Wheel-Baseline prüfen → Paket bauen`. Änderungen an `requirements-gui.txt`, der Baseline oder dem Baseline-Prüfer müssen gemeinsam geprüft werden; der normale Paketbuild darf die Baseline niemals automatisch erzeugen oder aktualisieren.
