@@ -1,47 +1,37 @@
-# PROVOWARE – Current Iteration
+# PROVOWARE – Aktueller Arbeitsblock
 
-## I35 – Portable Artifact Provenance Binding
+## I36 – Informationsaufbau und Regressionsmanifest
 
-**Status:** 🟢 AUTO PASS · FREEZE-BEREIT
-**Fortschritt:** `██████████ 100 %`
+**Status:** 🟢 AUTOMATISCH GEPRÜFT
+**Fortschritt:** `██████████ 100 %` für 6 von 6 Prüfpunkten
+**Freigabestand des Produkts:** `███░░░░░░░ 25 %` · drei Freigaben offen
 
-## A – PLAN
+## A – Plan
 
-I32/I33 werden um eine fail-closed Bindung von Git-Commit, Manifest, Paketwurzel, ZIP-Dateiname und Checksum-Sidecar ergänzt.
+README, Arbeitsliste, Dokumentationsindex und Arbeitsregeln werden in einfacher deutscher Sprache auf eindeutige Zuständigkeiten ausgerichtet. Ein geprüftes Regressionsmanifest ordnet ähnliche Fehler der kleinsten passenden Prüfung zu.
 
-## B – DELTA
+## B – Zusatz aus dem vorherigen Lauf
 
-NONE. I25/I31 Human-Gates und B01-Zweitgerät bleiben gesammelt offen.
+Der abgeschlossene I35-Stand wird nicht länger als nächster Schritt dargestellt. Die drei bereits offenen echten Bedien- und Geräteprüfungen werden nicht erweitert, sondern klar gezählt und voneinander abgegrenzt.
 
-## Implementiert
+## Ergebnis
 
-- Builder akzeptiert nur exakten 40-stelligen Git-SHA;
-- Paketwurzel wird gegen Manifest-Commit/Plattform geprüft;
-- ZIP-Dateiname wird gegen dieselbe Provenienz geprüft;
-- `.zip.sha256` bindet tatsächliche ZIP-Bytes und exakten Dateinamen;
-- Offline-Wheelhouse bleibt auf `linux-x86_64` begrenzt;
-- Manipulations-/Rename-/Checksum-Tests;
-- echter Portable-Package-CI-Lauf prüft Sidecar automatisch.
+1. dreistufige Anleitung mit vollständigen offiziellen Befehlen;
+2. direkte Abhängigkeiten und bewusste Sperren sichtbar;
+3. vier klar priorisierte Arbeitslisteneinträge statt historischer Wiederholungen;
+4. Register mit Zustand, Pflegeanlass und Besitzer der führenden Informationsdateien;
+5. Regressionsmanifest mit sechs ähnlichen Fehlerfamilien und vorhandenen Prüfpfaden;
+6. maschinelle Prüfung von Manifest und Register.
 
-## Sicherheitsgrenze
+## Grenzen
 
-Keine Signatur-/Authentizitätsbehauptung. ZIP und Sidecar gemeinsam austauschbar zu schützen ist ein separater kryptografischer Trust-Block.
-
-## Exit-Gates
-
-1. I35 targeted tests PASS.
-2. I32/I33 Paketregression PASS.
-3. echter Offline-Paketlauf PASS.
-4. Sidecar-Prüfung im CI PASS.
-5. Full Repository Gate PASS.
-6. GUI-Cross-Regressionsgates PASS, soweit ausgelöst.
-
-## AUTO-Ergebnis
-
-Commit-/Manifest-/Paketwurzel-/ZIP-Name-/Sidecar-Bindung und echter Offline-Bootstrap sind vollständig grün.
+- keine Änderung an Produktlogik oder Schreibfreigaben;
+- keine Umbenennung bestehender technischer Schnittstellen;
+- kein erfundenes Bildschirmfoto;
+- keine neue Abhängigkeit.
 
 ## Nächste drei Schritte
 
-1. 🟢 I35 Evidence an RC `98920d7af0d16c986c26742e859ca6f41fa18fed` binden und mergen.
-2. 🔵 danach verbleibende rein automatische Status-/Release-Sicherheitsarbeit priorisieren.
-3. 🔒 I25/I31 Human-Gates und B01-Zweitgerät weiterhin gesammelt offen halten.
+1. 🔵 Bedienprüfung für Kopieren und Verschieben mit `./start.sh --i25-evidence` genau einmal durchführen.
+2. 🔵 Bedienprüfung für die Diagnose-Datei mit `./start.sh --i31-evidence` genau einmal durchführen.
+3. 🔵 Zweitgeräteprüfung mit `./start.sh --second-device-evidence-json` auf einem weiteren Zielrechner durchführen.

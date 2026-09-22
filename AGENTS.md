@@ -396,3 +396,20 @@ Jeder Arbeitsblock endet mit:
 - Status 🟢 / 🟨 / 🔴;
 - genau einem empfohlenen nächsten Schritt;
 - den nächsten drei vorgeplanten Schritten in Kurzform.
+
+## 12. Klare Sprache und Regressionslernen
+
+- Nutzertexte beginnen mit der einfachen deutschen Wirkung. Ein notwendiger technischer Name folgt erst danach in Klammern oder als genauer Befehl.
+- Status wird nie nur durch Farbe vermittelt, sondern immer durch Zeichen, Wort und bei Fortschritt durch eine Zahl.
+- Neue frei wählbare deutsche Dokumentnamen werden deutsch benannt. Bestehende technische Verträge, Programmschnittstellen und gebräuchliche Werkzeugdateien werden nicht allein zur Übersetzung umbenannt, weil dies Links, Prüfungen und Startwege unnötig gefährden würde.
+- Terminalbefehle werden vollständig angegeben und unmittelbar in einfacher deutscher Sprache erklärt.
+- `docs/REGRESSIONSMANIFEST.json` ist die maschinenlesbare Zuordnung ähnlicher Fehler zu Prüfungen. Nach einem bestätigten Fehler wird zuerst eine bestehende Familie erweitert. Eine neue Familie ist nur zulässig, wenn Ursache und Prüfung wirklich neu sind.
+- Der Repository-Gate prüft Schema, eindeutige Kennungen und vorhandene Prüfdateien. Er verändert weder Code noch erwartete Ergebnisse.
+
+### Kurzer Auftrag für Hilfsagenten
+
+Jeder Auftrag verwendet deutsche Rollenwörter und genau diese Reihenfolge:
+
+`Ziel | Bereich | erlaubte Dateien | Nicht-Ziele | Prüfung | Rückgabe | Stopp`
+
+Hilfsagenten vermeiden Abkürzungen und englische Prozesswörter in ihrer Rückgabe, soweit kein genauer Datei-, Befehls- oder Schnittstellenname wiedergegeben werden muss. Der Organisator nennt zusätzlich Fortschritt als belegte Prüfpunkte und die Anzahl offener Schritte.

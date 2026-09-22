@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import ast
+import json
 import re
 import sys
 from pathlib import Path
@@ -19,10 +20,12 @@ CORE_REQUIRED = (
     "todo.txt",
     "docs/README.md",
     "docs/MAINTENANCE.md",
+    "docs/DATEIENREGISTER.md",
     "docs/CURRENT_ITERATION.md",
     "docs/INFO_TEXT_GOVERNANCE.md",
     "docs/UPDATE_ORCHESTRATION.md",
     "docs/REGRESSION_MATRIX.md",
+    "docs/REGRESSIONSMANIFEST.json",
     "docs/DEBUGGING_STANDARD.md",
     "docs/LAIEN_QUALITY_STANDARD.md",
     "docs/GUI_CLI_PARITY.md",
@@ -156,6 +159,53 @@ if todo.is_file():
         if any(not part.strip() for part in parts):
             fail(f"todo.txt Zeile {number}: leeres Feld")
 
+regression_manifest = ROOT / "docs" / "REGRESSIONSMANIFEST.json"
+if regression_manifest.is_file():
+    try:
+        manifest_data = json.loads(regression_manifest.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+        fail(f"Regressionsmanifest ist nicht gültig: {exc}")
+    else:
+        families = manifest_data.get("familien", [])
+        identifiers = [family.get("kennung") for family in families if isinstance(family, dict)]
+        if manifest_data.get("schema_version") != 1 or not families:
+            fail("Regressionsmanifest braucht Schema 1 und mindestens eine Fehlerfamilie")
+        if len(identifiers) != len(set(identifiers)) or any(not item for item in identifiers):
+            fail("Regressionsmanifest enthält leere oder doppelte Kennungen")
+        for family in families:
+            if not isinstance(family, dict):
+                fail("Regressionsmanifest enthält eine ungültige Fehlerfamilie")
+                continue
+            tests = family.get("pruefungen", [])
+            keywords = family.get("suchwoerter", [])
+            if not family.get("anzeige") or not keywords or not tests:
+                fail(f"Regressionsfamilie {family.get('kennung')!r} ist unvollständig")
+                continue
+            for test_path in tests:
+                if not isinstance(test_path, str) or not (ROOT / test_path).is_file():
+                    fail(f"Regressionsfamilie {family.get('kennung')!r}: Prüfung fehlt: {test_path}")
+
+information_registry = ROOT / "docs" / "DATEIENREGISTER.md"
+if information_registry.is_file():
+    registry_text = information_registry.read_text(encoding="utf-8")
+    registered_information = (
+        "README.md",
+        "AGENTS.md",
+        "todo.txt",
+        "PROVOWARE_TODO_INPUT_POOL0.md",
+        "requirements-gui.txt",
+        "docs/README.md",
+        "docs/CURRENT_ITERATION.md",
+        "docs/INFO_TEXT_GOVERNANCE.md",
+        "docs/MAINTENANCE.md",
+        "docs/REGRESSION_MATRIX.md",
+        "docs/REGRESSIONSMANIFEST.json",
+        "docs/evidence/README.md",
+    )
+    for rel in registered_information:
+        if f"`{rel}`" not in registry_text:
+            fail(f"Informationsdatei fehlt im Register: {rel}")
+
 python_files = [ROOT / "start.py"]
 for directory in ("src", "scripts", "tests"):
     base = ROOT / directory
@@ -269,6 +319,8 @@ print(" - stabile Pflichtstruktur und dynamischer Iterationsindex konsistent")
 print(" - start.sh als kanonischer Venv-first Starter, Offline-Wheelhouse und PySide6-Pin konsistent")
 print(" - Baseline-Marker vorhanden")
 print(" - TODO-Schema, Sortierung und Duplikate konsistent")
+print(" - Regressionsmanifest, Fehlerfamilien und Prüfpfade konsistent")
+print(" - führende Informationsdateien im Dateienregister erfasst")
 print(" - Python-Syntax in Produktcode, Skripten, Tests und Starter geprüft")
 print(" - kein Tkinter im Python-Produktionscode")
 print(" - Workflow-Permissions, Job-Timeouts, Concurrency, Post-Merge-GUI-Gate und Action-Pinning geprüft")

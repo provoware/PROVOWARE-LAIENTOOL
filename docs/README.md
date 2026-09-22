@@ -12,6 +12,8 @@ Dieser Index ist der Einstiegspunkt für Menschen, Codex und Prüfer. Er zeigt *
 | Was ist als Nächstes offen? | [todo.txt](../todo.txt) |
 | Was war die ursprüngliche Baseline? | [PROVOWARE_TODO_INPUT_POOL0.md](../PROVOWARE_TODO_INPUT_POOL0.md) |
 | Wie werden Änderungen wartbar gehalten? | [MAINTENANCE.md](MAINTENANCE.md) |
+| Welche Fehlerfamilie gehört zu welcher Prüfung? | [REGRESSIONSMANIFEST.json](REGRESSIONSMANIFEST.json) |
+| Welche Informationsdatei führt welchen Stand? | [DATEIENREGISTER.md](DATEIENREGISTER.md) |
 
 ## Stabile Verträge
 
@@ -19,9 +21,11 @@ Dieser Index ist der Einstiegspunkt für Menschen, Codex und Prüfer. Er zeigt *
 
 - [UPDATE_ORCHESTRATION.md](UPDATE_ORCHESTRATION.md) – Zwei-Spuren-Prozess, Rollen und Dateibesitz.
 - [REGRESSION_MATRIX.md](REGRESSION_MATRIX.md) – targeted-first bis Full-Suite/Real-Evidence.
+- [REGRESSIONSMANIFEST.json](REGRESSIONSMANIFEST.json) – maschinenlesbare Fehlerfamilien und passende kleinste Prüfungen.
 - [DEBUGGING_STANDARD.md](DEBUGGING_STANDARD.md) – Fehlerklassen, Reproduktion und Diagnose.
 - [INFO_TEXT_GOVERNANCE.md](INFO_TEXT_GOVERNANCE.md) – wann README, TODO, Docs und Evidence nachgeführt werden.
 - [MAINTENANCE.md](MAINTENANCE.md) – Quellen der Wahrheit, Drift-Vermeidung und Wartungsroutine.
+- [DATEIENREGISTER.md](DATEIENREGISTER.md) – Zustand, Pflegeanlass und Besitzer der führenden Informationsdateien.
 
 ### UX, Accessibility und Adapter
 
