@@ -42,6 +42,9 @@ Dieser Index ist der Einstiegspunkt für Menschen, Codex und Prüfer. Er zeigt *
 
 ## Iterationsverträge
 
+- [I40 – Vollständiger Projektaudit](I40_PROJECT_AUDIT.md): priorisierte,
+  commitgebundene Schwachstellen- und Verbesserungsliste mit Aufwand.
+
 Diese Dateien dokumentieren **fachliche Checkpoints**, nicht den flüchtigen Live-Status eines GitHub-Laufs.
 
 | Iteration | Vertrag |
