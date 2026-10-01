@@ -46,3 +46,11 @@ Dateiname: `EV-YYYYMMDD-NNN-kurzname.md`
 - `EV-20260922-012-i34-plugin-boundary.md` – I34 data-only Plugin-/Capability-Grenze, dynamische Loader gesperrt, read-only `find_spec()` explizit als legitimer Preflight-Fall regressiert.
 
 - `EV-20260922-013-i35-package-provenance.md` – I35 Commit-/Manifest-/Paketwurzel-/ZIP-Name-/Sidecar-/Byte-Bindung für portable Artefakte.
+
+- `EV-20261001-014-i42-transfer-accessibility-open.md` – I42 blieb vor dem technischen I25-Lauf sicher OPEN: `.venv` fehlte und die nicht-interaktive Standardantwort lehnte ihre Einrichtung ab.
+
+- `EV-20261001-015-i43-qt-runtime-open.md` – I43 Setup bleibt OPEN: Die lokale `.venv` wurde ausdrücklich eingerichtet, aber die Qt-Validierung scheiterte ohne Systeminstallation an der fehlenden Systembibliothek `libGL.so.1`.
+
+- `EV-20261001-016-i44-release-gates-partial.md` – I44 Gate-Scope-Fix und vollständige RC-Abnahme PASS; Qt-Laufzeit nach zwei begrenzten Systempaketzyklen weiterhin OPEN wegen `libEGL.so.1`.
+
+- `EV-20261001-017-i45-i25-auto-pass.md` – I45 Qt-Laufzeit und I25-AUTO PASS mit unabhängig verifizierten Artefakt-Hashes; I25-HUMAN und Gesamtfreigabe bleiben OPEN.
