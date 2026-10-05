@@ -122,16 +122,16 @@ Destruktive Aktionen bleiben visuell und funktional von normalen Aktionen getren
 
 Alle Themes verwenden identische Struktur und semantische Zustände.
 
-### Theme 01 – Purple Neon
+### Theme 01 – Violett Neon
 Grund: tiefes Navy/Anthrazit · Hauptfarbe: kräftiges Lila · Sekundärfarbe: elektrisches Blau · Kontrast 1: Cyan/Türkis · Kontrast 2: frisches Grün.
 
-### Theme 02 – Turquoise Neon
+### Theme 02 – Türkis Neon
 Grund: sehr dunkles Petrol/Blaugrün · Hauptfarbe: Türkis · Sekundärfarbe: Cyanblau · Kontrast 1: Violett · Kontrast 2: Amber/Orange.
 
-### Theme 03 – Graphite Electric
+### Theme 03 – Graphit Elektrisch
 Grund: Graphit/tiefes Anthrazit · Hauptfarbe: elektrisches Blau · Sekundärfarbe: kaltes Weiß/Blaugrau · Kontrast 1: Neongrün · Kontrast 2: Amber.
 
-### Theme 04 – Crimson / Copper
+### Theme 04 – Karmin / Kupfer
 Grund: dunkles Burgunder/Schwarzbraun · Hauptfarbe: Rot/Magenta · Sekundärfarbe: Kupfer/Orange · Kontrast 1: helles Cyan · Kontrast 2: warmes Cremeweiß.
 
 ## 11. Typografie
@@ -214,3 +214,23 @@ Längerer Einsatz: ruhig, logisch und vorhersehbar.
 ## 21. B00-Abnahme
 
 B00 gilt als fachlich definiert, wenn Designrichtung, vier Themes, Workflow-/Fokus-/Status-/Neonregeln und Accessibility-Grundregeln dokumentiert sind und noch keine produktive GUI-Implementierung behauptet wird.
+
+
+## 22. Sichtbarer GUI-Ausbau – 05.10.2026
+
+Der aktuelle Fensteradapter setzt die Grundregeln nun deutlicher sichtbar um:
+
+- Kopfbereich mit klar beschrifteter **Größe** und **Darstellung** statt unbeschrifteter Auswahlfelder;
+- permanente Sicherheitskarte mit Klartext zum Lese-Modus;
+- Einsteigerfrage **„Was möchtest du tun?“** vor der Funktionsnavigation;
+- verständlichere, kürzere Navigationsnamen mit Symbol **und** Text;
+- sichtbarer aktiver Navigationspunkt;
+- Ergebnisbereich mit getrenntem Statusfeld statt technischem Statuskürzel in der Überschrift;
+- kontextbezogener nächster Schritt direkt oberhalb des Ergebnisses;
+- Transfer-Auswahl als sichtbare Schritte **1 von 3**, **2 von 3**, **3 von 3**;
+- Auswahlzähler für Dateien und sichtbares gewähltes Ziel;
+- lange Zielpfade werden visuell begrenzt; der vollständige Pfad bleibt über Hilfetext und Screenreader-Beschriftung verfügbar;
+- Dialogschaltflächen mit Wirkungsbegriffen wie **Weiter**, **Vorschau anzeigen** und **Abbrechen**;
+- sichtbarer Fokus zusätzlich für Auswahllisten.
+
+Die Sicherheitsgrenzen bleiben unverändert. Kopieren und Verschieben bleiben Prüfmodi, bis die dafür geforderte menschliche Bedienabnahme bestanden ist.

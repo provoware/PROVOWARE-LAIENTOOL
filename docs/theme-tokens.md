@@ -1,6 +1,6 @@
 # PROVOWARE LAIENTOOL – Theme-Tokens
 
-**Status:** Design-Tokens, noch keine produktive Implementierung.
+**Status:** Design-Tokens; die aktuelle Fensteroberfläche nutzt diese Theme-Familien produktiv.
 
 ## Semantische Token-Namen
 
@@ -27,10 +27,10 @@
 
 ## Theme-Familien
 
-**Purple Neon:** Navy/Anthrazit + Lila + elektrisches Blau + Cyan + Grün.
-**Turquoise Neon:** Petrol + Türkis + Cyanblau + Violett + Amber/Orange.
-**Graphite Electric:** Graphit + elektrisches Blau + Blaugrau + Neongrün + Amber.
-**Crimson / Copper:** Burgunder/Schwarzbraun + Rot/Magenta + Kupfer/Orange + Cyan + Cremeweiß.
+**Violett Neon:** Navy/Anthrazit + Lila + elektrisches Blau + Cyan + Grün.
+**Türkis Neon:** Petrol + Türkis + Cyanblau + Violett + Amber/Orange.
+**Graphit Elektrisch:** Graphit + elektrisches Blau + Blaugrau + Neongrün + Amber.
+**Karmin / Kupfer:** Burgunder/Schwarzbraun + Rot/Magenta + Kupfer/Orange + Cyan + Cremeweiß.
 
 ## Geometrie
 

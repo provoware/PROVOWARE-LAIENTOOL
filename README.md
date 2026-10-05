@@ -84,6 +84,7 @@ Nur PySide6 ist eine direkte Python-Abhängigkeit. `start.sh` installiert niemal
 - nur lesendes Erfassen, Suchen und Sortieren von Dateien;
 - Vorschauen für Papierkorb, Kopieren und Verschieben innerhalb derselben Wurzel;
 - gemeinsamer Programmkern für Fenster und Zahlenmenü;
+- geführte Fensteroberfläche mit sichtbarer Größen-/Darstellungsauswahl, Sicherheitskarte, aktivem Arbeitsschritt, Klartextstatus und dreistufig geführter Transfer-Vorschau;
 - bereinigte Diagnose als Text oder strukturierte Ausgabe;
 - automatische Prüfungen für Tastatur, Vergrößerung, Abstürze, knappen Speicherplatz, Rechtefehler und gleichzeitige Zugriffe;
 - tragbares Paket mit Inhaltsliste und Prüfsummen.
