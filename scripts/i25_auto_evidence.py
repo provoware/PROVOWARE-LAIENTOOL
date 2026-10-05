@@ -294,12 +294,25 @@ def run_workflow_check(app, window, fixtures: dict[str, Path], evidence_dir: Pat
                         f"Zielauswahl {scale} %: Pfeiltaste wählt keinen Eintrag."
                     )
 
-            target_list.setCurrentRow(targets.directories.index("Ziel"))
+            target_row = targets.directories.index("Ziel")
+            target_list.setCurrentRow(target_row)
             app.processEvents()
-            if target_list.currentRow() != targets.directories.index("Ziel"):
+            if target_list.currentRow() != target_row:
                 scale_failures.append(
                     f"Zielauswahl {scale} %: Zielordner lässt sich nicht stabil auswählen."
                 )
+
+            long_target = "Ziel/" + ("sehr-langer-ordnername-" * 12)
+            target_list.addItem(long_target)
+            target_list.setCurrentRow(target_list.count() - 1)
+            app.processEvents()
+            scale_failures.extend(
+                f"Zielauswahl langer Pfad {scale} %: {item}"
+                for item in dialog_geometry_failures(target_dialog)
+            )
+            target_list.takeItem(target_list.count() - 1)
+            target_list.setCurrentRow(target_row)
+            app.processEvents()
 
             if scale == 150:
                 target_shot = evidence_dir / TARGET_DIALOG_SCREENSHOT
