@@ -90,7 +90,13 @@ def check_stable_status_text(root: Path, fail: Fail) -> None:
 
 def check_trailing_whitespace(root: Path, fail: Fail) -> None:
     for path in root.rglob("*"):
-        if not path.is_file() or ".git" in path.parts or path.suffix not in TEXT_SUFFIXES:
+        relative_parts = path.relative_to(root).parts
+        if (
+            not path.is_file()
+            or ".git" in relative_parts
+            or ".venv" in relative_parts
+            or path.suffix not in TEXT_SUFFIXES
+        ):
             continue
         try:
             lines = path.read_text(encoding="utf-8").splitlines()
