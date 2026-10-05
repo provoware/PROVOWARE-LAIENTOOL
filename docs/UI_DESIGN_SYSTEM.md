@@ -214,3 +214,22 @@ Längerer Einsatz: ruhig, logisch und vorhersehbar.
 ## 21. B00-Abnahme
 
 B00 gilt als fachlich definiert, wenn Designrichtung, vier Themes, Workflow-/Fokus-/Status-/Neonregeln und Accessibility-Grundregeln dokumentiert sind und noch keine produktive GUI-Implementierung behauptet wird.
+
+
+## 22. Sichtbarer GUI-Ausbau – 05.10.2026
+
+Der aktuelle Fensteradapter setzt die Grundregeln nun deutlicher sichtbar um:
+
+- Kopfbereich mit klar beschrifteter **Größe** und **Darstellung** statt unbeschrifteter Auswahlfelder;
+- permanente Sicherheitskarte mit Klartext zum Lese-Modus;
+- Einsteigerfrage **„Was möchtest du tun?“** vor der Funktionsnavigation;
+- verständlichere, kürzere Navigationsnamen mit Symbol **und** Text;
+- sichtbarer aktiver Navigationspunkt;
+- Ergebnisbereich mit getrenntem Statusfeld statt technischem Statuskürzel in der Überschrift;
+- kontextbezogener nächster Schritt direkt oberhalb des Ergebnisses;
+- Transfer-Auswahl als sichtbare Schritte **1 von 3**, **2 von 3**, **3 von 3**;
+- Auswahlzähler für Dateien und sichtbares gewähltes Ziel;
+- Dialogschaltflächen mit Wirkungsbegriffen wie **Weiter**, **Vorschau anzeigen** und **Abbrechen**;
+- sichtbarer Fokus zusätzlich für Auswahllisten.
+
+Die Sicherheitsgrenzen bleiben unverändert. Kopieren und Verschieben bleiben Prüfmodi, bis die dafür geforderte menschliche Bedienabnahme bestanden ist.
