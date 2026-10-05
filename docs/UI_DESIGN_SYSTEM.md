@@ -122,16 +122,16 @@ Destruktive Aktionen bleiben visuell und funktional von normalen Aktionen getren
 
 Alle Themes verwenden identische Struktur und semantische Zustände.
 
-### Theme 01 – Purple Neon
+### Theme 01 – Violett Neon
 Grund: tiefes Navy/Anthrazit · Hauptfarbe: kräftiges Lila · Sekundärfarbe: elektrisches Blau · Kontrast 1: Cyan/Türkis · Kontrast 2: frisches Grün.
 
-### Theme 02 – Turquoise Neon
+### Theme 02 – Türkis Neon
 Grund: sehr dunkles Petrol/Blaugrün · Hauptfarbe: Türkis · Sekundärfarbe: Cyanblau · Kontrast 1: Violett · Kontrast 2: Amber/Orange.
 
-### Theme 03 – Graphite Electric
+### Theme 03 – Graphit Elektrisch
 Grund: Graphit/tiefes Anthrazit · Hauptfarbe: elektrisches Blau · Sekundärfarbe: kaltes Weiß/Blaugrau · Kontrast 1: Neongrün · Kontrast 2: Amber.
 
-### Theme 04 – Crimson / Copper
+### Theme 04 – Karmin / Kupfer
 Grund: dunkles Burgunder/Schwarzbraun · Hauptfarbe: Rot/Magenta · Sekundärfarbe: Kupfer/Orange · Kontrast 1: helles Cyan · Kontrast 2: warmes Cremeweiß.
 
 ## 11. Typografie
