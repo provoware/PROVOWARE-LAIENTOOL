@@ -45,6 +45,9 @@ So entsteht nach einem Merge kein zwangsläufig falscher README-/TODO-Stand.
 8. GitHub-CI abwarten und nur fachlich dauerhafte Ergebnisse dokumentieren.
 
 Der Repository-Gate prüft zusätzlich interne Markdown-Links, Python-Syntax, Iterationsindex, Workflow-Pinning, TODO-Schema und Text-Hygiene.
+Lokale Laufzeitumgebungen unter `.venv` sind dabei ausdrücklich vom
+Text-Hygiene-Scan ausgeschlossen; installierte Fremdpakete sind kein
+Repository-Inhalt.
 
 ## 4. Dateiwachstum und Verantwortungen
 
