@@ -24,7 +24,7 @@ from provoware_laientool.ui_themes import THEMES, stylesheet  # noqa: E402
 TEXT_THRESHOLD = 4.5
 FOCUS_THRESHOLD = 3.0
 SCALES = (100, 150, 200)
-FOCUS_SELECTORS = ("QPushButton:focus", "QComboBox:focus", "QTextEdit:focus")
+FOCUS_SELECTORS = ("QPushButton:focus", "QComboBox:focus", "QTextEdit:focus", "QListWidget:focus")
 MANUAL_GATES = (
     "100 % ohne abgeschnittene Kernaktion",
     "150 % ohne abgeschnittene Kernaktion",
