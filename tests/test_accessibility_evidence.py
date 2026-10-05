@@ -32,6 +32,17 @@ class FocusContractTests(unittest.TestCase):
         self.assertEqual(checks["QPushButton:focus"], "PASS")
         self.assertEqual(checks["QComboBox:focus"], "PASS")
         self.assertEqual(checks["QTextEdit:focus"], "PASS")
+        self.assertEqual(checks["QListWidget:focus"], "PASS")
+
+
+class ThemeLanguageTests(unittest.TestCase):
+    def test_visible_theme_names_are_german(self) -> None:
+        from provoware_laientool.ui_themes import THEMES
+
+        self.assertEqual(
+            [theme.label for theme in THEMES],
+            ["Violett Neon", "Türkis Neon", "Graphit Elektrisch", "Karmin / Kupfer"],
+        )
 
 
 class ScaleContractTests(unittest.TestCase):
