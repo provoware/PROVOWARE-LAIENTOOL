@@ -229,6 +229,7 @@ Der aktuelle Fensteradapter setzt die Grundregeln nun deutlicher sichtbar um:
 - kontextbezogener nächster Schritt direkt oberhalb des Ergebnisses;
 - Transfer-Auswahl als sichtbare Schritte **1 von 3**, **2 von 3**, **3 von 3**;
 - Auswahlzähler für Dateien und sichtbares gewähltes Ziel;
+- lange Zielpfade werden visuell begrenzt; der vollständige Pfad bleibt über Hilfetext und Screenreader-Beschriftung verfügbar;
 - Dialogschaltflächen mit Wirkungsbegriffen wie **Weiter**, **Vorschau anzeigen** und **Abbrechen**;
 - sichtbarer Fokus zusätzlich für Auswahllisten.
 
