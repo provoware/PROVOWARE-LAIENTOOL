@@ -225,6 +225,7 @@ def create_main_window(*, evidence_mode: bool = False):
                 self.safety_label,
                 self.safety_detail,
                 self.nav_title,
+                self.nav_hint,
                 *self.action_buttons.values(),
                 self.section_title,
                 self.status_label,
@@ -390,7 +391,15 @@ def create_main_window(*, evidence_mode: bool = False):
             target_status = QLabel("Noch kein Zielordner ausgewählt")
             target_status.setObjectName("stepHint")
             target_status.setAccessibleName("Zielauswahl: noch kein Zielordner")
+            target_status.setWordWrap(True)
+            target_status.setMaximumWidth(620)
             dialog_layout.addWidget(target_status)
+
+            def compact_target_label(value: str, limit: int = 42) -> str:
+                if len(value) <= limit:
+                    return value
+                keep = (limit - 1) // 2
+                return f"{value[:keep]}…{value[-keep:]}"
 
             buttons = QDialogButtonBox(
                 QDialogButtonBox.Ok | QDialogButtonBox.Cancel
@@ -407,9 +416,11 @@ def create_main_window(*, evidence_mode: bool = False):
                 selected = target_list.selectedItems()
                 ok_button.setEnabled(bool(selected))
                 if selected:
-                    label = f"Ziel: {selected[0].text()}"
+                    full_target = selected[0].text()
+                    label = f"Ziel: {compact_target_label(full_target)}"
                     target_status.setText(label)
-                    target_status.setAccessibleName(f"Zielauswahl: {label}")
+                    target_status.setToolTip(full_target)
+                    target_status.setAccessibleName(f"Zielauswahl: Ziel: {full_target}")
                 else:
                     target_status.setText("Noch kein Zielordner ausgewählt")
                     target_status.setAccessibleName("Zielauswahl: noch kein Zielordner")
