@@ -44,6 +44,9 @@ Dieser Index ist der Einstiegspunkt für Menschen, Codex und Prüfer. Er zeigt *
 
 - [I40 – Vollständiger Projektaudit](I40_PROJECT_AUDIT.md): priorisierte,
   commitgebundene Schwachstellen- und Verbesserungsliste mit Aufwand.
+- [I42 – Stand, Schwachstellen und nächste Schritte](I42_STATUS_AND_PRIORITIES.md):
+  aktueller Abgleich mit jeweils zehn priorisierten Schritten, Schwachstellen
+  und Verbesserungen; ordnet die nach I40 abgeschlossene I41-Korrektur ein.
 
 Diese Dateien dokumentieren **fachliche Checkpoints**, nicht den flüchtigen Live-Status eines GitHub-Laufs.
 

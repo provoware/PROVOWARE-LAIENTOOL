@@ -1,6 +1,6 @@
 # PROVOWARE – Aktueller Arbeitsblock
 
-## I41 – Diagnosepfadredaktion
+## I42 – Informationsaudit und nächste Wirkhebel
 
 **Status:** 🟢 ABGESCHLOSSEN
 **Fortschritt:** `██████████ 100 %`
@@ -8,29 +8,28 @@
 
 ## Ziel
 
-Absolute POSIX-, Windows-Laufwerks- und UNC-Pfade in frei übernommenen
-Diagnosetexten so redigieren, dass lokale Pfade und Dateinamen nicht
-weitergegeben werden.
+Den aktuellen Stand aus sichtbarem Chat und Repository konsolidieren, jeweils
+zehn nächste Schritte, Schwachstellen und maximal wirksame Verbesserungen
+priorisieren und die führenden Informationsdateien driftarm angleichen.
 
 ## Ergebnis
 
-- absolute POSIX-, Windows-Laufwerks- und UNC-Pfade werden durch `<PATH>`
-  ersetzt;
-- Unicode, Leerzeichen und gültige Trennzeichen innerhalb eines Pfades sind
-  regressionsgetestet;
-- Satzzeichen nach einem Pfad, bereits redigierte Home-Pfade und Webadressen
-  bleiben erhalten;
-- ein blockierter Diagnoseexport gibt weder Inhalt noch Schreibplan zurück;
-- 260 Tests und die betroffenen Repository-Guards sind auf dem Release
-  Candidate erfolgreich durchgelaufen;
-- es wurden keine Schreibrechte, Startwege oder Produktfreigaben verändert.
+- Die vollständige priorisierte Analyse steht in
+  [`I42_STATUS_AND_PRIORITIES.md`](I42_STATUS_AND_PRIORITIES.md).
+- Der sichtbare Chat wurde von nicht zugänglicher Chathistorie klar abgegrenzt;
+  Git-Historie und Evidence bleiben die dauerhafte Spur.
+- I41 ist als erledigte Pfadredaktion eingeordnet und nicht mehr als offene
+  Schwachstelle gezählt.
+- Flüchtige Iterationsnamen und TODO-Anzahlen wurden aus dem Dateiregister
+  entfernt, damit der Wegweiser nicht nach jedem Abschluss veraltet.
+- Produktcode, Tests, Workflows, Abhängigkeiten und Freigaben blieben unverändert.
 
-## Bewusster Trade-off
+## Bewusste Grenze
 
-Die sicherheitsorientierte Erkennung kann in freiem Diagnosetext auch eine
-unproblematische Zeichenfolge redigieren, wenn sie wie ein absoluter Pfad
-aussieht. Diese mögliche Überredaktion ist akzeptiert: Ein weniger ausführlicher
-Diagnosetext ist sicherer als die unbeabsichtigte Weitergabe lokaler Namen.
+„Alle Infodateien“ wurde als alle **führenden Live-Status- und
+Navigationsdateien** ausgelegt. Eingefrorene Baseline, historische
+Iterationsverträge und Evidence wurden nicht kosmetisch umgeschrieben, weil sie
+ihren geprüften historischen Stand bewahren müssen.
 
 ## Offene Freigaben und Abgrenzung
 
@@ -40,9 +39,9 @@ Diagnosetext ist sicherer als die unbeabsichtigte Weitergabe lokaler Namen.
 - Die Human-Abnahmen für Kopieren/Verschieben und für die Diagnose-Datei bleiben
   offen.
 - Ein Inventarlimit wurde nicht eingeführt, weil keine fachlich freigegebene
-  Defaultgrenze vorliegt. Der Befund bleibt nachvollziehbar in `todo.txt`
-  vertagt.
-- Der historische I40-Audit bleibt als damalige Bestandsaufnahme unverändert.
+  Defaultgrenze vorliegt.
+- Der historische I40-Audit und die I41-Ergebnisse bleiben unverändert; I42
+  ordnet ihren aktuellen Status ein, statt alte Bestandsaufnahmen umzuschreiben.
 
 ## Nächster verbindlicher Schritt
 
