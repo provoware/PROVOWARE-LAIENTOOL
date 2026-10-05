@@ -95,6 +95,9 @@ Nur PySide6 ist eine direkte Python-Abhängigkeit. `start.sh` installiert niemal
 3. **Diagnose-Datei:** Die abschließende verständliche Bedienprüfung fehlt; die Funktion bleibt im normalen Programmweg gesperrt.
 
 Die genaue Reihenfolge steht in [`todo.txt`](todo.txt). Der aktuelle Arbeitsblock steht in [`docs/CURRENT_ITERATION.md`](docs/CURRENT_ITERATION.md).
+Die aktuelle Analyse mit jeweils zehn nächsten Schritten, Schwachstellen und
+Verbesserungen steht in
+[`docs/I42_STATUS_AND_PRIORITIES.md`](docs/I42_STATUS_AND_PRIORITIES.md).
 
 ## Befehle in einfacher Sprache
 

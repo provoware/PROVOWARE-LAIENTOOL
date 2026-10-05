@@ -16,11 +16,11 @@ Dieses Register zeigt, welche Datei welche Aussage führt, wie sicher ihr Stand 
 | --- | --- | --- | --- | --- |
 | `README.md` | einfacher Einstieg, Voraussetzungen und Gesamtüberblick | 🟡 drei Freigaben offen | geänderter Start, neue Abhängigkeit oder dauerhafter Fähigkeitsstand | Dokumentation |
 | `AGENTS.md` | verbindliches Arbeits- und Sicherheitsverfahren | 🟢 bestätigt | geänderter Entwicklungs- oder Prüfablauf | Hauptverantwortung |
-| `todo.txt` | geordnete offene Arbeit | 🟡 drei Einträge zur Freigabe, ein späterer Komfortpunkt | neuer bestätigter Befund oder geschlossener Punkt | Organisation |
+| `todo.txt` | geordnete offene Arbeit | 🟡 priorisierte Freigaben und Folgearbeit offen | neuer bestätigter Befund oder geschlossener Punkt | Organisation |
 | `PROVOWARE_TODO_INPUT_POOL0.md` | ursprüngliche Anforderungen | 🔒 eingefroren | nur durch ausdrücklich freigegebene Anforderungsänderung | Hauptverantwortung |
 | `requirements-gui.txt` | direkte Python-Abhängigkeit mit genauer Version | 🟢 bestätigt | bewusstes Hochstufen von PySide6 | Umsetzung und Prüfung |
 | `docs/README.md` | Wegweiser durch alle Informationsbereiche | 🟢 bestätigt | neue, verschobene oder entfernte Dokumentation | Dokumentation |
-| `docs/CURRENT_ITERATION.md` | genau ein aktueller Arbeitsblock | 🟢 I36 | Beginn oder Abschluss einer Iteration | Organisation |
+| `docs/CURRENT_ITERATION.md` | genau ein aktueller Arbeitsblock | 🟢 aktueller Abschluss dokumentiert | Beginn oder Abschluss einer Iteration | Organisation |
 | `docs/INFO_TEXT_GOVERNANCE.md` | Regeln gegen veraltete Information | 🟢 bestätigt | neue Informationsklasse oder neuer Pflegewächter | Dokumentation |
 | `docs/MAINTENANCE.md` | dauerhafte Wartungs- und Prüfregeln | 🟢 bestätigt | geänderte Wartungsgrenze | Hauptverantwortung |
 | `docs/REGRESSION_MATRIX.md` | menschlich lesbare Auswahl der Prüfungen | 🟢 bestätigt | neuer Prüfbereich oder neue Fehlerfamilie | Prüfung |
