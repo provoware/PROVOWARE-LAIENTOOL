@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import shutil
+import subprocess
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -91,22 +94,22 @@ class VenvBootstrapContractTests(unittest.TestCase):
     def test_diagnostics_route_through_start_sh(self) -> None:
         text = (ROOT / "start.sh").read_text(encoding="utf-8")
         self.assertIn(
-            'exec "$VENV_PYTHON" "$ROOT_DIR/scripts/diagnostic_snapshot.py"',
+            'exec "$BASE_PYTHON" "$ROOT_DIR/scripts/diagnostic_snapshot.py"',
             text,
         )
         self.assertIn(
-            'exec "$VENV_PYTHON" "$ROOT_DIR/scripts/diagnostic_snapshot.py" --json',
+            'exec "$BASE_PYTHON" "$ROOT_DIR/scripts/diagnostic_snapshot.py" --json',
             text,
         )
 
     def test_second_device_evidence_routes_through_start_sh(self) -> None:
         text = (ROOT / "start.sh").read_text(encoding="utf-8")
         self.assertIn(
-            'exec "$VENV_PYTHON" "$ROOT_DIR/scripts/second_device_evidence.py"',
+            'exec "$BASE_PYTHON" "$ROOT_DIR/scripts/second_device_evidence.py"',
             text,
         )
         self.assertIn(
-            'exec "$VENV_PYTHON" "$ROOT_DIR/scripts/second_device_evidence.py" --json',
+            'exec "$BASE_PYTHON" "$ROOT_DIR/scripts/second_device_evidence.py" --json',
             text,
         )
 
@@ -115,6 +118,55 @@ class VenvBootstrapContractTests(unittest.TestCase):
         self.assertIn('if [[ "$ACTION" == "--check" ]]', text)
         self.assertIn('Nichts verändert.', text)
 
+
+    def test_core_only_modes_without_venv_and_gui_requirements(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            shutil.copyfile(ROOT / "start.sh", root / "start.sh")
+            (root / "scripts").mkdir()
+            stub = (
+                "import sys\n"
+                "print('ENTRY:' + __file__.rsplit('/', 1)[-1] + '|' + '|'.join(sys.argv[1:]))\n"
+            )
+            (root / "start.py").write_text(stub, encoding="utf-8")
+            for name in ("diagnostic_snapshot.py", "second_device_evidence.py"):
+                (root / "scripts" / name).write_text(stub, encoding="utf-8")
+
+            modes = (
+                ("--preflight", "start.py", ""),
+                ("--json", "start.py", "--json"),
+                ("--diagnostics", "diagnostic_snapshot.py", ""),
+                ("--diagnostics-json", "diagnostic_snapshot.py", "--json"),
+                ("--second-device-evidence", "second_device_evidence.py", ""),
+                ("--second-device-evidence-json", "second_device_evidence.py", "--json"),
+            )
+            for option, entry, argument in modes:
+                with self.subTest(option=option):
+                    result = subprocess.run(
+                        ["bash", str(root / "start.sh"), option],
+                        cwd=root, input="", capture_output=True,
+                        text=True, check=False, timeout=10,
+                    )
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    self.assertEqual(
+                        result.stdout.strip().splitlines()[-1],
+                        f"ENTRY:{entry}|{argument}",
+                    )
+                    self.assertFalse((root / ".venv").exists())
+                    self.assertFalse((root / ".venv.tmp").exists())
+
+    def test_gui_mode_still_requires_gui_dependencies(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            shutil.copyfile(ROOT / "start.sh", root / "start.sh")
+            result = subprocess.run(
+                ["bash", str(root / "start.sh"), "--gui"],
+                cwd=root, input="", capture_output=True,
+                text=True, check=False, timeout=10,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("requirements-gui.txt fehlt", result.stderr)
+            self.assertFalse((root / ".venv").exists())
 
 if __name__ == "__main__":
     unittest.main()

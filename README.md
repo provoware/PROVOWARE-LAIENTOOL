@@ -66,6 +66,12 @@ Die Prozentzahl bildet genau vier Freigaben ab: automatische Prüfung, Bedienpr�
 
 3. Beide Befehle zeigen nur Text an. Sie schreiben keine Datei und nutzen kein Netz.
 
+Die lesenden Befehle `--preflight`, `--json`, `--diagnostics`,
+`--diagnostics-json` und beide `--second-device-evidence`-Varianten
+funktionieren auch ohne `.venv` und PySide6. Sie nutzen das vorhandene
+System-Python (3.10 bis 3.14), installieren nichts und verändern keine
+Dateien. Für das Fensterprogramm bleibt die geprüfte Projektumgebung Pflicht.
+
 ## Voraussetzungen und Abhängigkeiten
 
 | Benötigt | Wofür | Wo festgelegt |
