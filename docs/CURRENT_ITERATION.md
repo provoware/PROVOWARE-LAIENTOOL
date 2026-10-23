@@ -1,89 +1,76 @@
 # PROVOWARE – Aktueller Arbeitsblock
 
-## I45 – I25 technische Transfer-Prüfung
+## I46 – Paket-CI deckt verpackte Quelldateien ab
 
-**Status:** 🟨 TEILWEISE BESTANDEN
+**Stand:** 23.10.2026. **Basis:** `main` bei `6845d6c09ab68e8ad830caaf89afb0392bcb0153`.
+**Entwicklungszweig:** `fix/portable-package-trigger-coverage-20261023`.
+**PR/CI:** nach dem ersten GitHub-Push zu prüfen; bis dahin `OPEN`.
+**Produktfreigabe:** unverändert `OPEN`; keine Schreibfunktion freigeschaltet.
 
-**Fortschritt:** `████████░░ 75 %` (3 von 4 definierten Gates bestanden)
+### Ziel und Umfang
 
-**Produktfreigabe:** unverändert; Copy/Move bleibt nicht READY
+P1-Paketlücke aus `todo.txt` beheben: Änderungen an tatsächlich verpackten
+Laufzeitdateien müssen den vollständigen Offline-Paketbau auf Pull Requests
+und `main` auslösen. Die Regeln des Paketbauers
+(`scripts/build_portable_package.py`: `RUNTIME_TOP_LEVEL`,
+`RUNTIME_PREFIXES`) sind die maßgebliche Grundlage.
 
-## Ziel
+**Dateibesitz:** Workflow = CI-Konfiguration; Pakettests = Regression;
+`todo.txt` und diese Datei = Status. **Nicht-Ziele:** keine neuen
+Dateischreibfunktionen, keine Freigabe gesperrter Use-Cases, keine Migration,
+kein Paket-Upload und keine Änderung der Abhängigkeiten.
 
-Den aktuellen Stand aus sichtbarem Chat und Repository konsolidieren, jeweils
-zehn nächste Schritte, Schwachstellen und maximal wirksame Verbesserungen
-priorisieren und die führenden Informationsdateien driftarm angleichen.
+**Umsetzung:** identische Filter für `pull_request` und `push/main`;
+`src/**`, `scripts/**`, `docs/**` sowie `README.md` ergänzt.
+`docs/evidence/**` löst konservativ ebenfalls einen Paketlauf aus,
+obwohl es nicht im ZIP liegt. Die doppelte Nennung des Provenance-Tests
+entfällt. Ein Vertragstest prüft beide Filter auf Gleichheit, Duplikate,
+alle derzeit verpackten Dateien sowie neu hinzukommende Dateien.
+Der Paketbauer und sein Sicherheitsvertrag bleiben unverändert.
 
-## Ergebnis
+### Release-Pflichtmatrix (nur belegter Stand)
 
-- Die vollständige priorisierte Analyse steht in
-  [`I42_STATUS_AND_PRIORITIES.md`](I42_STATUS_AND_PRIORITIES.md).
-- Der sichtbare Chat wurde von nicht zugänglicher Chathistorie klar abgegrenzt;
-  Git-Historie und Evidence bleiben die dauerhafte Spur.
-- I41 ist als erledigte Pfadredaktion eingeordnet und nicht mehr als offene
-  Schwachstelle gezählt.
-- Flüchtige Iterationsnamen und TODO-Anzahlen wurden aus dem Dateiregister
-  entfernt, damit der Wegweiser nicht nach jedem Abschluss veraltet.
-- Produktcode, Tests, Workflows, Abhängigkeiten und Freigaben blieben unverändert.
+| Bereich | Stand | Nachweis / verbleibende Pflicht |
+| --- | --- | --- |
+| Fachfunktionen und Grenzfälle | OPEN | Lesender Kern und Vorschauen getestet; schreibende Aktionen bewusst gesperrt |
+| Datensicherheit / Wiederherstellung | OPEN | Read-only-Schutz vorhanden; echte Wiederherstellung nach Schreibaktionen nicht freigegeben |
+| Fehlerbehandlung / Sicherheit | OPEN | Core-Sicherheitsprüfungen vorhanden; Recovery ungültiger `.venv` offen |
+| Design / UX / Lesbarkeit | OPEN | Technische GUI-Evidence vorhanden; persönliche Gesamtsichtprüfung fehlt |
+| 800×600 und hohe Skalierung | OPEN | 100/150/200-%-Prüfungen dokumentiert; 800×600 vollständig nachzuweisen |
+| Tastatur / Barrierefreiheit | OPEN | Automatische I25/I31-Evidence vorhanden; reale Bedienprüfung fehlt |
+| Performance / Abbruch | OPEN | Unbegrenzte synchrone Inventarisierung ist P1 |
+| Wartbarkeit / Wiederverwendung | OPEN | Gemeinsamer Core vorhanden; Qualitäts- und Kohäsionsbefunde offen |
+| Installation / Paketierung | OPEN | Paketbau auf Basis-Commit grün; neue Trigger-Abdeckung und Zweitgerät offen |
+| Automatisierte Funktionstests | PASS (Basis) | `repo-quality` auf `6845d6c09ab68e8ad830caaf89afb0392bcb0153` erfolgreich; neuer Branch noch zu prüfen |
+| Integration | OPEN | GUI/CLI und Export-Adapter automatisch geprüft; vollständige Freigabe fehlt |
+| GUI / Browser | OPEN | I25/I31 technisch geprüft; menschliche Endprüfung fehlt |
+| Regression | OPEN | Neuer Filter-Vertragstest hinzugefügt; Ausführung und CI-Nachweis noch offen |
+| CI / Qualitätsgates | OPEN | Basis-CI grün; PR-Gates `repo-quality` und `portable-package` ausstehend |
+| Dokumentation | OPEN | Aktuelle Matrix und TODO nachgeführt; vollständige Release-Dokumentation offen |
+| Release / Freeze | BLOCKED | Zweitgerät, gesperrte Aktionen und gebündelte Kubuntu-Endabnahme offen |
 
-## Bewusste Grenze
+Die historische I45-Evidence bleibt unter
+`docs/evidence/EV-20261001-017-i45-i25-auto-pass.md` erhalten;
+sie ersetzt keinen menschlichen Test. `main`-Prüfungen des Basis-Commits
+sind kein Nachweis für den neuen Entwicklungszweig.
 
-„Alle Infodateien“ wurde als alle **führenden Live-Status- und
-Navigationsdateien** ausgelegt. Eingefrorene Baseline, historische
-Iterationsverträge und Evidence wurden nicht kosmetisch umgeschrieben, weil sie
-ihren geprüften historischen Stand bewahren müssen.
+### Gates und Rückweg
 
-## Offene Freigaben und Abgrenzung
+1. **TARGETED:** `PYTHONPATH=src python3 -m unittest tests.test_i32_portable_package -v`
+   (bei fehlendem Paketimport alternativ `unittest discover -s tests -p test_i32_portable_package.py`).
+2. **FULL:** `python3 scripts/repo_quality.py`,
+   `python3 scripts/read_only_guard.py` und gesamte `unittest discover`-Suite.
+3. **REMOTE:** `repo-quality` und `portable-package` auf dem exakten PR-Head
+   vollständig grün; Fehler nicht durch Abschwächung des Gates beheben.
+4. **DIFF:** ausschließlich Trigger, Vertragstest und Statusdateien.
+5. **RÜCKWEG:** PR offen lassen oder schließen; `main` unverändert.
 
-- Die Zweitgeräteprüfung wurde auf Nutzerentscheidung übersprungen. Sie gilt
-  ausdrücklich **nicht** als bestanden und wird nur nach neuer Freigabe wieder
-  aufgenommen.
-- Die Human-Abnahmen für Kopieren/Verschieben und für die Diagnose-Datei bleiben
-  offen.
-- Ein Inventarlimit wurde nicht eingeführt, weil keine fachlich freigegebene
-  Defaultgrenze vorliegt.
-- Der historische I40-Audit und die I41-Ergebnisse bleiben unverändert; I42
-  ordnet ihren aktuellen Status ein, statt alte Bestandsaufnahmen umzuschreiben.
-Die fehlende Qt-Laufzeitkomponente begrenzt bereitstellen, die Qt-Validierung
-genau einmal wiederholen und danach die technische I25-Prüfung ausführen.
+### Nächste drei Arbeitsschritte
 
-## Definierte Gates
+1. Paket- und Qualitäts-PR-Gates auswerten, Fehler reparieren und erneut prüfen.
+2. P1-Inventarisierung mit expliziter, optionaler Begrenzung und Abbruchmodell
+   vorbereiten, ohne willkürlichen Standardwert zu behaupten.
+3. P2-Recovery ungültiger `.venv` verlustfrei absichern und gezielt testen.
 
-1. **PASS – Qt-Paket:** `libegl1` und seine zwingenden Abhängigkeiten wurden
-   distributionsgerecht installiert.
-2. **PASS – Qt-Validierung:** `./start.sh --setup` meldete PySide6 6.11.2,
-   Qt 6.11.2 und einen erfolgreichen QtWidgets-Import.
-3. **PASS – I25-AUTO:** `./start.sh --i25-offscreen` bestand; Bericht,
-   Auswertung, JSON und sieben Screenshots wurden unabhängig per SHA-256
-   verifiziert.
-4. **OPEN – I25-HUMAN:** `./start.sh --i25-evidence` benötigt weiterhin eine
-   echte menschliche Wahrnehmungsentscheidung.
-
-## Ergebnis und Abgrenzung
-
-Die Qt-Laufzeit ist in dieser Prüfumgebung vollständig nutzbar. Der technische
-I25-Lauf bestätigt die automatisierten Prüfungen für 100, 150 und 200 Prozent,
-Tastaturfokus, Auswahl- und Zieldialoge sowie die read-only Transfer-Vorschau.
-Die Artefakte sind an den geprüften Commit gebunden und ihre Hashes sind in
-`docs/evidence/EV-20261001-017-i45-i25-auto-pass.md` festgehalten.
-
-I25-AUTO ist damit **PASS**. I25-HUMAN bleibt **OPEN**; deshalb bleiben auch
-I25 insgesamt und die Copy-/Move-Freigabe **OPEN**. Es wurde kein menschliches
-PASS angenommen und kein Registry-Eintrag auf READY gesetzt.
-
-## Nächster verbindlicher Schritt
-
-Genau einen echten Lauf von `./start.sh --i25-evidence` durchführen und die
-Wahrnehmbarkeit sowie Verständlichkeit durch einen Menschen beurteilen lassen.
-
-### Drei-Schritte-Vorausplanung
-
-1. **I25 menschlich prüfen:** I25-AUTO-PASS ist erfüllt; Gate ist genau ein
-   echter Lauf von `./start.sh --i25-evidence` mit dokumentierter
-   Wahrnehmungsentscheidung.
-2. **I25-Freigabe entscheiden:** HUMAN-PASS ist erforderlich; Scope sind nur
-   die betroffenen Registry- und Freeze-Texte, Gate ist ein gezielter
-   Registry-/Repository-Test.
-3. **Verbleibende Release-Gates prüfen:** I25-Abschluss ist erforderlich;
-   Scope sind die bereits offenen Human- und Zweitgeräte-Nachweise, Gate ist
-   eine konsistente Release-Checkliste ohne unbelegtes PASS.
+Die persönliche Endabnahme wird erst vor einer explizit freigegebenen
+Veröffentlichung des vollständig geprüften Release-Kandidaten verlangt.
