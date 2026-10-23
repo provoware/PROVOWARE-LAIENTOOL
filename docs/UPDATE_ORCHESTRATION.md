@@ -151,3 +151,21 @@ B blockiert B01-B nicht. Daher wird A zuerst umgesetzt; B bleibt als klarer Evid
 ## Portable-Package Supply-Chain-Gate
 
 Für das Linux-x86_64-Offline-Paket gilt ab I38 verbindlich die Reihenfolge `pip download → festgeschriebene Wheel-Baseline prüfen → Paket bauen`. Änderungen an `requirements-gui.txt`, der Baseline oder dem Baseline-Prüfer müssen gemeinsam geprüft werden; der normale Paketbuild darf die Baseline niemals automatisch erzeugen oder aktualisieren.
+
+## Portable-Package-Trigger-Vertrag (I46)
+
+Der Paketbauer nimmt alle von Git erfassten Laufzeitdateien aus
+`RUNTIME_TOP_LEVEL` und den Verzeichnissen `src/`, `scripts/`, `docs/`
+auf; `docs/evidence/` bleibt im ZIP ausgeschlossen. Deshalb müssen
+`pull_request` und `push/main` im Workflow
+`.github/workflows/portable-package.yml` identische, konservative
+Pfadfilter besitzen. Ein zusätzlicher Paketlauf ist akzeptabel; eine
+fehlende Prüfung nach einer Änderung am Paketinhalt ist es nicht.
+
+Der Vertragstest in `tests/test_i32_portable_package.py` prüft
+Filtergleichheit, eindeutige Einträge, alle derzeit verpackten Dateien
+und repräsentative neue Dateien. Der Workflow selbst, die festgelegten
+Pakettests und die Wheelhouse-Baseline gehören zu den Auslösern.
+`repo-quality` allein ersetzt den echten Offline-Paketbau nicht.
+Vor Merge sind **beide** unabhängigen GitHub-Gates auf dem endgültigen
+PR-Head erforderlich; der Test gibt keine schreibenden Produktfunktionen frei.
