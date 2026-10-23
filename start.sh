@@ -93,8 +93,6 @@ esac
 
 cd "$ROOT_DIR"
 
-[[ -f "$REQUIREMENTS" ]] || die "requirements-gui.txt fehlt. Repository ist unvollständig."
-
 BASE_PYTHON="$(command -v python3 || true)"
 [[ -n "$BASE_PYTHON" ]] || die "python3 wurde nicht gefunden."
 
@@ -107,6 +105,18 @@ PY
 then
   die "Python muss >= 3.10 und < 3.15 sein."
 fi
+
+# Lesende Hilfswege benötigen weder Venv noch GUI-Abhängigkeiten.
+case "$ACTION" in
+  --preflight) exec "$BASE_PYTHON" "$ROOT_DIR/start.py" ;;
+  --json) exec "$BASE_PYTHON" "$ROOT_DIR/start.py" --json ;;
+  --diagnostics) exec "$BASE_PYTHON" "$ROOT_DIR/scripts/diagnostic_snapshot.py" ;;
+  --diagnostics-json) exec "$BASE_PYTHON" "$ROOT_DIR/scripts/diagnostic_snapshot.py" --json ;;
+  --second-device-evidence) exec "$BASE_PYTHON" "$ROOT_DIR/scripts/second_device_evidence.py" ;;
+  --second-device-evidence-json) exec "$BASE_PYTHON" "$ROOT_DIR/scripts/second_device_evidence.py" --json ;;
+esac
+
+[[ -f "$REQUIREMENTS" ]] || die "requirements-gui.txt fehlt. Repository ist unvollständig."
 
 validate_venv() {
   [[ -x "$VENV_PYTHON" ]] || return 1
@@ -230,23 +240,5 @@ case "$ACTION" in
     ;;
   --menu)
     exec "$VENV_PYTHON" "$ROOT_DIR/start.py" --menu
-    ;;
-  --preflight)
-    exec "$VENV_PYTHON" "$ROOT_DIR/start.py"
-    ;;
-  --json)
-    exec "$VENV_PYTHON" "$ROOT_DIR/start.py" --json
-    ;;
-  --diagnostics)
-    exec "$VENV_PYTHON" "$ROOT_DIR/scripts/diagnostic_snapshot.py"
-    ;;
-  --diagnostics-json)
-    exec "$VENV_PYTHON" "$ROOT_DIR/scripts/diagnostic_snapshot.py" --json
-    ;;
-  --second-device-evidence)
-    exec "$VENV_PYTHON" "$ROOT_DIR/scripts/second_device_evidence.py"
-    ;;
-  --second-device-evidence-json)
-    exec "$VENV_PYTHON" "$ROOT_DIR/scripts/second_device_evidence.py" --json
     ;;
 esac
