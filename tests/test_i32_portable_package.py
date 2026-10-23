@@ -77,7 +77,7 @@ class PortableWorkflowTriggerTests(unittest.TestCase):
             encoding="utf-8"
         )
         section = re.search(
-            rf"(?ms)^  {re.escape(event)}:\n(.*?)(?=^  (?:pull_request|push):|^[a-z][a-z_-]*:|\\Z)",
+            rf"(?ms)^  {re.escape(event)}:\n(.*?)(?=^  (?:pull_request|push):|^[a-z][a-z_-]*:|\Z)",
             workflow,
         )
         if section is None:
@@ -88,8 +88,7 @@ class PortableWorkflowTriggerTests(unittest.TestCase):
         )
         if block is None:
             raise AssertionError(f"Pfadfilter fehlt: {event}")
-        return tuple(re.findall(r'^      - "([^"]+)"    unittest.main()
-, block.group(1), re.M))
+        return tuple(re.findall(r'^      - "([^"]+)"$', block.group(1), re.M))
 
     def test_pull_request_and_main_use_same_unique_paths(self) -> None:
         pull_paths = self.event_paths("pull_request")
