@@ -4,7 +4,10 @@
 
 **Stand:** 23.10.2026. **Basis:** `main` bei `6845d6c09ab68e8ad830caaf89afb0392bcb0153`.
 **Entwicklungszweig:** `fix/portable-package-trigger-coverage-20261023`.
-**PR/CI:** nach dem ersten GitHub-Push zu prüfen; bis dahin `OPEN`.
+**PR:** [#67](https://github.com/provoware/PROVOWARE-LAIENTOOL/pull/67), nach grünen Gates per Squash integriert.
+**Geprüfter PR-Head:** `0baee39ac1a3f9bafbdd8a1331730fc83a4e2c4f`.
+**Merge-Commit auf `main`:** `64f83a3a2f3f270f3d4a713ab319366212e954b9`.
+**CI:** `PASS` für `repo-quality` und `portable-package` auf PR-Head und erneut nach Merge auf `main`.
 **Produktfreigabe:** unverändert `OPEN`; keine Schreibfunktion freigeschaltet.
 
 ### Ziel und Umfang
@@ -40,12 +43,12 @@ Der Paketbauer und sein Sicherheitsvertrag bleiben unverändert.
 | Tastatur / Barrierefreiheit | OPEN | Automatische I25/I31-Evidence vorhanden; reale Bedienprüfung fehlt |
 | Performance / Abbruch | OPEN | Unbegrenzte synchrone Inventarisierung ist P1 |
 | Wartbarkeit / Wiederverwendung | OPEN | Gemeinsamer Core vorhanden; Qualitäts- und Kohäsionsbefunde offen |
-| Installation / Paketierung | OPEN | Paketbau auf Basis-Commit grün; neue Trigger-Abdeckung und Zweitgerät offen |
+| Installation / Paketierung | OPEN | Trigger-Abdeckung und Paketbau nach Merge PASS; reale Zweitgeräteprüfung weiterhin offen |
 | Automatisierte Funktionstests | PASS (Basis) | `repo-quality` auf `6845d6c09ab68e8ad830caaf89afb0392bcb0153` erfolgreich; neuer Branch noch zu prüfen |
 | Integration | OPEN | GUI/CLI und Export-Adapter automatisch geprüft; vollständige Freigabe fehlt |
 | GUI / Browser | OPEN | I25/I31 technisch geprüft; menschliche Endprüfung fehlt |
-| Regression | OPEN | Neuer Filter-Vertragstest hinzugefügt; Ausführung und CI-Nachweis noch offen |
-| CI / Qualitätsgates | OPEN | Basis-CI grün; PR-Gates `repo-quality` und `portable-package` ausstehend |
+| Regression | PASS (I46) | Drei neue Paket-Filter-Vertragstests bestanden; übrige Release-Regressionen separat OPEN |
+| CI / Qualitätsgates | PASS (I46) | Beide PR-Gates und beide Post-Merge-Gates erfolgreich; andere Release-Gates unverändert OPEN |
 | Dokumentation | OPEN | Aktuelle Matrix und TODO nachgeführt; vollständige Release-Dokumentation offen |
 | Release / Freeze | BLOCKED | Zweitgerät, gesperrte Aktionen und gebündelte Kubuntu-Endabnahme offen |
 
@@ -54,23 +57,36 @@ Die historische I45-Evidence bleibt unter
 sie ersetzt keinen menschlichen Test. `main`-Prüfungen des Basis-Commits
 sind kein Nachweis für den neuen Entwicklungszweig.
 
+
+### Abgeschlossene I46-Nachweise
+
+- PR [#67](https://github.com/provoware/PROVOWARE-LAIENTOOL/pull/67),
+  geprüfter Head `0baee39ac1a3f9bafbdd8a1331730fc83a4e2c4f`.
+- PR: [Repository-Contract](https://github.com/provoware/PROVOWARE-LAIENTOOL/actions/runs/39999103246)
+  **PASS**, 268 Python-Tests; [Offline-Paket](https://github.com/provoware/PROVOWARE-LAIENTOOL/actions/runs/39999103230)
+  **PASS**.
+- Post-Merge auf `main`: [Repository-Contract](https://github.com/provoware/PROVOWARE-LAIENTOOL/actions/runs/39999330683)
+  **PASS**; [Offline-Paket](https://github.com/provoware/PROVOWARE-LAIENTOOL/actions/runs/39999330920)
+  **PASS**.
+- Keine Produktfreigabe, keine Veröffentlichung. Die persönlichen und
+  physischen Release-Nachweise bleiben ausdrücklich `OPEN`.
+
 ### Gates und Rückweg
 
-1. **TARGETED:** `PYTHONPATH=src python3 -m unittest tests.test_i32_portable_package -v`
+1. **PASS – TARGETED:** `PYTHONPATH=src python3 -m unittest tests.test_i32_portable_package -v`
    (bei fehlendem Paketimport alternativ `unittest discover -s tests -p test_i32_portable_package.py`).
-2. **FULL:** `python3 scripts/repo_quality.py`,
+2. **PASS – FULL:** `python3 scripts/repo_quality.py`,
    `python3 scripts/read_only_guard.py` und gesamte `unittest discover`-Suite.
-3. **REMOTE:** `repo-quality` und `portable-package` auf dem exakten PR-Head
+3. **PASS – REMOTE:** `repo-quality` und `portable-package` auf dem exakten PR-Head
    vollständig grün; Fehler nicht durch Abschwächung des Gates beheben.
-4. **DIFF:** ausschließlich Trigger, Vertragstest und Statusdateien.
-5. **RÜCKWEG:** PR offen lassen oder schließen; `main` unverändert.
+4. **PASS – DIFF:** ausschließlich Trigger, Vertragstest und Statusdateien.
+5. **RÜCKWEG:** I46 ist nach grünen Gates auf `main` integriert; bei einer nachgewiesenen Regression nur durch neuen geprüften PR zurücknehmen.
 
 ### Nächste drei Arbeitsschritte
 
-1. Paket- und Qualitäts-PR-Gates auswerten, Fehler reparieren und erneut prüfen.
-2. P1-Inventarisierung mit expliziter, optionaler Begrenzung und Abbruchmodell
-   vorbereiten, ohne willkürlichen Standardwert zu behaupten.
-3. P2-Recovery ungültiger `.venv` verlustfrei absichern und gezielt testen.
+1. P1-Inventarisierung: optionales Begrenzungs-/Abbruchmodell ohne willkürliche Defaultgrenze spezifizieren und mit Großbaumtests absichern.
+2. P2-Recovery ungültiger `.venv` verlustfrei absichern und gezielt testen.
+3. P2-Python-Versionsgrenzen im Starter und Preflight vereinheitlichen und Randwerte testen.
 
 Die persönliche Endabnahme wird erst vor einer explizit freigegebenen
 Veröffentlichung des vollständig geprüften Release-Kandidaten verlangt.
