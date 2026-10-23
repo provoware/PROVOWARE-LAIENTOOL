@@ -1,40 +1,42 @@
 name: portable-package
 
+# Keep PR and main triggers identical: the package builder ships every tracked
+# runtime file under src/, scripts/ and docs/ (except docs/evidence/).
+# Broad docs/ matching is intentional: missing a packaged change is worse than
+# an occasional extra validation run.
 on:
   pull_request:
     paths:
+      - "README.md"
       - "PROVOWARE.desktop"
-      - "start.sh"
-      - "start.py"
       - "requirements-gui.txt"
-      - "scripts/build_portable_package.py"
-      - "scripts/validate_portable_package.py"
-      - "scripts/wheelhouse_integrity.py"
-      - "scripts/verify_wheelhouse_integrity.py"
-      - "scripts/verify_wheelhouse_baseline.py"
+      - "start.py"
+      - "start.sh"
+      - "src/**"
+      - "scripts/**"
+      - "docs/**"
       - "wheelhouse-lock-linux-x86_64.json"
       - "tests/test_i32_portable_package.py"
       - "tests/test_i33_wheelhouse_integrity.py"
+      - "tests/test_i35_package_provenance.py"
       - "tests/test_i38_wheelhouse_baseline.py"
-      - "tests/test_i35_package_provenance.py"
-      - "tests/test_i35_package_provenance.py"
       - ".github/workflows/portable-package.yml"
   push:
     branches:
       - main
     paths:
+      - "README.md"
       - "PROVOWARE.desktop"
-      - "start.sh"
-      - "start.py"
       - "requirements-gui.txt"
-      - "scripts/build_portable_package.py"
-      - "scripts/validate_portable_package.py"
-      - "scripts/wheelhouse_integrity.py"
-      - "scripts/verify_wheelhouse_integrity.py"
-      - "scripts/verify_wheelhouse_baseline.py"
+      - "start.py"
+      - "start.sh"
+      - "src/**"
+      - "scripts/**"
+      - "docs/**"
       - "wheelhouse-lock-linux-x86_64.json"
       - "tests/test_i32_portable_package.py"
       - "tests/test_i33_wheelhouse_integrity.py"
+      - "tests/test_i35_package_provenance.py"
       - "tests/test_i38_wheelhouse_baseline.py"
       - ".github/workflows/portable-package.yml"
 
