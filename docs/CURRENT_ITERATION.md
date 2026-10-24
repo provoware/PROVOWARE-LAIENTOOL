@@ -1,7 +1,9 @@
 ## I48 – Ungültige .venv verlustfrei wiederherstellen
 
 **Stand:** 24.10.2026. **Basis-Head:** `5b174612787fb2285ba4c1d6af534c35376db417`.
-**Entwicklungszweig:** `fix/i48-reversible-venv-recovery-20261024`. **PR/CI:** GitHub ist die maßgebliche Quelle; vor grüner PR-CI bleibt das Gate OPEN.
+**Entwicklungszweig:** `fix/i48-reversible-venv-recovery-20261024`. **PR:** [#70](https://github.com/provoware/PROVOWARE-LAIENTOOL/pull/70) (Entwurf).
+**Geprüfter Implementierungs-Head:** `df4dbb57ab38c9e1b73ccec11538551bcd41edc0`.
+**Repository-CI:** [#40113639435](https://github.com/provoware/PROVOWARE-LAIENTOOL/actions/runs/40113639435) PASS auf diesem Code-Head; andere Pflichtprüfungen und finaler PR-Head bleiben bis zu eigenen Ergebnissen OPEN.
 
 **Ziel:** Eine ungültige Projektumgebung darf nicht mehr in sich selbst verschachtelt,
 gelöscht oder still ersetzt werden. Betroffen sind `start.sh`, ein neuer
@@ -40,7 +42,7 @@ diesen Nachweisen **OPEN**, nicht PASS.
 | Performance/Abbruch | OPEN | Budgetierte, abbrechbare Inventarisierung fehlt |
 | Wartbarkeit | OPEN | Kleine Änderung am vorhandenen Starter; weitere Qualitätsbefunde offen |
 | Paketierung/Installation | OPEN | I48-Subprozessfälle im PR; Offline-Zweitgerät und Hashbindung offen |
-| Funktionstests/Regression | OPEN | Zehn neue Tests; GitHub-Ergebnisse auf PR-Head ausstehend |
+| Funktionstests/Regression | PASS (I48-Code) | Zehn neue Tests im vollständigen Repository-Gate auf Implementierungs-Head erfolgreich; finaler PR-Head separat OPEN |
 | Integration/GUI/Browser | OPEN | GUI-/CLI-Evidence vorhanden; vollständige Release-Prüfung offen |
 | CI | OPEN | `repo-quality` und `portable-package` auf finalem PR-Head abwarten |
 | Dokumentation | OPEN | I48-Matrix und TODO aktualisiert; Release-Dokumentation offen |
