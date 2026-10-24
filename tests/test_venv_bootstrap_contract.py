@@ -6,6 +6,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from provoware_laientool.preflight import PYTHON_MAX_EXCLUSIVE, PYTHON_MIN
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -24,6 +26,20 @@ class VenvBootstrapContractTests(unittest.TestCase):
         self.assertIn('requirements-gui.txt', text)
         self.assertIn('validate_venv', text)
         self.assertIn('validate_gui_runtime', text)
+
+
+    def test_python_bounds_match_starter_and_portable_manifest(self) -> None:
+        starter = (ROOT / "start.sh").read_text(encoding="utf-8")
+        self.assertIn(
+            f"ok = {PYTHON_MIN} <= sys.version_info[:2] < {PYTHON_MAX_EXCLUSIVE}",
+            starter,
+        )
+        package = (ROOT / "scripts" / "build_portable_package.py").read_text(
+            encoding="utf-8"
+        )
+        lower = ".".join(map(str, PYTHON_MIN))
+        upper = ".".join(map(str, PYTHON_MAX_EXCLUSIVE))
+        self.assertIn(f'"python_supported": ">={lower},<{upper}"', package)
 
     def test_start_script_prefers_local_offline_wheelhouse(self) -> None:
         text = (ROOT / "start.sh").read_text(encoding="utf-8")

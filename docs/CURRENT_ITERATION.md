@@ -1,5 +1,74 @@
 # PROVOWARE – Aktueller Arbeitsblock
 
+## I47 – Python-Laufzeitgrenzen konsistent und sicher prüfen
+
+**Stand:** 24.10.2026. **Basis:** `main` bei `996fc55b797b3d3be3a488cdb25744d1506a8da5`.
+**Entwicklungszweig:** `fix/i47-python-runtime-contract-20261024`.
+**PR:** [#69](https://github.com/provoware/PROVOWARE-LAIENTOOL/pull/69) (Entwurf).
+**Code-Commit:** `a717cebdfc438d1acadffd47a74977e16303a1eb`.
+**CI-Nachweis:** die Prüfungen des jeweils aktuellen PR-Heads unter PR #69; keine Freigabe allein durch einen älteren grünen Lauf.
+
+### Ziel, Scope und Sicherheitsgrenze
+
+Der lesende Preflight hatte Python 3.15 und neuer als geeignet eingestuft,
+obwohl der offizielle Starter und das Paketmanifest nur 3.10 bis 3.14
+akzeptieren. I47 korrigiert diese widersprüchliche Eignung. Betroffen:
+`src/provoware_laientool/preflight.py`, `tests/test_preflight.py`,
+`tests/test_venv_bootstrap_contract.py`, diese Statusseite, die
+Regressionsmatrix und `todo.txt`. **Nicht-Ziele:** Installation,
+Abhängigkeitswechsel, Datei-Migration, Freigabe von Schreibaktionen,
+zweites Gerät, Human-Abnahme oder Veröffentlichung.
+
+Der Preflight prüft jetzt die **gemeldete** Python-Version statt der
+zufälligen Testlaufzeit. 3.9 und 3.15+ werden abgewiesen, 3.10 bis 3.14
+akzeptiert. Nicht auswertbare Versionsangaben werden sicher abgewiesen.
+Ein Vertragstest bindet die Preflight-Grenzen an die vorhandenen Angaben
+in `start.sh` und im Paketmanifest; der Starter selbst bleibt unverändert.
+
+### Tatsächliche Prüfung und Fehlerkorrektur
+
+- **PASS:** Der erste PR-Lauf [repo-quality #40064306534](https://github.com/provoware/PROVOWARE-LAIENTOOL/actions/runs/40064306534)
+  bestand Repository-, Sicherheits-, vollständige Unit-/Integrationstests,
+  Kern-Diagnostik und Preflight.
+- **FAIL (erkannt):** Derselbe Lauf stoppte ausschließlich am
+  `info_text_guard`, weil die verpflichtende Änderung an `todo.txt`
+  beziehungsweise README/Evidence noch fehlte. Dies wird mit diesem
+  Dokumentationsbatch behoben, nicht durch Abschwächung des Gates.
+- **Noch offen:** Der vollständige unabhängige GitHub-Prüflauf auf dem
+  abschließenden PR-Head ist maßgeblich; den aktuellen Status unter PR #69
+  prüfen. Der Paketlauf ist ein eigenständiger Nachweis.
+
+### Release-Pflichtmatrix – aktueller Nachweisstand
+
+| Pflichtbereich | Status | Beleg / Rest |
+| --- | --- | --- |
+| Fachfunktionen und Grenzfälle | OPEN | Lesewege und Vorschau vorhanden; schreibende Use-Cases gesperrt |
+| Datensicherheit und Wiederherstellung | OPEN | Read-only-Lock geprüft; Recovery ungültiger `.venv` offen |
+| Fehlerbehandlung und Sicherheit | OPEN | I47 weist falsche Python-Version ab; Abhängigkeitshashes und Venv-Recovery offen |
+| Design, UX und Lesbarkeit | OPEN | Technische Evidence; reale Gesamtsichtprüfung fehlt |
+| 800×600 und hohe Skalierung | OPEN | 100/150/200 % technisch erfasst; 800×600 vollständig offen |
+| Tastatur und Barrierefreiheit | OPEN | I25/I31 automatisch geprüft; echte Bedienprüfung erst zum Abschluss |
+| Performance und Abbruch | OPEN | Inventarisierung ohne begrenzten Abbruchpfad |
+| Wartbarkeit und Wiederverwendung | OPEN | Gemeinsamer Kern; Kohäsions-/Qualitätsbefunde offen |
+| Installation und Paketierung | OPEN | Starter-/Manifest-Vertrag mit I47-Test; Zweitgerät und Online-Hashbindung offen |
+| Automatisierte Funktionstests | PASS (I47-Code) | Grenzwerte und injizierte Plattformdaten im vollständigen PR-Testlauf bestanden |
+| Integration | OPEN | GUI-/CLI-Parität vorhanden, vollständige Freigabe ausstehend |
+| GUI/Browser | OPEN | I25/I31 automatisiert; reale Wahrnehmungsprüfung ausstehend |
+| Regression | PASS (I47-Code) | Neue Grenzwert- und Konsistenzprüfungen auf Code-Commit erfolgreich |
+| CI und Qualitätsgates | OPEN | Erstlauf Info-Text-Impact FAIL; finaler PR-Head muss vollständig grün sein |
+| Dokumentation | OPEN | Matrix/TODO im Nachtragsbatch aktualisiert; Release-Dokumentation offen |
+| Release-Freeze | BLOCKED | Drei reale Freigaben, vollständige Fachfunktion und Kubuntu-Endabnahme fehlen |
+
+### Rückweg und nächste Pflichtarbeit
+
+Änderung ausschließlich auf Entwicklungszweig; bei Regression PR nicht
+integrieren und den Branch gezielt zurücknehmen. Nach grünen Pflichtgates
+nächster unabhängiger Block: `.venv`-Recovery verlustfrei und ohne
+stille Rechteausweitung absichern. Die einzige gebündelte persönliche
+Endabnahme erfolgt erst am vollständig geprüften Release-Kandidaten.
+
+---
+
 ## I46 – Paket-CI deckt verpackte Quelldateien ab
 
 **Stand:** 23.10.2026. **Basis:** `main` bei `6845d6c09ab68e8ad830caaf89afb0392bcb0153`.
