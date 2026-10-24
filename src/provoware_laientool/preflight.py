@@ -11,10 +11,27 @@ import importlib.util
 import json
 import os
 import platform
+import re
 import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Mapping
+
+
+PYTHON_MIN = (3, 10)
+PYTHON_MAX_EXCLUSIVE = (3, 15)
+
+
+def supports_python_version(version: str) -> bool:
+    """Check the same Python minor-version range as the official starter."""
+    match = re.fullmatch(
+        r"([0-9]+)\.([0-9]+)(?:\.[0-9]+(?:(?:a|b|rc|dev)[0-9]+)?)?",
+        version,
+    )
+    if match is None:
+        return False
+    major_minor = (int(match.group(1)), int(match.group(2)))
+    return PYTHON_MIN <= major_minor < PYTHON_MAX_EXCLUSIVE
 
 
 @dataclass(frozen=True)
@@ -166,7 +183,7 @@ def collect_capabilities(
         linux=info.system == "Linux",
         supported_distro_family=distro in {"ubuntu", "kubuntu"}
         and info.distro_version.startswith("24.04"),
-        python_supported=sys.version_info >= (3, 10),
+        python_supported=supports_python_version(info.python),
         graphical_session=gui_session,
         pyside6_available=has_pyside6,
         utf8_filesystem=info.filesystem_encoding.lower().replace("-", "") == "utf8",
@@ -220,7 +237,7 @@ def evaluate(info: PlatformInfo, caps: CapabilityInfo) -> PreflightResult:
     if not caps.supported_distro_family:
         notes.append("Ubuntu/Kubuntu 24.04 wurde nicht als freigegebene Baseline erkannt.")
     if not caps.python_supported:
-        notes.append("Python 3.10 oder neuer wird vorausgesetzt.")
+        notes.append("Python 3.10 bis 3.14 wird vorausgesetzt.")
     if not caps.utf8_filesystem:
         notes.append("Das Dateisystem-Encoding ist nicht als UTF-8 erkannt.")
     if not caps.home_available:

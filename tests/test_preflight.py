@@ -15,6 +15,7 @@ from provoware_laientool.preflight import (
     parse_os_release,
     read_os_release,
     runtime_source,
+    supports_python_version,
 )
 
 
@@ -132,6 +133,47 @@ class PlanTests(unittest.TestCase):
             caps(supported_distro_family=False),
         )
         self.assertEqual(result.status, "OPEN")
+
+
+class PythonVersionContractTests(unittest.TestCase):
+    def test_supported_boundaries_and_prerelease(self) -> None:
+        cases = {
+            "3.9.21": False,
+            "3.10.0": True,
+            "3.12.3": True,
+            "3.14.0": True,
+            "3.14.0rc1": True,
+            "3.15.0": False,
+            "4.0.0": False,
+            "3.15.0rc1": False,
+            "3.14junk": False,
+            "3.14.bad": False,
+            "unbekannt": False,
+        }
+        for version, expected in cases.items():
+            with self.subTest(version=version):
+                self.assertEqual(supports_python_version(version), expected)
+
+    def test_capabilities_use_reported_runtime_not_test_runner(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            for version, expected in (("3.9.21", False), ("3.10.0", True),
+                                      ("3.14.0", True), ("3.15.0", False)):
+                with self.subTest(version=version):
+                    platform_info = info(python=version)
+                    value = collect_capabilities(
+                        platform_info, home=root, downloads=root,
+                        project_root=root, pyside6_available=True,
+                    )
+                    self.assertEqual(value.python_supported, expected)
+                    self.assertEqual(
+                        choose_start_plan(platform_info, value).profile,
+                        "gui-ready" if expected else "blocked-readonly",
+                    )
+                    self.assertEqual(
+                        evaluate(platform_info, value).status,
+                        "PASS" if expected else "OPEN",
+                    )
 
 
 if __name__ == "__main__":
