@@ -26,7 +26,15 @@ class ReversibleVenvRecoveryTests(unittest.TestCase):
             "#!/usr/bin/env bash\n"
             "if [[ \"$1\" == -m && \"$2\" == venv ]]; then\n"
             "  mkdir -p -- \"$3/bin\"\n"
-            "  printf '#!/bin/sh\\necho 6.11.2\\n' > \"$3/bin/python\"\n"
+            "  cat > \"$3/bin/python\" <<'STUB'\n"
+            "#!/usr/bin/env bash\n"
+            "if [[ \"${FAKE_PYSIDE_FAIL:-0}\" == 1 ]]; then\n"
+            "  if [[ \"$1\" == -m && \"$2\" == pip ]]; then exit 1; fi\n"
+            "  code=\"$(cat)\"\n"
+            "  if [[ \"$code\" == *importlib.metadata* ]]; then exit 0; fi\n"
+            "fi\n"
+            "echo 6.11.2\n"
+            "STUB\n"
             "  chmod +x \"$3/bin/python\"\n"
             "  [[ \"${FAKE_VENV_FAIL:-0}\" == 1 ]] && exit 1\n"
             "  exit 0\n"
@@ -42,8 +50,15 @@ class ReversibleVenvRecoveryTests(unittest.TestCase):
             "WAYLAND_DISPLAY": "",
         }
 
-    def run_start(self, *args: str, answer: str = "", fail: bool = False) -> subprocess.CompletedProcess[str]:
-        env = {**self.env, "FAKE_VENV_FAIL": "1" if fail else "0"}
+    def run_start(
+        self, *args: str, answer: str = "", fail: bool = False,
+        pyside_fail: bool = False,
+    ) -> subprocess.CompletedProcess[str]:
+        env = {
+            **self.env,
+            "FAKE_VENV_FAIL": "1" if fail else "0",
+            "FAKE_PYSIDE_FAIL": "1" if pyside_fail else "0",
+        }
         return subprocess.run(
             ["bash", str(self.root / "start.sh"), *args],
             input=answer, text=True, capture_output=True, cwd=self.root,
@@ -95,6 +110,23 @@ class ReversibleVenvRecoveryTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertEqual((old / "keep.txt").read_text(), "restore")
         self.assertTrue((self.backups()[0] / "failed-setup/bin/python").exists())
+
+    def test_failed_dependency_install_restores_previous_venv(self) -> None:
+        old = self.root / ".venv"
+        old.mkdir()
+        (old / "keep.txt").write_text("keep", encoding="utf-8")
+        result = self.run_start("--yes", "--setup", pyside_fail=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual((old / "keep.txt").read_text(), "keep")
+        self.assertTrue((self.backups()[0] / "failed-setup/bin/python").exists())
+
+    def test_backup_paths_are_ignored_by_git(self) -> None:
+        result = subprocess.run(
+            ["git", "check-ignore", "--no-index", "--quiet",
+             ".venv.backup.example/original/secret.txt"],
+            cwd=ROOT, capture_output=True, text=True, timeout=10, check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_declined_recovery_does_not_change_anything(self) -> None:
         (self.root / ".venv").write_text("unchanged", encoding="utf-8")

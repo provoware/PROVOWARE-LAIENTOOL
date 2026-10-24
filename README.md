@@ -32,7 +32,7 @@ Die Prozentzahl bildet genau vier Freigaben ab: automatische Prüfung, Bedienpr�
    ./start.sh --setup
    ```
 
-   Das Programm fragt vor dem Anlegen der Umgebung und vor einem Herunterladen nach. Ist eine vorhandene `.venv` ungültig, fragt es vor einer verlustfreien Sicherung nach; die alte Umgebung bleibt unter `.venv.backup.*/original` erhalten. Ein fehlgeschlagener Aufbau stellt die alte Umgebung wieder her. Es nutzt keine Systemrechte.
+   Das Programm fragt vor dem Anlegen der Umgebung und vor einem Herunterladen nach. Ist eine vorhandene `.venv` ungültig, fragt es vor einer verlustfreien Sicherung nach; die alte Umgebung bleibt unter `.venv.backup.*/original` erhalten. Scheitert das Anlegen oder die Paketinstallation, wird die alte Umgebung wiederhergestellt. Es nutzt keine Systemrechte.
 
 ### Stufe 2 – Programm starten
 

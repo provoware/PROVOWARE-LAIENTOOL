@@ -16,14 +16,14 @@ verschiebt er ausschließlich den ursprünglichen Verzeichniseintrag in
 einen mit `mktemp` angelegten privaten Sicherungsordner.
 Eine neue Umgebung entsteht unmittelbar an ihrem endgültigen Pfad,
 damit installierte Skripte keine falschen Pfade erhalten. Bei
-Erstellungsfehler oder Abbruch wird die vorherige Umgebung zurückgestellt;
+Erstellungsfehler, Paketfehler oder Abbruch wird die vorherige Umgebung zurückgestellt;
 eine teilweise erstellte Umgebung bleibt als `failed-setup` zur
 Fehleranalyse erhalten. Ein gültiger Zustand wird nicht verändert.
 Die alte Umgebung wird auch nach Erfolg **nicht automatisch gelöscht**.
 
-**Prüfpflicht:** Acht isolierte Starter-Subprozesstests für Ordner, Datei,
-gültigen/hängenden Verweis, Fehler-Rückweg, abgelehnte Zustimmung,
-`--check` und alte temporäre Daten. Diese Tests und das vollständige
+**Prüfpflicht:** Zehn isolierte Starter-Subprozesstests für Ordner, Datei,
+gültigen/hängenden Verweis, Aufbau-/Paketfehler-Rückweg, abgelehnte Zustimmung,
+`--check`, alte temporäre Daten und Git-Ausschluss der Sicherung. Diese Tests und das vollständige
 Repository-/Paket-Gate müssen auf dem finalen PR-Head grün sein; vor
 diesen Nachweisen **OPEN**, nicht PASS.
 
@@ -40,7 +40,7 @@ diesen Nachweisen **OPEN**, nicht PASS.
 | Performance/Abbruch | OPEN | Budgetierte, abbrechbare Inventarisierung fehlt |
 | Wartbarkeit | OPEN | Kleine Änderung am vorhandenen Starter; weitere Qualitätsbefunde offen |
 | Paketierung/Installation | OPEN | I48-Subprozessfälle im PR; Offline-Zweitgerät und Hashbindung offen |
-| Funktionstests/Regression | OPEN | Acht neue Tests; GitHub-Ergebnisse auf PR-Head ausstehend |
+| Funktionstests/Regression | OPEN | Zehn neue Tests; GitHub-Ergebnisse auf PR-Head ausstehend |
 | Integration/GUI/Browser | OPEN | GUI-/CLI-Evidence vorhanden; vollständige Release-Prüfung offen |
 | CI | OPEN | `repo-quality` und `portable-package` auf finalem PR-Head abwarten |
 | Dokumentation | OPEN | I48-Matrix und TODO aktualisiert; Release-Dokumentation offen |

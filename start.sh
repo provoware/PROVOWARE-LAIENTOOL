@@ -200,7 +200,6 @@ if ! validate_venv; then
     die "Venv-Erstellung unvollständig. Vorhandene Daten bleiben erhalten." 5
   fi
 
-  trap - EXIT
   status "🟢 .venv wurde lokal angelegt."
   if [[ -n "$QUARANTINE_DIR" ]]; then
     status "🟡 Die bisherige Umgebung bleibt zur manuellen Wiederherstellung unter $QUARANTINE_DIR/original erhalten."
@@ -238,6 +237,8 @@ fi
 status "🔎 Validierung der virtuellen Umgebung ..."
 validate_venv || die ".venv ist nach Einrichtung nicht als virtuelle Umgebung erkennbar."
 validate_gui_runtime || die "PySide6-/Qt-Validierung fehlgeschlagen."
+# Keep the rollback active through dependency installation and Qt validation.
+trap - EXIT
 
 status "🟢 Virtuelle Umgebung bereit: $VENV_DIR"
 
