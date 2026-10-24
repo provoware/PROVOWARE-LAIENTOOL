@@ -119,6 +119,8 @@ esac
 [[ -f "$REQUIREMENTS" ]] || die "requirements-gui.txt fehlt. Repository ist unvollständig."
 
 validate_venv() {
+  # A linked .venv could run an interpreter outside the selected project.
+  [[ ! -L "$VENV_DIR" && -d "$VENV_DIR" ]] || return 1
   [[ -x "$VENV_PYTHON" ]] || return 1
   "$VENV_PYTHON" - <<'PY'
 import sys
@@ -151,27 +153,58 @@ print("QtWidgets-Import: PASS")
 PY
 }
 
+# An invalid environment is preserved, never deleted or nested into itself.
+# A fresh environment is created at its final path so pip script shebangs remain valid.
+restore_previous_venv() {
+  [[ -n "${QUARANTINE_DIR:-}" ]] || return 0
+  [[ -e "$QUARANTINE_DIR/original" || -L "$QUARANTINE_DIR/original" ]] || return 0
+  if [[ -e "$VENV_DIR" || -L "$VENV_DIR" ]]; then
+    if ! mv -T -- "$VENV_DIR" "$QUARANTINE_DIR/failed-setup"; then
+      printf '🔴 Wiederherstellung blockiert; alter Zustand liegt unter %s/original.\n' "$QUARANTINE_DIR" >&2
+      return 1
+    fi
+  fi
+  if ! mv -T -- "$QUARANTINE_DIR/original" "$VENV_DIR"; then
+    printf '🔴 Wiederherstellung fehlgeschlagen; alter Zustand liegt unter %s/original.\n' "$QUARANTINE_DIR" >&2
+    return 1
+  fi
+  status "🟡 Vorherige .venv nach fehlgeschlagenem Aufbau wiederhergestellt."
+}
+
 if ! validate_venv; then
   if [[ "$ACTION" == "--check" ]]; then
     die ".venv fehlt oder ist ungültig. Nichts verändert." 3
   fi
 
-  status "🟨 Lokale virtuelle Umgebung .venv fehlt."
-  confirm "Jetzt .venv ausschließlich im Projektordner anlegen?" || die "Einrichtung abgebrochen. Nichts installiert." 4
-
-  rm -rf -- "$VENV_DIR.tmp"
-  if ! "$BASE_PYTHON" -m venv "$VENV_DIR.tmp"; then
-    rm -rf -- "$VENV_DIR.tmp"
-    die "Venv-Erstellung fehlgeschlagen. Prüfe, ob das venv-Modul für dein Python installiert ist. Es wurde kein sudo/apt ausgeführt." 5
+  QUARANTINE_DIR=""
+  if [[ -e "$VENV_DIR" || -L "$VENV_DIR" ]]; then
+    status "🟨 Vorhandene .venv ist ungültig (auch Dateien und symbolische Verweise)."
+    confirm "Ungültige .venv unverändert in einen geschützten Sicherungsordner verschieben und eine neue .venv anlegen?" || die "Einrichtung abgebrochen. Nichts verändert." 4
+    QUARANTINE_DIR="$(mktemp -d "$ROOT_DIR/.venv.backup.XXXXXXXX")" || die "Sicherungsordner konnte nicht angelegt werden." 5
+    if ! mv -T -- "$VENV_DIR" "$QUARANTINE_DIR/original"; then
+      rmdir -- "$QUARANTINE_DIR" || true
+      die "Alte .venv konnte nicht gesichert werden. Nichts ersetzt." 5
+    fi
+    # A failed build, error exit or interruption restores the original object.
+    trap 'restore_previous_venv || true' EXIT
+    status "🟢 Alter Zustand gesichert unter: $QUARANTINE_DIR/original"
+  else
+    status "🟨 Lokale virtuelle Umgebung .venv fehlt."
+    confirm "Jetzt .venv ausschließlich im Projektordner anlegen?" || die "Einrichtung abgebrochen. Nichts installiert." 4
   fi
 
-  [[ -x "$VENV_DIR.tmp/bin/python" ]] || {
-    rm -rf -- "$VENV_DIR.tmp"
-    die "Venv-Erstellung unvollständig; temporäre Umgebung entfernt." 5
-  }
+  if ! "$BASE_PYTHON" -m venv "$VENV_DIR"; then
+    die "Venv-Erstellung fehlgeschlagen. Vorhandene Daten bleiben erhalten; kein sudo/apt." 5
+  fi
+  if ! validate_venv; then
+    die "Venv-Erstellung unvollständig. Vorhandene Daten bleiben erhalten." 5
+  fi
 
-  mv -- "$VENV_DIR.tmp" "$VENV_DIR"
+  trap - EXIT
   status "🟢 .venv wurde lokal angelegt."
+  if [[ -n "$QUARANTINE_DIR" ]]; then
+    status "🟡 Die bisherige Umgebung bleibt zur manuellen Wiederherstellung unter $QUARANTINE_DIR/original erhalten."
+  fi
 fi
 
 CURRENT_PYSIDE6="$(pyside_version)"
