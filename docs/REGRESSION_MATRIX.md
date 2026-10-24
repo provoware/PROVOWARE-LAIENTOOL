@@ -32,6 +32,7 @@ Das System ändert niemals selbst Programmcode oder erwartete Ergebnisse. „Ler
 | Inventar | `tests/test_inventory.py` |
 | Preview-Modell | `tests/test_preview_model.py` |
 | Recovery-Vertrag | `tests/test_recovery_contract.py` |
+| Python-Version/Preflight | `tests/test_preflight.py` + `tests/test_venv_bootstrap_contract.py`; 3.9/3.10/3.14/3.15, fehlerhafte Angaben und Starter-/Paketgrenzen |
 | Registry/Application-Core | `tests/test_i11_shell.py` + betroffener Use-Case-Test |
 | I16 Preview-Application | `tests/test_i16_preview_application.py` |
 | Theme/Fokus/Skalierung | `tests/test_accessibility_evidence.py` |
