@@ -1,3 +1,64 @@
+## I48 – Ungültige .venv verlustfrei wiederherstellen
+
+**Stand:** 24.10.2026. **Basis-Head:** `5b174612787fb2285ba4c1d6af534c35376db417`.
+**Entwicklungszweig:** `fix/i48-reversible-venv-recovery-20261024`. **PR:** [#70](https://github.com/provoware/PROVOWARE-LAIENTOOL/pull/70) (Entwurf).
+**Geprüfter Implementierungs-Head:** `df4dbb57ab38c9e1b73ccec11538551bcd41edc0`.
+**Repository-CI:** [#40113639435](https://github.com/provoware/PROVOWARE-LAIENTOOL/actions/runs/40113639435) PASS auf diesem Code-Head; andere Pflichtprüfungen und finaler PR-Head bleiben bis zu eigenen Ergebnissen OPEN.
+
+**Ziel:** Eine ungültige Projektumgebung darf nicht mehr in sich selbst verschachtelt,
+gelöscht oder still ersetzt werden. Betroffen sind `start.sh`, ein neuer
+Subprozess-Regressionstest, TODO und diese Release-Pflichtmatrix.
+**Nicht-Ziele:** Änderungen an Python/PySide6-Versionen, Paketquellen,
+Schreibfunktionen, Zielgeräteprüfung, Produktfreigabe.
+
+**Umsetzung:** `--check` bleibt vollständig lesend. Bei ungültiger
+`.venv` (Ordner, Datei, gültiger oder hängender symbolischer Verweis)
+fragt der Starter vor jeder Änderung ausdrücklich nach. Nach Zustimmung
+verschiebt er ausschließlich den ursprünglichen Verzeichniseintrag in
+einen mit `mktemp` angelegten privaten Sicherungsordner.
+Eine neue Umgebung entsteht unmittelbar an ihrem endgültigen Pfad,
+damit installierte Skripte keine falschen Pfade erhalten. Bei
+Erstellungsfehler, Paketfehler oder Abbruch wird die vorherige Umgebung zurückgestellt;
+eine teilweise erstellte Umgebung bleibt als `failed-setup` zur
+Fehleranalyse erhalten. Ein gültiger Zustand wird nicht verändert.
+Die alte Umgebung wird auch nach Erfolg **nicht automatisch gelöscht**.
+
+**Prüfpflicht:** Zehn isolierte Starter-Subprozesstests für Ordner, Datei,
+gültigen/hängenden Verweis, Aufbau-/Paketfehler-Rückweg, abgelehnte Zustimmung,
+`--check`, alte temporäre Daten und Git-Ausschluss der Sicherung. Diese Tests und das vollständige
+Repository-/Paket-Gate müssen auf dem finalen PR-Head grün sein; vor
+diesen Nachweisen **OPEN**, nicht PASS.
+
+### Release-Pflichtmatrix (I48)
+
+| Bereich | Status | Evidenz / offene Pflicht |
+| --- | --- | --- |
+| Fachfunktionen/Grenzfälle | OPEN | Lese-/Vorschauwege vorhanden, produktive Schreibaktionen gesperrt |
+| Datensicherheit/Wiederherstellung | OPEN | I48-Venv-Rückweg im PR; Produktdaten-Recovery separat offen |
+| Fehlerbehandlung/Sicherheit | OPEN | Ordner/Datei/Symlink/Abbruch werden gezielt geprüft; Online-Hashbindung offen |
+| Design/UX/Lesbarkeit | OPEN | Eindeutige Rückfrage und Sicherungspfad; reale Gesamtsichtprüfung offen |
+| 800×600/Skalierung | OPEN | 800×600 und 100/150/200 % abschließend zu prüfen |
+| Tastatur/Barrierefreiheit | OPEN | Technische I25/I31-Evidence; abschließende Bedienprüfung offen |
+| Performance/Abbruch | OPEN | Budgetierte, abbrechbare Inventarisierung fehlt |
+| Wartbarkeit | OPEN | Kleine Änderung am vorhandenen Starter; weitere Qualitätsbefunde offen |
+| Paketierung/Installation | OPEN | I48-Subprozessfälle im PR; Offline-Zweitgerät und Hashbindung offen |
+| Funktionstests/Regression | PASS (I48-Code) | Zehn neue Tests im vollständigen Repository-Gate auf Implementierungs-Head erfolgreich; finaler PR-Head separat OPEN |
+| Integration/GUI/Browser | OPEN | GUI-/CLI-Evidence vorhanden; vollständige Release-Prüfung offen |
+| CI | OPEN | `repo-quality` und `portable-package` auf finalem PR-Head abwarten |
+| Dokumentation | OPEN | I48-Matrix und TODO aktualisiert; Release-Dokumentation offen |
+| Release-Freeze | BLOCKED | Fachfunktionen, reale Zielgeräte- und gebündelte Endabnahme offen |
+
+**Rückweg:** PR nicht integrieren, solange Pflichtgates fehlen. Die bisherige
+`.venv` liegt unverändert unter `.venv.backup.*/original`; für eine
+manuelle Rücknahme zuerst die neue `.venv` sichern, dann die alte
+Umgebung an ihren ursprünglichen Namen zurückbewegen.
+
+**Nächste drei Schritte:** (1) I48-PR-CI und Paketprüfung auswerten,
+(2) inventarisierte Großbäume begrenzt/abbrechbar machen,
+(3) Online-Abhängigkeiten artefaktgebunden absichern.
+
+---
+
 # PROVOWARE – Aktueller Arbeitsblock
 
 ## I47 – Python-Laufzeitgrenzen konsistent und sicher prüfen
